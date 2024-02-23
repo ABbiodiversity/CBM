@@ -265,4 +265,43 @@ d2 |>
         strip.background = element_blank(),
         plot.title = element_text(size = 15))
 
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Animals
+
+cpdfn_data_slim |>
+  filter(str_detect(species_common_name, "White-tailed Deer|Black Bear|Moose|Gray Wolf")) |>
+  mutate(project_id = "CPDFN") |>
+  wt_ind_detect(threshold = 30, unit = "minutes") |>
+  ggplot(mapping = aes(x = start_time, fill = species_common_name)) +
+  geom_histogram(bins = 50) +
+  facet_wrap(~ species_common_name, nrow = 4, scales = "free_y") +
+  labs(y = "Number of Detections",
+       title = "Wildlife Detections at CPDFN Cameras in 2022") +
+  #scale_y_continuous(breaks = seq(0, 60, 20), limits = c(0, 60)) +
+  scale_x_datetime(date_breaks = "1 month", date_labels = "%b", limits = lims) +
+  #annotate(geom = "richtext", y = 42, x = as.POSIXct("2022-03-15", format = "%Y-%m-%d"), label = text,
+  #         label.colour = NA, fill = NA, fontface = "bold", color = "grey20", size = 4) +
+  scale_fill_viridis_d() +
+  #guides(fill = guide_legend(override.aes = list(size = 11))) +
+  theme_abmi() +
+  theme(axis.text.x = element_text(size = 11, angle = 45, hjust = 1),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 14, margin = margin(0, 10, 0, 0)),
+        #axis.text.y = element_blank(),
+        legend.position = "none",
+        legend.text = element_text(size = 8),
+        legend.title = element_blank(),
+        legend.key.size = unit(0.4, "cm"),
+        #panel.spacing.y = unit(0, "lines"),
+        strip.text = element_text(size = 11, color = "black", face = "bold", hjust = 0),
+        strip.background = element_blank(),
+        plot.title = element_text(size = 16))
+
+
+
+
+
+
+
 
