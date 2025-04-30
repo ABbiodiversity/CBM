@@ -175,7 +175,7 @@ get_operating_days <- function(image_report, include_project = TRUE, summarise =
       group_by(project_location) |>
       # This code is gross. Do we still need to do this for camera data pre-2019?
       mutate(starts_again = ifelse(lead(image_fov) == "START - First Good Image in FOV" & image_fov == "END - Last Good Image in FOV", 1, NA),
-            restart = ifelse(lag(starts_again) == "1" & lag(image_fov) == "END - Last Good Image in FOV", 1, NA)) |>
+             restart = ifelse(lag(starts_again) == "1" & lag(image_fov) == "END - Last Good Image in FOV", 1, NA)) |>
       filter(starts_again == "1" | restart == "1") |>
       select(-c(starts_again, restart)) |>
       ungroup() |>
@@ -187,7 +187,7 @@ get_operating_days <- function(image_report, include_project = TRUE, summarise =
 
     to_remove <- inter_pairs |>
       mutate(end_date = as.Date(`image_date_time...2`),
-            start_date = as.Date(`image_date_time...5`)) |>
+             start_date = as.Date(`image_date_time...5`)) |>
       select(project_location = 1, end_date, start_date) |>
       rowwise() |>
       mutate(date = list(seq(from = end_date, to = start_date, by = "day"))) |>
@@ -350,7 +350,7 @@ group_tags_into_series <- function(tag_report, threshold, summarise = FALSE) {
     ungroup() |>
     # Number the series
     mutate(series = c(1, cumsum(new_detection[-1]) + 1))
-    # Flag gaps that will need
+  # Flag gaps that will need
 
   # "Naive" summary - no probabilistic gaps, etc.
   if(summarise) {
