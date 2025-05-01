@@ -250,9 +250,6 @@ ggplot(all_diff, aes(x = comparison, y = mean_diff, color = comparison, shape = 
 ggsave("LMCA/Differences in Mean_new.png", height = 4, width = 7, dpi = 500, bg = "white")
 
 
-
-
-
 # Plot
 
 summary |>

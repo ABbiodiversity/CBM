@@ -47,7 +47,7 @@ main_report <- wt_download_report(project_id = project_ids,
   # Consolidate tags of same species in the same image into one row
   consolidate_tags() |>
   filter(image_fov == "WITHIN") |>
-  select(project, location, image_date_time, species_common_name, individual_count)
+  select(project, location, image_date_time, species_common_name, individual_count, image_id)
 
 # Image report
 image_report <- wt_download_report(project_id = project_ids,
@@ -142,7 +142,19 @@ df_density_sum <- df_density_long |>
 
 source("Functions/Date to Radian.R")
 
+species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
+             "Canada Lynx", "Woodland Caribou", "Gray Wolf")
+
 df <- main_report |>
+  # Turn 'Deer' tags into White-tailed Deer (most likely)
+  mutate(species_common_name = case_when(
+    species_common_name == "Deer" ~ "White-tailed Deer",
+    species_common_name == "Mule Deer" ~ "White-tailed Deer",
+    species_common_name == "Bear" ~ "Black Bear",
+    species_common_name == "Foxes" ~ "Red Fox",
+    str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
+    TRUE ~ species_common_name
+  )) |>
   filter(species_common_name %in% species) |>
   filter(!individual_count == "VNA") |>
   mutate(individual_count = as.numeric(individual_count),
@@ -164,9 +176,10 @@ rad_time <- df |>
 
 #-----------------------------------------------------------------------------------------------------------------------
 
+
 # Step 3. Save results for future scripts
 
-save(df_density_sum, df_density_long, location_report, image_report, main_report, rad_time,
+save(df_density_sum, df_density_long, location_report, image_report, main_report, rad_time, M,
      file = "Communities/MNA Region 1/MNA Region 1 Data Objects.RData")
 
 #-----------------------------------------------------------------------------------------------------------------------
