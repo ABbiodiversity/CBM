@@ -1,0 +1,446 @@
+---
+title: "Buffalo Lake Metis Settlement"
+author: "ABMI CBME"
+date: "2025-04-29"
+output: 
+  bookdown::html_document2:
+    theme: lumen
+    css: styles.css
+    highlight: zenburn
+    toc: yes
+    toc_depth: '3'
+    toc_float: yes
+    number_sections: true
+    self_contained: yes
+  urlcolor: blue
+  always_allow_html: yes
+---
+
+<style>
+    body .main-container {
+        max-width: 1550px;
+    }
+</style>
+
+```{r setup, include = TRUE, message = FALSE, warning = FALSE, eval = TRUE, echo = FALSE}
+
+#library(abmi.themes)
+library(wildrtrax)
+library(tidyverse)
+library(leaflet)
+library(leaflet.extras)
+library(sf)
+library(activity)
+library(overlap)
+library(corrplot)
+library(here)
+
+load(here("Communities/BLMS/BLMS Data Objects.RData"))
+
+species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
+             "Canada Lynx", "Woodland Caribou", "Gray Wolf")
+
+species_colours <- c(
+  "#4E6E58",  # deep green (forest)
+  "#A17C6B",  # muted brown (soil / fur)
+  "#79929D",  # soft blue-grey (sky / water)
+  "#C2B280",  # dry grass / tan
+  "#5B5B5B",  # dark grey (stone / shadow)
+  "#7B9E87",  # sage green
+  "#A9A9A9",  # light grey (mist)
+  "#D6B88A"   # light brown (field / bark)
+)
+
+names(species_colours) <- species
+
+```
+
+# Project Introduction
+
+Buffalo Lake Metis Settlement (BLMS) began their camera program in 2024 and deployed 41 cameras between April and November of 2024.
+
+The images from this project can be accessed on WildTrax here: [Buffalo Lake Metis Settlement Terrestrial Cumulative Effects ABMI Wildlife Biodiversity Camera Program](https://portal.wildtrax.ca/home/camera-deployments.html?sensorId=CAM&projectId=3150).
+
+<br>
+
+```{r images, echo = FALSE, fig.align="center", out.width="80%", eval=TRUE, include=TRUE, echo=FALSE, fig.cap="MNA Region 1 Field Crew with Dave Evans from ABMI CBME deploying cameras."}
+
+knitr::include_graphics(here("Communities/BLMS/BLMS_Img1.JPG"))
+
+```
+
+<br>
+
+# Camera Locations
+
+The following interactive map can be used to explore the locations of the cameras deployed by MNA Region 1. Satellite imagery can switched on and off using the button in the top right of the top.
+
+<br>
+
+```{r map, echo = FALSE, cache = TRUE, fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE, fig.height=8}
+
+cam <- makeAwesomeIcon(
+  icon = "camera",
+  iconColor = "black",
+  library = "ion",
+  markerColor = "white"
+)
+
+dens_moose <- dens |>
+  filter(species_common_name == "Moose") |>
+  left_join(location_report, by = "location") |>
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
+  mutate(density_km2 = sqrt(density_km2))
+
+# Create a color palette (yellow to red)
+pal <- colorNumeric(palette = c("yellow", "red"),
+                    domain = dens_moose$density_km2, na.color = "transparent")
+
+location_report |>
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
+  leaflet() |>
+  addTiles() |>
+  addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
+  addFullscreenControl() |>
+  addResetMapButton() |>
+  addScaleBar(position = "bottomright", 
+              options = scaleBarOptions(imperial = FALSE)) |>
+  
+  # Camera Locations
+  addAwesomeMarkers(icon = cam,
+                    group = "Camera Locations",
+                    #options = leafletOptions(pane = "Proposed Cameras"),
+                    popup = paste("Location: ", "<b>", location_report$location, "</b>",
+                                  "<br>", "<br>",
+                                  "Notes:", "<br>"
+                                  )) |>
+  
+    addCircleMarkers(data = dens_moose, radius = 15,
+                   color = ~ pal(density_km2),
+                   stroke = FALSE,
+                   fillOpacity = 0.8,
+                   group = "Moose Abundance") |>
+  
+  # Layers control
+  addLayersControl(overlayGroups = c("Satellite Imagery",
+                                     "Camera Locations",
+                                     "Moose Abundance"),
+                   options = layersControlOptions(collapsed = FALSE),
+                   position = "topright") |>
+  
+  addLegend("bottomright", pal = pal, values = ~ dens_moose$density_km2, title = "Number of Moose") |>
+  
+  hideGroup("Moose Abundance")
+
+```
+
+<br>
+
+# Camera Operating Times
+
+
+
+<br>
+
+Here we display when the cameras were operating so we can check for any discrepancies and failures in the camera deployment. 
+
+```{r}
+
+
+
+```
+
+<br>
+
+# Number of Images Collected
+
+The figure below displays the total number of images collected on the most common 6 species present in the BLMS camera project. 
+
+```{r img, fig.cap="Total Number of Images Captured By BLMS Camera Project", fig.align="center", out.width="90%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Number of Images.png"))
+
+```
+
+<br>
+
+You can download the figure by clicking [this link](https://github.com/ABbiodiversity/CBM/blob/main/Communities/MNA%20Region%201/Figures/Number%20of%20Images.png){download=true}.
+
+For a complete list of all the species, you can go to the project on WildTrax and click on the 'Species Verification' tab of the project.
+
+<br>
+
+# Independent Detections Over Time
+
+With camera data, one useful metric to track over time is the number of "independent" detections captured for each species. In this case, an independent detection is defined as an image or series of images captured for a given species within a specific time interval. In the figure below we present the number of independent detections for each of the 8 main species using a 30 minute time interval; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals. 
+
+<br>
+
+```{r ind, fig.cap="Independent Species Detections Captured By BLMS Camera Project", fig.align="center", out.width="90%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Independent Detections.png"))
+
+```
+
+You can download the figure by clicking [this link](Figures/Independent Detections.png){download=true}.
+
+<br>
+
+## Species-specific figures {.tabset}
+
+Here is displayed each of the species independent detections individually, which can be toggled through using the tabs below. 
+
+### White-tailed Deer {-}
+
+```{r wtd, fig.cap="Independent Detections for White-tailed Deer", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Independent Detections White-tailed Deer.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections White-tailed Deer.png){download=true}.
+
+<br>
+
+### Black Bear {-}
+
+```{r bb, fig.cap="Independent Detections for Black Bear", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Independent Detections Black Bear.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Black Bear.png){download=true}.
+
+<br>
+
+### Canada Lynx {-}
+
+```{r cl, fig.cap="Independent Detections for Canada Lynx", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Independent Detections Canada Lynx.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Canada Lynx.png){download=true}.
+
+<br>
+
+### Coyote {-}
+
+```{r coy, fig.cap="Independent Detections for Coyote", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Independent Detections Coyote.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Coyote.png){download=true}.
+
+<br>
+
+### Moose {-}
+
+```{r moo, fig.cap="Independent Detections for Moose", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Independent Detections Moose.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Moose.png){download=true}.
+
+<br>
+
+### Snowshoe Hare {-}
+
+```{r sh, fig.cap="Independent Detections for Snowshoe Hare", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Independent Detections Snowshoe Hare.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Snowshoe Hare.png){download=true}.
+
+<br>
+
+# Temporal Activity Patterns {.tabset}
+
+Given that camera traps operate 24 hours a day, 7 days a week, and can record animal motion down to second-level precision, they represent a powerful tool to explore and contrast the activity patterns of the species they detect. Such analyses can give insight into competition, predation, and coexistence.
+
+In this section we present the temporal (diel) activity patterns for each of the 8 species from MNA Region 1 cameras.
+
+## White-tailed Deer {-}
+
+```{r wtdact, fig.cap="Activity Pattern of White-tailed Deer", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+wtd <- rad_time |>
+  filter(species_common_name == "White-tailed Deer") |>
+  pull(rad_time)
+
+densityPlot(wtd, col = species_colours["White-tailed Deer"], 
+            lty = 1, 
+            lwd = 2,
+            main = "White-tailed Deer")
+
+```
+
+White-tailed deer display a diurnal pattern in this data, with activity peaks at both dawn and dusk.
+
+<br>
+
+## Black Bear {-}
+
+```{r bbact, fig.cap="Activity Pattern of Black Bear", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+bb <- rad_time |>
+  filter(species_common_name == "Black Bear") |>
+  pull(rad_time)
+
+densityPlot(bb, col = species_colours["Black Bear"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Black Bear")
+
+```
+
+Black Bears are more active in the evenings and overnight.
+
+<br>
+
+## Canada Lynx {-}
+
+```{r clact, fig.cap="Activity Pattern of Canada Lynx", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+cl <- rad_time |>
+  filter(species_common_name == "Canada Lynx") |>
+  pull(rad_time)
+
+densityPlot(cl, col = species_colours["Canada Lynx"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Canada Lynx")
+
+```
+
+<br>
+
+## Coyote {-}
+
+```{r coyact, fig.cap="Activity Pattern of Coyote", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+coy <- rad_time |>
+  filter(species_common_name == "Coyote") |>
+  pull(rad_time)
+
+densityPlot(coy, col = species_colours["Coyote"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Coyote")
+
+```
+
+Coyotes are primarily active during the nighttime. 
+
+<br>
+
+## Moose {-}
+
+```{r mooact, fig.cap="Activity Pattern of Moose", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+moo <- rad_time |>
+  filter(species_common_name == "Moose") |>
+  pull(rad_time)
+
+densityPlot(moo, col = species_colours["Moose"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Moose")
+
+```
+
+Moose activity peaks during the dawn periods. 
+
+<br>
+
+## Snowshoe Hare {-}
+
+```{r shact, fig.cap="Activity Pattern of Snowshoe Hare", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+sh <- rad_time |>
+  filter(species_common_name == "Snowshoe Hare") |>
+  pull(rad_time)
+
+densityPlot(sh, col = species_colours["Snowshoe Hare"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Snowshoe Hare")
+
+```
+
+Snowshoe Hare are most active at night. 
+
+<br>
+
+# Species Co-Occurences
+
+Camera trap data are being increasingly used to model multiple species communities, and we can use this data to explore the co-occurrence patterns of the species in the community.
+
+The plot below displays pairwise correlations between the species on the left and the species on the top row. Blue colours indicate positive correlation, meaning that the two species are positively associated with one another. Red colours indicate the opposite, that where you have high counts of one species you likely have low counts of the other (and vice versa).
+
+```{r corrplot, fig.cap="Species Co-Occurrences at BLMS Camera Deployments", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+par(mfrow=c(1,1))
+
+corrplot(M, method = "color",
+         type = "upper",
+         order = "hclust",
+         tl.col = "black", tl.srt = 45,
+         diag = FALSE)
+
+```
+
+# Comparisons Between Grids {.tabset}
+
+In this section we present the results from BLMS camera deployments evaluating the differences between the two grids. To do this, we estimated the species-specific density at each camera using the Time in Front of Camera (TIFC) approach (Becker et al., 2022). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Analagous to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area effectively sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density'). 
+
+## White-tailed Deer {-}
+
+```{r wtddens, fig.cap="White-tailed Deer Density By Grid", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/White-tailed Deer.png"))
+
+```
+
+## Black Bear {-}
+
+```{r bbdens, fig.cap="Black Bear Density By Grid", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Black Bear.png"))
+
+```
+
+## Coyote {-}
+
+```{r coydens, fig.cap="Coyote Density By Grid", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Coyote.png"))
+
+```
+
+## Moose {-}
+
+```{r moodens, fig.cap="Moose Density By Grid", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/BLMS/Figures/Moose.png"))
+
+```
+
+# ABMI Species Model Predictions in Study Area
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
