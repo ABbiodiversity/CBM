@@ -1,0 +1,589 @@
+---
+title: "MNA Region 1 Otipemisiwak Lac La Biche District 19"
+author: "ABMI CBME"
+date: "2025-04-29"
+output: 
+  bookdown::html_document2:
+    theme: lumen
+    css: styles.css
+    highlight: zenburn
+    toc: yes
+    toc_depth: '3'
+    toc_float: yes
+    number_sections: true
+    self_contained: yes
+  urlcolor: blue
+  always_allow_html: yes
+---
+
+<style>
+    body .main-container {
+        max-width: 1550px;
+    }
+</style>
+
+```{r setup, include = TRUE, message = FALSE, warning = FALSE, eval = TRUE, echo = FALSE}
+
+#library(abmi.themes)
+library(wildrtrax)
+library(tidyverse)
+library(leaflet)
+library(leaflet.extras)
+library(sf)
+library(activity)
+library(overlap)
+library(corrplot)
+library(here)
+
+load(here("Communities/MNA Region 1/MNA Region 1 Data Objects.RData"))
+
+species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
+             "Canada Lynx", "Woodland Caribou", "Gray Wolf")
+
+species_colours <- c(
+  "#4E6E58",  # deep green (forest)
+  "#A17C6B",  # muted brown (soil / fur)
+  "#79929D",  # soft blue-grey (sky / water)
+  "#C2B280",  # dry grass / tan
+  "#5B5B5B",  # dark grey (stone / shadow)
+  "#7B9E87",  # sage green
+  "#A9A9A9",  # light grey (mist)
+  "#D6B88A"   # light brown (field / bark)
+)
+
+names(species_colours) <- species
+
+```
+
+# Project Introduction
+
+MNA Region 1 Otipemisiwak Lac La Biche District 19 began their camera program in 2023 and deployed 18 cameras between October 2023 and October 2024. These cameras were primarily deployed along the Old Conklin Road near Lac La Biche (see Figure below) in clusters of 4 cameras. 
+
+The goal of the program was to evaluate the specific oil sands disturbance type of pipelines and roads compared to reference (low disturbance) areas. The achieve this, 2 clusters of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community. 
+
+The images from this project can be accessed on WildTrax here: [OCR 2023-2024 Lac La Biche Cameras](https://portal.wildtrax.ca/home/camera-deployments.html?sensorId=CAM&projectId=2929).
+
+<br>
+
+```{r images, echo = FALSE, fig.align="center", out.width="80%", eval=TRUE, include=TRUE, echo=FALSE, fig.cap="MNA Region 1 Field Crew with Dave Evans from ABMI CBME deploying cameras."}
+
+knitr::include_graphics(here("Communities/MNA Region 1/MNA_Img1.JPG"))
+
+```
+
+<br>
+
+# Camera Locations
+
+The following interactive map can be used to explore the locations of the cameras deployed by MNA Region 1. Satellite imagery can switched on and off using the button in the top right of the top.
+
+<br>
+
+```{r map, echo = FALSE, cache = TRUE, fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE, fig.height=8}
+
+cam <- makeAwesomeIcon(
+  icon = "camera",
+  iconColor = "black",
+  library = "ion",
+  markerColor = "white"
+)
+
+location_report |>
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
+  leaflet() |>
+  addTiles() |>
+  addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
+  addFullscreenControl() |>
+  addResetMapButton() |>
+  addScaleBar(position = "bottomright", 
+              options = scaleBarOptions(imperial = FALSE)) |>
+  
+  # Camera Locations
+  addAwesomeMarkers(icon = cam,
+                    group = "Camera Locations",
+                    #options = leafletOptions(pane = "Proposed Cameras"),
+                    popup = paste("Location: ", "<b>", location_report$location, "</b>",
+                                  "<br>", "<br>",
+                                  "Notes:", "<br>"
+                                  )) |>
+  
+  # Layers control
+  addLayersControl(overlayGroups = c("Satellite Imagery",
+                                     "Camera Locations"),
+                   options = layersControlOptions(collapsed = FALSE),
+                   position = "topright")
+
+```
+
+<br>
+
+# Camera Operating Times
+
+
+
+<br>
+
+Here we display when the cameras were operating so we can check for any discrepancies and failures in the camera deployment. 
+
+```{r}
+
+
+
+```
+
+<br>
+
+# Number of Images Collected
+
+The figure below displays the total number of images collected on the most common 8 species present in the MNA Region 1 camera project. 
+
+```{r img, fig.cap="Total Number of Images Captured By MNA Region 1 2023-2024 Camera Project", fig.align="center", out.width="90%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Number of Images.png"))
+
+```
+
+<br>
+
+You can download the figure by clicking [this link](https://github.com/ABbiodiversity/CBM/blob/main/Communities/MNA%20Region%201/Figures/Number%20of%20Images.png){download=true}.
+
+For a complete list of all the species, you can go to the project on WildTrax and click on the 'Species Verification' tab of the project.
+
+<br>
+
+# Independent Detections Over Time
+
+With camera data, one useful metric to track over time is the number of "independent" detections captured for each species. In this case, an independent detection is defined as an image or series of images captured for a given species within a specific time interval. In the figure below we present the number of independent detections for each of the 8 main species using a 30 minute time interval; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals. 
+
+<br>
+
+```{r ind, fig.cap="Independent Species Detections Captured By MNA Region 1 2023-2024 Camera Project", fig.align="center", out.width="90%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Independent Detections.png"))
+
+```
+
+You can download the figure by clicking [this link](Figures/Independent Detections.png){download=true}.
+
+<br>
+
+## Species-specific figures {.tabset}
+
+Here is displayed each of the species independent detections individually, which can be toggled through using the tabs below. 
+
+### White-tailed Deer {-}
+
+```{r wtd, fig.cap="Independent Detections for White-tailed Deer", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Independent Detections White-tailed Deer.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections White-tailed Deer.png){download=true}.
+
+<br>
+
+### Black Bear {-}
+
+```{r bb, fig.cap="Independent Detections for Black Bear", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Independent Detections Black Bear.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Black Bear.png){download=true}.
+
+<br>
+
+### Canada Lynx {-}
+
+```{r cl, fig.cap="Independent Detections for Canada Lynx", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Independent Detections Canada Lynx.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Canada Lynx.png){download=true}.
+
+<br>
+
+### Coyote {-}
+
+```{r coy, fig.cap="Independent Detections for Coyote", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Independent Detections Coyote.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Coyote.png){download=true}.
+
+<br>
+
+### Gray Wolf {-}
+
+```{r gw, fig.cap="Independent Detections for Gray Wolf", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Independent Detections Gray Wolf.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Gray Wolf.png){download=true}.
+
+<br>
+
+### Moose {-}
+
+```{r moo, fig.cap="Independent Detections for Moose", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Independent Detections Moose.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Moose.png){download=true}.
+
+<br>
+
+### Snowshoe Hare {-}
+
+```{r sh, fig.cap="Independent Detections for Snowshoe Hare", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Independent Detections Snowshoe Hare.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Snowshoe Hare.png){download=true}.
+
+<br>
+
+### Woodland Caribou {-}
+
+```{r wc, fig.cap="Independent Detections for Woodland Caribou", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Independent Detections Woodland Caribou.png"))
+
+```
+Download figure with [this link](Figures/Independent Detections Woodland Caribou.png){download=true}.
+
+<br>
+
+# Temporal Activity Patterns {.tabset}
+
+Given that camera traps operate 24 hours a day, 7 days a week, and can record animal motion down to second-level precision, they represent a powerful tool to explore and contrast the activity patterns of the species they detect. Such analyses can give insight into competition, predation, and coexistence.
+
+In this section we present the temporal (diel) activity patterns for each of the 8 species from MNA Region 1 cameras.
+
+## White-tailed Deer {-}
+
+```{r wtdact, fig.cap="Activity Pattern of White-tailed Deer", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+wtd <- rad_time |>
+  filter(species_common_name == "White-tailed Deer") |>
+  pull(rad_time)
+
+densityPlot(wtd, col = species_colours["White-tailed Deer"], 
+            lty = 1, 
+            lwd = 2,
+            main = "White-tailed Deer")
+
+```
+
+White-tailed deer display a diurnal pattern in this data, with activity peaks at both dawn and dusk.
+
+<br>
+
+## Black Bear {-}
+
+```{r bbact, fig.cap="Activity Pattern of Black Bear", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+bb <- rad_time |>
+  filter(species_common_name == "Black Bear") |>
+  pull(rad_time)
+
+densityPlot(bb, col = species_colours["Black Bear"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Black Bear")
+
+```
+
+Black Bears are more active in the evenings and overnight.
+
+<br>
+
+## Canada Lynx {-}
+
+```{r clact, fig.cap="Activity Pattern of Canada Lynx", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+cl <- rad_time |>
+  filter(species_common_name == "Canada Lynx") |>
+  pull(rad_time)
+
+densityPlot(cl, col = species_colours["Canada Lynx"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Canada Lynx")
+
+```
+
+<br>
+
+## Coyote {-}
+
+```{r coyact, fig.cap="Activity Pattern of Coyote", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+coy <- rad_time |>
+  filter(species_common_name == "Coyote") |>
+  pull(rad_time)
+
+densityPlot(coy, col = species_colours["Coyote"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Coyote")
+
+```
+
+Coyotes are primarily active during the nighttime. 
+
+<br>
+
+## Gray Wolf {-}
+
+```{r gwact, fig.cap="Activity Pattern of Gray Wolf", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+gw <- rad_time |>
+  filter(species_common_name == "Gray Wolf") |>
+  pull(rad_time)
+
+densityPlot(gw, col = species_colours["Gray Wolf"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Gray Wolf")
+
+```
+
+Wolves are primarily active at dusk.
+
+<br>
+
+## Moose {-}
+
+```{r mooact, fig.cap="Activity Pattern of Moose", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+moo <- rad_time |>
+  filter(species_common_name == "Moose") |>
+  pull(rad_time)
+
+densityPlot(moo, col = species_colours["Moose"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Moose")
+
+```
+
+Moose activity peaks during the dawn periods. 
+
+<br>
+
+## Snowshoe Hare {-}
+
+```{r shact, fig.cap="Activity Pattern of Snowshoe Hare", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+sh <- rad_time |>
+  filter(species_common_name == "Snowshoe Hare") |>
+  pull(rad_time)
+
+densityPlot(sh, col = species_colours["Snowshoe Hare"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Snowshoe Hare")
+
+```
+
+Snowshoe Hare are most active at night. 
+
+<br>
+
+## Woodland Caribou {-}
+
+```{r wcact, fig.cap="Activity Pattern of Woodland Caribou", fig.align="center", out.width="100%", eval=TRUE, include=TRUE, echo=FALSE}
+
+wc <- rad_time |>
+  filter(species_common_name == "Woodland Caribou") |>
+  pull(rad_time)
+
+densityPlot(wc, col = species_colours["Woodland Caribou"], 
+            lty = 1, 
+            lwd = 2,
+            main = "Woodland Caribou")
+
+```
+
+<br>
+
+# Species Co-Occurences
+
+Camera trap data are being increasingly used to model multiple species communities, and we can use this data to explore the co-occurrence patterns of the species in the community.
+
+The plot below displays pairwise correlations between the species on the left and the species on the top row. Blue colours indicate positive correlation, meaning that the two species are positively associated with one another. Red colours indicate the opposite, that where you have high counts of one species you likely have low counts of the other (and vice versa).
+
+```{r corrplot, fig.cap="Species Co-Occurrences at MNA Region 1 Camera Deployments", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+par(mfrow=c(1,1))
+
+corrplot(M, method = "color",
+         type = "upper",
+         order = "hclust",
+         tl.col = "black", tl.srt = 45,
+         diag = FALSE)
+
+```
+
+# Evaluating Oil Sands Disturbances {.tabset}
+
+In this section we present the results from MNA Region 1 camera deployments evaluating the impact of specific oil sands stressors on wildlife within MNA Region 1: pipelines and roads. To do this, we estimated the species-specific density at each camera using the Time in Front of Camera (TIFC) approach (Becker et al., 2022). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Analagous to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area effectively sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density'). 
+
+The following plots show the average camera density at each of the clusters. There are 3 reference clusters, 2 road clusters, and 1 linear features cluster (pipelines). The tabs can be used to toggle through each individual species results.
+
+## White-tailed Deer {-}
+
+```{r wtddens, fig.cap="White-tailed Deer Density By Treatment", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/White-tailed Deer Density Treatments.png"))
+
+```
+
+## Black Bear {-}
+
+```{r bbdens, fig.cap="Black Bear Density By Treatment", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Black Bear Density Treatments.png"))
+
+```
+
+## Canada Lynx {-}
+
+```{r cldens, fig.cap="Canada Lynx Density By Treatment", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Canada Lynx Density Treatments.png"))
+
+```
+
+## Coyote {-}
+
+```{r coydens, fig.cap="Coyote Density By Treatment", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Coyote Density Treatments.png"))
+
+```
+
+## Gray Wolf {-}
+
+```{r gwdens, fig.cap="Gray Wolf Density By Treatment", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Gray Wolf Density Treatments.png"))
+
+```
+
+## Moose {-}
+
+```{r moodens, fig.cap="Moose Density By Treatment", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Moose Density Treatments.png"))
+
+```
+
+## Snowshoe Hare {-}
+
+```{r shdens, fig.cap="Snowshoe Hare Density By Treatment", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Snowshoe Hare Density Treatments.png"))
+
+```
+
+## Woodland Caribou {-}
+
+```{r wcdens, fig.cap="Woodland Caribou Density By Treatment", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/Woodland Caribou Density Treatments.png"))
+
+```
+
+# Comparison to Regional OSM Monitoring {.tabset}
+
+In this section we compare the results from the 6 camera clusters deployed by MNA Region 1 to those deployed as part of the broader regional OSM monitoring done by the ABMI. The ABMI deploys clusters of cameras (called 'Joint Environmental Monitoring Sites', or JEMS) in a similar fashion to MNA Region 1, targeting the physical footprint and adjacent areas of oil sands disturbances. These disturbances include linear features, low activity well pads, high activity in situ facilities, oil sands roads, and processing plant/mining operations. Low disturbance (reference) areas are also surveyed. 
+
+There are two common stressors examined by the MNA Region 1 cameras and the regional monitoring done by the ABMI: linear features and roads, as well as reference areas. In the figures below for each species, we plot out the values obtained from ABMI JEM sites alongside the MNA Region 1 values, as well as the overall mean value for each treatment.
+
+## White-tailed Deer {-}
+
+```{r wtdjem, fig.cap="White-tailed Deer Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/BADR White-tailed Deer.png"))
+
+```
+
+## Black Bear {-}
+
+```{r bbjem, fig.cap="Black Bear Results from Regional OSM Monitoring", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/BADR Black Bear.png"))
+
+```
+
+## Canada Lynx {-}
+
+```{r cljem, fig.cap="Canada Lynx Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/BADR Canada Lynx.png"))
+
+```
+
+## Coyote {-}
+
+```{r coyjem, fig.cap="Coyote Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/BADR Coyote.png"))
+
+```
+
+## Gray Wolf {-}
+
+```{r gwjem, fig.cap="Gray Wolf Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/BADR Gray Wolf.png"))
+
+```
+
+## Moose {-}
+
+```{r moojem, fig.cap="Moose Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/BADR Moose.png"))
+
+```
+
+## Snowshoe Hare {-}
+
+```{r shjem, fig.cap="Snowshoe Hare Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/BADR Snowshoe Hare.png"))
+
+```
+
+## Woodland Caribou {-}
+
+```{r wcjem, fig.cap="White-tailed Deer Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.", fig.align="center", out.width="60%", eval=TRUE, include=TRUE, echo=FALSE}
+
+knitr::include_graphics(here("Communities/MNA Region 1/Figures/BADR Woodland Caribou.png"))
+
+```
+
+# ABMI Species Model Predictions in Study Area
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
