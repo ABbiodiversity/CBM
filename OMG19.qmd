@@ -1,0 +1,90 @@
+---
+title: "Otipemisiwak Métis Government Lac La Biche District 19"
+subtitle: "Oil Sands Monitoring Wildlife Camera Project"
+format:
+  html:
+    grid:
+      margin-width: 300px
+navbar: right
+theme: cosmo
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author:
+  - name: "Cheryl Gordon"
+    affiliation: "Otipemisiwak Métis Government District 19"
+  - name: "David Evans"
+    affiliation: "ABMI"
+    email: "david.evans@ualberta.ca"
+  - name: "Marcus Becker"
+    affiliation: "ABMI"
+    email: "marcus.becker@ualberta.ca"
+  - name: "Robbie Potts"
+    email: "rnpotts@ualberta.ca"
+    affiliation: "ABMI"
+editor: visual
+toc: true
+toc-depth: 3
+toc-expand: true
+toc-location: left
+# styles: styles.css
+---
+
+![](omg19_header.JPG){style="float:left`;" fig-alt="Photo of the ocean" fig-align="center"}
+## Project Introduction
+
+Members of the Otipemisiwak Métis Government Lac La Biche District 19 (OMGD19) are interested in understanding the changes in wildlife condition and behaviour that they are noticing on the land. The health and abundance of wildlife populations is relied upon by members of OMGD19 to support a traditional way of life. To ensure the sustainability of this way of life it is important to understand both how many animals, such as moose, are available for harvest every year and what the drivers of change are in the abundance of wildlife over time. These concerns led to the initiation of this wildlife monitoring program in 2023.
+<br>
+<br>
+In 2023, the Otipemisiwak Métis Government Lac La Biche District 19 created a Community Knowledge Committee comprising both elders and youths to lead this project. This Community Knowledge Committee shares knowledge and disseminates information about the program across age ranges and the region. The Committee engages with ABMI staff about program updates, monitoring methods, study design, site locations, analysis, and integration of Indigenous knowledge indicators.
+<br>
+<br>
+The Committee deployed 18 cameras between October 2023 and October 2024. These cameras were primarily deployed along the Old Conklin Road near Lac La Biche (see Figure below) in clusters of 4 cameras. Cameras were deployed based on the knowledge of the land, areas of interest by the committee and areas of oil sands disturbance.
+<br>
+<br>
+The goal of the program is to evaluate the specific oil sands disturbance type of pipelines and roads compared to reference (low disturbance) areas. To achieve this, 2 clusters of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community.
+
+## Camera Locations
+
+The following interactive map can be used to explore the locations of the cameras deployed by Otipemisiwak Métis Government Lac La Biche District 19. Satellite imagery can switched on and off using the button in the top right of the top.
+
+```{r}
+cam <- makeAwesomeIcon(
+  icon = "camera",
+  iconColor = "black",
+  library = "ion",
+  markerColor = "white"
+)
+
+location_report |>
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
+  leaflet() |>
+  addTiles() |>
+  addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
+  addFullscreenControl() |>
+  addResetMapButton() |>
+  addScaleBar(position = "bottomright", 
+              options = scaleBarOptions(imperial = FALSE)) |>
+  
+  # Camera Locations
+  addAwesomeMarkers(icon = cam,
+                    group = "Camera Locations",
+                    #options = leafletOptions(pane = "Proposed Cameras"),
+                    popup = paste("Location: ", "<b>", location_report$location, "</b>",
+                                  "<br>", "<br>",
+                                  "Notes:", "<br>"
+                                  )) |>
+  
+  # Layers control
+  addLayersControl(overlayGroups = c("Satellite Imagery",
+                                     "Camera Locations"),
+                   options = layersControlOptions(collapsed = FALSE),
+                   position = "topright")
+```
+
+You can add options to executable code like this
+
+```{r}
+#| echo: false
+2 * 2
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
