@@ -1,0 +1,301 @@
+---
+title: "Otipemisiwak Métis Government Lac La Biche District 19"
+subtitle: "Oil Sands Monitoring Wildlife Camera Project"
+format:
+  html:
+    grid:
+      margin-width: 300px
+navbar: right
+theme: cosmo
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author:
+  - name: "Cheryl Gordon"
+    affiliation: "Otipemisiwak Métis Government District 19"
+  - name: "David Evans"
+    affiliation: "ABMI"
+    email: "david.evans@ualberta.ca"
+  - name: "Marcus Becker"
+    affiliation: "ABMI"
+    email: "marcus.becker@ualberta.ca"
+  - name: "Robbie Potts"
+    email: "rnpotts@ualberta.ca"
+    affiliation: "ABMI"
+editor: visual
+toc: true
+toc-depth: 3
+toc-expand: true
+toc-location: left
+# styles: styles.css
+---
+
+![](omg19_header.JPG){style="float:left`;" fig-alt="Photo of the ocean" fig-align="center"}
+
+# Project Introduction
+
+```{r}
+#| label: load-packages and authenticate
+#| include: false
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+# Load packages
+library(tidyverse)
+library(leaflet)
+library(leaflet.extras)
+library(sf)
+library(activity)
+library(overlap)
+library(corrplot)
+library(here)
+
+# Community acronym
+com_acr <- "OMGD19"
+
+# Community full name
+com_full <- "Otipemisiwak Métis Government Lac La Biche District 19"
+
+load(here(paste0("Communities/", com_acr, "/", com_acr, " Data Objects.RData")))
+
+species <- c(
+  "White-tailed Deer", 
+  "Black Bear", 
+  "Moose", 
+  "Coyote", 
+  "Snowshoe Hare",
+  "Canada Lynx", 
+  "Woodland Caribou", 
+  "Gray Wolf")
+
+species_colours <- c(
+  "#4E6E58",  
+  "#A17C6B",  
+  "#79929D",  
+  "#C2B280",  
+  "#5B5B5B",  
+  "#7B9E87",  
+  "#A9A9A9",  
+  "#D6B88A"   
+)
+
+names(species_colours) <- species
+
+```
+
+Members of the __`r com_full`__ (`r com_acr`) are interested in understanding the changes in wildlife condition and behaviour that they are noticing on the land. The health and abundance of wildlife populations is relied upon by members of `r com_acr` to support a traditional way of life. To ensure the sustainability of this way of life it is important to understand both how many animals, such as moose, are available for harvest every year and what the drivers of change are in the abundance of wildlife over time. These concerns led to the initiation of this wildlife monitoring program in 2023.
+<br>
+<br>
+In 2023, the `r com_full` created a Community Knowledge Committee comprising both elders and youths to lead this project. This Community Knowledge Committee shares knowledge and disseminates information about the program across age ranges and the region. The Committee engages with ABMI staff about program updates, monitoring methods, study design, site locations, analysis, and integration of Indigenous knowledge indicators.
+<br>
+<br>
+The Committee deployed 18 cameras between October 2023 and October 2024. These cameras were primarily deployed along the Old Conklin Road near Lac La Biche (see Figure below) in clusters of 4 cameras. Cameras were deployed based on the knowledge of the land, areas of interest by the committee, and areas of oil sands disturbance.
+<br>
+<br>
+The goal of the program is to evaluate the specific oil sands disturbance type of pipelines and roads compared to reference (low disturbance) areas. To achieve this, 2 clusters of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community.
+
+## Camera Refresh and Image Processing
+
+THe wildlife cameras were refreshed (new SD cards and batteries) in the field by the Community Knowledge Committee in 2024 and 2025. The CKC members uploaded and tagged all of the camera images on the online platform [WildTrax](www.wildtrax.ca)[^1]. Initial results from this first year of data collected at the 18 cameras are presented here in this report. 
+
+[^1]: `r com_acr` images and wildlife tags can be viewed using [this link](https://portal.wildtrax.ca/home/camera-deployments.html?sensorId=CAM&projectId=2929) to the WildTrax platform. Note that viewers will need to have a WildTrax account with the appropriate permissions from the community and be logged in to see the images.  
+
+# Camera Locations
+
+The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`. Satellite imagery can switched on and off using the button in the top right of the top.
+
+```{r}
+#| label: camera locations
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+cam <- makeAwesomeIcon(
+  icon = "camera",
+  iconColor = "black",
+  library = "ion",
+  markerColor = "white"
+)
+
+location_report |>
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
+  leaflet() |>
+  addTiles() |>
+  addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
+  addFullscreenControl() |>
+  addResetMapButton() |>
+  addScaleBar(position = "bottomright", 
+              options = scaleBarOptions(imperial = FALSE)) |>
+  addMiniMap(position = "bottomright") |>
+  
+  # Camera Locations
+  addAwesomeMarkers(icon = cam,
+                    group = "Camera Locations",
+                    #options = leafletOptions(pane = "Proposed Cameras"),
+                    popup = paste("Location: ", "<b>", location_report$location, "</b>",
+                                  "<br>", "<br>",
+                                  "Notes:", "<br>"
+                                  )) |>
+  
+  # Layers control
+  addLayersControl(overlayGroups = c("Satellite Imagery",
+                                     "Camera Locations"),
+                   options = layersControlOptions(collapsed = FALSE),
+                   position = "topright") |>
+  
+  hideGroup("Satellite Imagery")
+  
+```
+
+# Number of Images Collected
+
+The figure below displays the total number of images collected on the most common 8 species present in the `r com_full` camera project.
+
+```{r}
+#| label: number of images by species
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(here("Communities/OMGD19/Figures/Number of Images.png"))
+
+```
+
+For a complete list of all the species, you can go to the project on WildTrax and click on the 'Species Verification' tab of the project.
+
+# Independent Detections Over Time
+
+With camera data, one useful metric to track over time is the number of "independent" detections captured for each species. In this case, an independent detection is defined as an image or series of images captured for a given species within a specific time interval. In the figure below we present the number of independent detections for each of the 8 main species using a 30 minute time interval; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals.
+
+```{r}
+#| label: independent detections
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections.png"))
+
+```
+
+Here is displayed each of the species independent detections individually, which can be toggled through using the tabs below. 
+
+::: {.panel-tabset}
+
+### White-tailed Deer {-}
+
+```{r}
+#| label: independent detections wtd
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections White-tailed Deer.png"))
+
+```
+
+### Black Bear {-}
+
+```{r}
+#| label: independent detections bb
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Black Bear.png"))
+
+```
+
+### Canada Lynx {-}
+
+```{r}
+#| label: independent detections cl
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Canada Lynx.png"))
+
+```
+
+### Coyote {-}
+
+```{r}
+#| label: independent detections coyote
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Coyote.png"))
+
+```
+
+### Gray Wolf {-}
+
+```{r}
+#| label: independent detections gw
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Gray Wolf.png"))
+
+```
+
+### Moose {-}
+
+```{r}
+#| label: independent detections moose
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Moose.png"))
+
+```
+
+### Snowshoe Hare {-}
+
+```{r}
+#| label: independent detections hare
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Snowshoe Hare.png"))
+
+```
+
+### Woodland Caribou {-}
+
+```{r}
+#| label: independent detections wc
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Woodland Caribou.png"))
+
+```
+
