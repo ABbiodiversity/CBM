@@ -86,6 +86,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<link rel="stylesheet" href="assets/styles.css">
 </head>
 
 <body>
@@ -100,8 +101,13 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#camera-refresh-and-image-processing" id="toc-camera-refresh-and-image-processing" class="nav-link" data-scroll-target="#camera-refresh-and-image-processing">Camera Refresh and Image Processing</a></li>
   </ul></li>
+  <li><a href="#camera-locations" id="toc-camera-locations" class="nav-link" data-scroll-target="#camera-locations">Camera Locations</a></li>
   <li><a href="#number-of-images-collected" id="toc-number-of-images-collected" class="nav-link" data-scroll-target="#number-of-images-collected">Number of Images Collected</a></li>
   <li><a href="#independent-detections-over-time" id="toc-independent-detections-over-time" class="nav-link" data-scroll-target="#independent-detections-over-time">Independent Detections Over Time</a></li>
+  <li><a href="#temporal-activity-patterns" id="toc-temporal-activity-patterns" class="nav-link" data-scroll-target="#temporal-activity-patterns">Temporal Activity Patterns</a></li>
+  <li><a href="#species-co-occurences" id="toc-species-co-occurences" class="nav-link" data-scroll-target="#species-co-occurences">Species Co-Occurences</a></li>
+  <li><a href="#evaluating-oil-sands-disturbances" id="toc-evaluating-oil-sands-disturbances" class="nav-link" data-scroll-target="#evaluating-oil-sands-disturbances">Evaluating Oil Sands Disturbances</a></li>
+  <li><a href="#comparison-to-regional-osm-monitoring" id="toc-comparison-to-regional-osm-monitoring" class="nav-link" data-scroll-target="#comparison-to-regional-osm-monitoring">Comparison to Regional OSM Monitoring</a></li>
   </ul>
 </nav>
 </div>
@@ -172,25 +178,75 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="omg19_header.JPG" class="img-fluid quarto-figure quarto-figure-center figure-img" style="float:left`;" alt="Photo of the ocean"></p>
-</figure>
+<p><br></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="gallery-carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+<div class="carousel-indicators">
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="0" aria-label="Slide 1" class="active" aria-current="true"></button>
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+</div>
+<div class="carousel-inner">
+<div class="carousel-item active" data-bs-interval="5000">
+<a href="">
+<img src="images/OMGD19/IMG_7196.JPG" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">OMGD19 members deploying cameras</p>
+</div>
+</div>
+<div class="carousel-item" data-bs-interval="5000">
+<a href="">
+<img src="images/OMGD19/IMG_8386.JPG" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">Gathered around the fire</p>
+</div>
+</div>
+<div class="carousel-item" data-bs-interval="5000">
+<a href="">
+<img src="images/OMGD19/IMG_8397.JPG" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">OMGD19 members carefully collecting metadata</p>
+</div>
+</div>
+</div>
+<button class="carousel-control-prev" type="button" data-bs-target="#gallery-carousel" data-bs-slide="prev">
+<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Prevoius</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#gallery-carousel" data-bs-slide="next">
+<span class="carousel-control-next-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Next</span>
+</button>
+</div>
+</div>
 </div>
 <section id="project-introduction" class="level1">
 <h1>Project Introduction</h1>
-<p>Members of the <strong>Otipemisiwak Métis Government Lac La Biche District 19</strong> (<strong>OMGD19</strong>) are interested in understanding the changes in wildlife condition and behaviour that they are noticing on the land. The health and abundance of wildlife populations is relied upon by members of OMGD19 to support a traditional way of life. To ensure the sustainability of this way of life it is important to understand both how many animals, such as moose, are available for harvest every year and what the drivers of change are in the abundance of wildlife over time. These concerns led to the initiation of this wildlife monitoring program in 2023. <br> <br> In 2023, OMGD19 created a Community Knowledge Committee comprising both elders and youths to lead this project. This Community Knowledge Committee shares knowledge and disseminates information about the program across age ranges and the region. The Committee engages with ABMI staff about program updates, monitoring methods, study design, site locations, analysis, and integration of Indigenous knowledge indicators. <br> <br> The Committee deployed 18 cameras between October 2023 and October 2024. These cameras were primarily deployed along the Old Conklin Road near Lac La Biche (see Figure below) in clusters of 4 cameras. Cameras were deployed based on the knowledge of the land, areas of interest by the committee, and areas of oil sands disturbance. <br> <br> The goal of the program is to evaluate the specific oil sands disturbance type of pipelines and roads compared to reference (low disturbance) areas. To achieve this, 2 clusters of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community.</p>
+<p>Members of the <strong>Otipemisiwak Métis Government Lac La Biche District 19</strong> (<strong>OMGD19</strong>) are interested in understanding the changes in wildlife condition and behaviour that they are noticing on the land. The health and abundance of wildlife populations is relied upon by members of OMGD19 to support a traditional way of life. To ensure the sustainability of this way of life it is important to understand both how many animals, such as moose, are available for harvest every year and what the drivers of change are in the abundance of wildlife over time. These concerns led to the initiation of this wildlife monitoring program in 2023. <br> <br> In 2023, OMGD19 created a Community Knowledge Committee comprising both elders and youths to lead this project. This Community Knowledge Committee shares knowledge and disseminates information about the program across age ranges and the region. The Committee engages with ABMI staff about program updates, monitoring methods, study design, site locations, analysis, and integration of Indigenous knowledge indicators.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="images/OMGD19/community%20knowledge%20committee.JPG" class="img-fluid quarto-figure quarto-figure-center figure-img" style="float:left`;" alt="Community Members"></p>
+</figure>
+</div>
+<p>The Committee deployed 18 cameras between October 2023 and October 2024. These cameras were primarily deployed along the Old Conklin Road near Lac La Biche (see Figure below) in clusters of 4 cameras. Cameras were deployed based on the knowledge of the land, areas of interest by the committee, and areas of oil sands disturbance. <br> <br> The goal of the program is to evaluate the specific oil sands disturbance type of pipelines and roads compared to reference (low disturbance) areas. To achieve this, 2 clusters of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community.</p>
 <section id="camera-refresh-and-image-processing" class="level2">
 <h2 class="anchored" data-anchor-id="camera-refresh-and-image-processing">Camera Refresh and Image Processing</h2>
 <p>The wildlife cameras were refreshed (given new SD cards and batteries) in the field by the Community Knowledge Committee in 2024 and 2025. The CKC members uploaded and tagged all of the camera images on the online platform <a href="www.wildtrax.ca">WildTrax</a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Initial results from this first year of data collected at the 18 cameras are presented here in this report.</p>
+</section>
+</section>
+<section id="camera-locations" class="level1">
+<h1>Camera Locations</h1>
 <p>The following interactive map can be used to explore the locations of the cameras deployed by Otipemisiwak Métis Government Lac La Biche District 19. Satellite imagery can switched on and off using the button in the top right of the top.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item" id="htmlwidget-08cf8d37301991dcff1d" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-08cf8d37301991dcff1d">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"fullscreenControl":{"position":"topleft","pseudoFullscreen":false}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addProviderTiles","args":["Esri.WorldImagery",null,"Satellite Imagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addEasyButton","args":[{"icon":"ion-arrow-shrink","title":"Reset View","onClick":"function(btn, map){ map.setView(map._initialCenter, map._initialZoom); }","position":"topleft"}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":false,"updateWhenIdle":true,"position":"bottomright"}]},{"method":"addMiniMap","args":[null,null,"bottomright",150,150,19,19,-5,false,false,false,false,false,false,{"color":"#ff7800","weight":1,"clickable":false},{"color":"#000000","weight":1,"clickable":false,"opacity":0,"fillOpacity":0},{"hideText":"Hide MiniMap","showText":"Show MiniMap"},[]]},{"method":"addAwesomeMarkers","args":[[55.560068,55.56709,55.568538,55.537764,55.547846,55.36146,55.371061,55.36786,55.36949,55.36631,55.32064,55.35634,55.35455,55.35157,55.29901,55.28927,55.30961,55.307951],[-111.469614,-111.474983,-111.459946,-111.511337,-111.491695,-111.89161,-111.753376,-111.76221,-111.76476,-111.77514,-111.81004,-111.89178,-111.89924,-111.9051,-111.95199,-111.96678,-111.92894,-111.941971],{"icon":"camera","markerColor":"white","iconColor":"black","spin":false,"squareMarker":false,"iconRotate":0,"font":"monospace","prefix":"ion"},null,"Camera Locations",{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Location:  <b> MNA19-1-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-1-2 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-1-3 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-2-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-2-2 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-5-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-3-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-3-2 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-3-3 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-3-4 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-4-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-5-2 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-5-3 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-5-4 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-6-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-6-3 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-6-4 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-6-2 <\/b> <br> <br> Notes: <br>"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[[],["Satellite Imagery","Camera Locations"],{"collapsed":false,"autoZIndex":true,"position":"topright"}]},{"method":"hideGroup","args":["Satellite Imagery"]}],"limits":{"lat":[55.28927,55.568538],"lng":[-111.96678,-111.459946]}},"evals":["calls.2.args.0.onClick"],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x){\n  var map = this;\n  map.whenReady(function(){\n    map._initialCenter = map.getCenter();\n    map._initialZoom = map.getZoom();\n  });\n}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-e428d693bc7e902e1bd2" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-e428d693bc7e902e1bd2">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"fullscreenControl":{"position":"topleft","pseudoFullscreen":false}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addProviderTiles","args":["Esri.WorldImagery",null,"Satellite Imagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addEasyButton","args":[{"icon":"ion-arrow-shrink","title":"Reset View","onClick":"function(btn, map){ map.setView(map._initialCenter, map._initialZoom); }","position":"topleft"}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":false,"updateWhenIdle":true,"position":"bottomright"}]},{"method":"addMiniMap","args":[null,null,"bottomright",150,150,19,19,-5,false,false,false,false,false,false,{"color":"#ff7800","weight":1,"clickable":false},{"color":"#000000","weight":1,"clickable":false,"opacity":0,"fillOpacity":0},{"hideText":"Hide MiniMap","showText":"Show MiniMap"},[]]},{"method":"addAwesomeMarkers","args":[[55.560068,55.56709,55.568538,55.537764,55.547846,55.36146,55.371061,55.36786,55.36949,55.36631,55.32064,55.35634,55.35455,55.35157,55.29901,55.28927,55.30961,55.307951],[-111.469614,-111.474983,-111.459946,-111.511337,-111.491695,-111.89161,-111.753376,-111.76221,-111.76476,-111.77514,-111.81004,-111.89178,-111.89924,-111.9051,-111.95199,-111.96678,-111.92894,-111.941971],{"icon":"camera","markerColor":"white","iconColor":"black","spin":false,"squareMarker":false,"iconRotate":0,"font":"monospace","prefix":"ion"},null,"Camera Locations",{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Location:  <b> MNA19-1-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-1-2 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-1-3 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-2-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-2-2 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-5-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-3-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-3-2 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-3-3 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-3-4 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-4-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-5-2 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-5-3 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-5-4 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-6-1 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-6-3 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-6-4 <\/b> <br> <br> Notes: <br>","Location:  <b> MNA19-6-2 <\/b> <br> <br> Notes: <br>"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[[],["Satellite Imagery","Camera Locations"],{"collapsed":false,"autoZIndex":true,"position":"topright"}]},{"method":"hideGroup","args":["Satellite Imagery"]}],"limits":{"lat":[55.28927,55.568538],"lng":[-111.96678,-111.459946]}},"evals":["calls.2.args.0.onClick"],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x){\n  var map = this;\n  map.whenReady(function(){\n    map._initialCenter = map.getCenter();\n    map._initialZoom = map.getZoom();\n  });\n}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
 </div>
 </div>
-</section>
 </section>
 <section id="number-of-images-collected" class="level1">
 <h1>Number of Images Collected</h1>
@@ -313,13 +369,335 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
+<section id="temporal-activity-patterns" class="level1">
+<h1>Temporal Activity Patterns</h1>
+<p>Given that camera traps operate 24 hours a day, 7 days a week, and can record animal motion down to second-level precision, they represent a powerful tool to explore and contrast the activity patterns of the species they detect. Such analyses can give insight into competition, predation, and coexistence.</p>
+<p>In this section we present the temporal (diel) activity patterns for each of the 8 species from the Otipemisiwak Métis Government Lac La Biche District 19 cameras.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">White-tailed Deer</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Black Bear</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Canada Lynx</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false" href="">Coyote</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false" href="">Gray Wolf</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-6" role="tab" aria-controls="tabset-2-6" aria-selected="false" href="">Moose</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-7" role="tab" aria-controls="tabset-2-7" aria-selected="false" href="">Snowshoe Hare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-8" role="tab" aria-controls="tabset-2-8" aria-selected="false" href="">Woodland Caribou</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="OMGD19_files/figure-html/temporal%20patterns%20wtd-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>White-tailed deer demonstrate a diurnal activity pattern, with peaks both during the dawn (6am-9am) and dusk (7pm) periods of the day.</p>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="OMGD19_files/figure-html/temporal%20patterns%20bb-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Black Bear are more active in the evenings and overnight.</p>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="OMGD19_files/figure-html/temporal%20patterns%20cl-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="OMGD19_files/figure-html/temporal%20patterns%20coyote-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Coyotes are primarily active during the nighttime.</p>
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="OMGD19_files/figure-html/temporal%20patterns%20gw-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Wolves are primarily active at dusk.</p>
+</div>
+<div id="tabset-2-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-6-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="OMGD19_files/figure-html/temporal%20patterns%20moose-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Moose activity peaks during the nighttime and dawn periods, with much less activity throughout the day.</p>
+</div>
+<div id="tabset-2-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-7-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="OMGD19_files/figure-html/temporal%20patterns%20sh-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Snowshoe Hare are most active at night, with very few detections on the cameras during the day.</p>
+</div>
+<div id="tabset-2-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-8-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="OMGD19_files/figure-html/temporal%20patterns%20wc-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Caribou are most active during the midday.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="species-co-occurences" class="level1">
+<h1>Species Co-Occurences</h1>
+<p>Camera trap data are being increasingly used to model multiple species communities, and we can use this data to explore the co-occurrence patterns of the species in the community.</p>
+<p>The plot below displays pairwise correlations between the species on the left and the species on the top row. Blue colours indicate positive correlation, meaning that the two species are positively associated with one another. Red colours indicate the opposite, that where you have high counts of one species you likely have low counts of the other (and vice versa).</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="OMGD19_files/figure-html/species%20co-occurrences-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="evaluating-oil-sands-disturbances" class="level1">
+<h1>Evaluating Oil Sands Disturbances</h1>
+<p>In this section we present the results from Otipemisiwak Métis Government Lac La Biche District 19 camera deployments evaluating the impact of specific oil sands stressors on wildlife within OMGD19: pipelines and roads. To do this, we estimated the species-specific density at each camera using the Time in Front of Camera (TIFC) approach (Becker et al., 2022). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Analagous to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area effectively sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., ‘density’).</p>
+<p>The following plots show the average camera density at each of the clusters. There are 3 reference clusters, 2 road clusters, and 1 linear features cluster (pipelines). The tabs can be used to toggle through each individual species results.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">White-tailed Deer</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Black Bear</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false" href="">Canada Lynx</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false" href="">Coyote</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-5" role="tab" aria-controls="tabset-3-5" aria-selected="false" href="">Gray Wolf</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-6" role="tab" aria-controls="tabset-3-6" aria-selected="false" href="">Moose</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-7" role="tab" aria-controls="tabset-3-7" aria-selected="false" href="">Snowshoe Hare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-8" role="tab" aria-controls="tabset-3-8" aria-selected="false" href="">Woodland Caribou</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/White-tailed%20Deer%20Density%20Treatments.png" class="img-fluid figure-img" width="500"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/Black%20Bear%20Density%20Treatments.png" class="img-fluid figure-img" width="500"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/Canada%20Lynx%20Density%20Treatments.png" class="img-fluid figure-img" width="500"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-4-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/Coyote%20Density%20Treatments.png" class="img-fluid figure-img" width="500"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-5-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/Gray%20Wolf%20Density%20Treatments.png" class="img-fluid figure-img" width="500"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-6-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/Moose%20Density%20Treatments.png" class="img-fluid figure-img" width="500"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-7-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/Snowshoe%20Hare%20Density%20Treatments.png" class="img-fluid figure-img" width="500"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-8-tab">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/Woodland%20Caribou%20Density%20Treatments.png" class="img-fluid figure-img" width="500"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="comparison-to-regional-osm-monitoring" class="level1">
+<h1>Comparison to Regional OSM Monitoring</h1>
+<p>In this section we compare the results from the 6 camera clusters deployed by OMGD19 to those deployed as part of the broader regional OSM monitoring done by the ABMI. The ABMI deploys clusters of cameras (called ‘Joint Environmental Monitoring Sites’, or JEMS) in a similar fashion to MNA Region 1, targeting the physical footprint and adjacent areas of oil sands disturbances. These disturbances include linear features, low activity well pads, high activity in situ facilities, oil sands roads, and processing plant/mining operations. Low disturbance (reference) areas are also surveyed.</p>
+<p>There are two common stressors examined by the MNA Region 1 cameras and the regional monitoring done by the ABMI: linear features and roads, as well as reference areas. In the figures below for each species, we plot out the values obtained from ABMI JEM sites alongside the MNA Region 1 values, as well as the overall mean value for each treatment.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-4-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-1" role="tab" aria-controls="tabset-4-1" aria-selected="true" href="">White-tailed Deer</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-2" role="tab" aria-controls="tabset-4-2" aria-selected="false" href="">Black Bear</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-3" role="tab" aria-controls="tabset-4-3" aria-selected="false" href="">Canada Lynx</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-4" role="tab" aria-controls="tabset-4-4" aria-selected="false" href="">Coyote</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-5" role="tab" aria-controls="tabset-4-5" aria-selected="false" href="">Gray Wolf</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-6" role="tab" aria-controls="tabset-4-6" aria-selected="false" href="">Moose</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-7-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-7" role="tab" aria-controls="tabset-4-7" aria-selected="false" href="">Snowshoe Hare</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-4-8-tab" data-bs-toggle="tab" data-bs-target="#tabset-4-8" role="tab" aria-controls="tabset-4-8" aria-selected="false" href="">Woodland Caribou</a></li></ul>
+<div class="tab-content">
+<div id="tabset-4-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-4-1-tab">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/BADR%20White-tailed%20Deer.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>White-tailed Deer Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/BADR%20Black%20Bear.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Black Bear Results from Regional OSM Monitoring</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-3-tab">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/BADR%20Canada%20Lynx.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Canada Lynx Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-4-tab">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/BADR%20Coyote.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Coyote Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-5-tab">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/BADR%20Gray%20Wolf.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Gray Wolf Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-6-tab">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/BADR%20Moose.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Moose Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-7" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-7-tab">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/BADR%20Snowshoe%20Hare.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>Snowshoe Hare Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-4-8" class="tab-pane" role="tabpanel" aria-labelledby="tabset-4-8-tab">
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Communities/OMGD19/Figures/BADR%20Woodland%20Caribou.png" class="img-fluid figure-img" style="width:60.0%"></p>
+<figcaption>White-tailed Deer Results from Regional OSM Monitoring. Error bars on the mean value represent a 90% confidence value.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
 
 
 <div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
 
 <ol>
-<li id="fn1"><p>OMGD19 images and wildlife tags can be viewed using <a href="https://portal.wildtrax.ca/home/camera-deployments.html?sensorId=CAM&amp;projectId=2929">this link</a> to the WildTrax platform. Note that viewers will need to have a WildTrax account with the appropriate permissions from the community and be logged in to see the images.<br>
-# Camera Locations<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>OMGD19 images and wildlife tags can be viewed using <a href="https://portal.wildtrax.ca/home/camera-deployments.html?sensorId=CAM&amp;projectId=2929">this link</a> to the WildTrax platform. Note that viewers will need to have a WildTrax account with the appropriate permissions from the community and be logged in to see the images.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section></div></main>
 <!-- /main column -->

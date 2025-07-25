@@ -1,0 +1,31 @@
+---
+title: "Image Carousel Demo"
+format: 
+  html:
+    theme: cosmo
+    toc: false
+---
+
+## Image Carousel Test
+
+This should show an interactive Bootstrap carousel with navigation arrows.
+
+<!-- Start of Carousel -->
+<div id="carouselExample" class="carousel slide" data-bs-ride="carousel" style="max-width: 700px; margin: auto;">
+
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="https://via.placeholder.com/700x400.png?text=Slide+1" class="d-block w-100">
+  </div>
+
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+
+</div>
+<!-- End of Carousel -->

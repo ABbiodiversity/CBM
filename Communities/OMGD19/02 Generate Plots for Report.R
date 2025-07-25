@@ -11,7 +11,7 @@ library(tidyverse)
 library(wildrtrax)
 
 # Load data
-load("Communities/MNA Region 1/MNA Region 1 Data Objects.RData")
+load("Communities/OMGD19/OMGD19 Data Objects.RData")
 
 species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
              "Canada Lynx", "Woodland Caribou", "Gray Wolf")
@@ -110,7 +110,7 @@ plot2 <- df_ind_detect |>
 
 plot2
 
-ggsave(filename = "Communities/MNA Region 1/Figures/Independent Detections.png", plot2,
+ggsave(filename = "Communities/OMGD19/Figures/Independent Detections.png", plot2,
        width = 7, height = 7, dpi = 250, bg = "white")
 
 # Now we do each species individually
