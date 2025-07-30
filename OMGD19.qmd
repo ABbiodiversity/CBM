@@ -5,6 +5,7 @@ format:
   html:
     grid:
       margin-width: 300px
+      body-width: 1050px
 navbar: right
 theme: cosmo
 date: "`r format(Sys.time(), '%d %B, %Y')`"
@@ -31,13 +32,16 @@ css: assets/styles.css
 <br>
 
 ```{r}
-#| classes: 
 #| warning: false
 #| echo: false
 source("Functions/Carousel.R")
-carousel("gallery-carousel", 5000, 
+carousel("gallery-carousel", 10000, 
          yaml.load_file("carousel.yml"))
 ```
+
+::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
+This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, refer to the publication date and feel free to reach out to the authors.
+:::
 
 # Project Introduction
 
@@ -57,6 +61,7 @@ library(sf)
 library(activity)
 library(overlap)
 library(corrplot)
+library(DT)
 library(here)
 
 # Community acronym
@@ -65,10 +70,11 @@ com_acr <- "OMGD19"
 # Community full name
 com_full <- "Otipemisiwak Métis Government Lac La Biche District 19"
 
-# Root folder for Community
-g_drive <- paste0("G:/Shared drives/CBME Community Camera Results/", com_acr, "/")
+# Google Drive
+g_drive_cbme <- "G:/Shared drives/CBME Community Camera Results/"
 
-load(here(paste0("Communities/", com_acr, "/", com_acr, " Data Objects.RData")))
+# Load data from the community (including pre-processed data)
+load(paste0(g_drive_cbme, com_acr, "/Data/", com_acr, " Data Objects.RData"))
 
 species <- c(
   "White-tailed Deer", 
@@ -100,29 +106,49 @@ Members of the __`r com_full`__ (__`r com_acr`__) are interested in understandin
 <br>
 In 2023, `r com_acr` created a Community Knowledge Committee comprising both elders and youths to lead this project. This Community Knowledge Committee shares knowledge and disseminates information about the program across age ranges and the region. The Committee engages with ABMI staff about program updates, monitoring methods, study design, site locations, analysis, and integration of Indigenous knowledge indicators.
 
+<br>
 
-![](images/OMGD19/community knowledge committee.JPG){style="float:left`;" fig-alt="Community Members" fig-align="center"}
+```{r}
+#| label: fig-ckc
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| fig-cap: "Community Knowledge Committee with ABMI staff."
+#| fig-align: center
+#| out-width: "80%"
 
+knitr::include_graphics("Images/OMGD19/CKC.JPG")
 
-The Committee deployed 18 cameras between October 2023 and October 2024. These cameras were primarily deployed along the Old Conklin Road near Lac La Biche (see Figure below) in clusters of 4 cameras. Cameras were deployed based on the knowledge of the land, areas of interest by the committee, and areas of oil sands disturbance.
+```
+
+<br>
+
+The Committee deployed 18 cameras between late September 2023 and October 2024. These cameras were primarily deployed along the Old Conklin Road near Lac La Biche (see Figure below) in clusters of 4 cameras. Cameras were deployed based on the knowledge of the land, areas of interest by the committee, and areas of oil sands disturbance.
 <br>
 <br>
-The goal of the program is to evaluate the specific oil sands disturbance type of pipelines and roads compared to reference (low disturbance) areas. To achieve this, 2 clusters of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community.
+The goal of the program is to evaluate the specific oil sands disturbance type of **pipelines** and **roads** compared to reference (low disturbance) areas. To achieve this, 2 clusters of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community.
 
 ## Camera Refresh and Image Processing
 
-The wildlife cameras were refreshed (given new SD cards and batteries) in the field by the Community Knowledge Committee in 2024 and 2025. The CKC members uploaded and tagged all of the camera images on the online platform [WildTrax](www.wildtrax.ca)[^1]. Initial results from this first year of data collected at the 18 cameras are presented here in this report. 
+The wildlife cameras were refreshed (given new SD cards and batteries) in the field by the Community Knowledge Committee in 2024 and 2025. The CKC members uploaded and tagged all of the camera images on the online platform [WildTrax](www.wildtrax.ca)[^1]. WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) for users of environmental sensors such as remote cameras to provide support with processing, standardizing, and sharing data. Initial results from this first year of data collected at the 18 cameras are presented here in this report. 
 
 [^1]: `r com_acr` images and wildlife tags can be viewed using [this link](https://portal.wildtrax.ca/home/camera-deployments.html?sensorId=CAM&projectId=2929) to the WildTrax platform. Note that viewers will need to have a WildTrax account with the appropriate permissions from the community and be logged in to see the images.
 
 # Camera Locations
 
-The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`. Satellite imagery can switched on and off using the button in the top right of the top.
+The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`. Satellite imagery can switched on and off using the button in the top left of the top.
+
+Click each camera location to see it's name, assigned treatment (road, pipeline, or reference), and when it was deployed and refreshed. 
+
+<br>
 
 ```{r}
-#| label: camera locations
+#| label: map-camera-locations
 #| include: true
 #| echo: false
+#| results: asis
 #| eval: true
 #| warning: false
 #| message: false
@@ -134,67 +160,92 @@ cam <- makeAwesomeIcon(
   markerColor = "white"
 )
 
-location_report |>
-  st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
-  leaflet() |>
-  addTiles() |>
-  addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
-  addFullscreenControl() |>
-  addResetMapButton() |>
-  addScaleBar(position = "bottomright", 
-              options = scaleBarOptions(imperial = FALSE)) |>
-  addMiniMap(position = "bottomright") |>
+location_ranges <- df_od |>
+  group_by(project_location) |>
+  summarize(start_date = min(date), end_date = max(date), .groups = "drop") |>
+  separate(project_location, into = c("project", "location"), sep = "_")
+
+locations_for_map <- location_report |>
+  # Indicate Treatment
+  mutate(treatment = case_when(
+    str_detect(location, "MNA19-1-") ~ "Road",
+    str_detect(location, "MNA19-2-") ~ "Road",
+    str_detect(location, "MNA19-3-") ~ "Reference (Low Disturbance)",
+    str_detect(location, "MNA19-4-") ~ "Reference (Low Disturbance)",
+    str_detect(location, "MNA19-5-") ~ "Pipeline",
+    str_detect(location, "MNA19-6-") ~ "Reference (Low Disturbance)"
+  )) |>
+  left_join(location_ranges, by = "location")
+
+htmltools::tags$div(
+  style = "display: flex; justify-content: center;",
   
-  # Camera Locations
-  addAwesomeMarkers(icon = cam,
-                    group = "Camera Locations",
-                    #options = leafletOptions(pane = "Proposed Cameras"),
-                    popup = paste("Location: ", "<b>", location_report$location, "</b>",
-                                  "<br>", "<br>",
-                                  "Notes:", "<br>"
-                                  )) |>
-  
-  # Layers control
-  addLayersControl(overlayGroups = c("Satellite Imagery",
-                                     "Camera Locations"),
-                   options = layersControlOptions(collapsed = FALSE),
-                   position = "topright") |>
-  
-  hideGroup("Satellite Imagery")
+  leaflet(data = st_as_sf(locations_for_map, coords = c("longitude", "latitude"), crs = 4326), 
+          width = "90%", height = "750px") |>
+    addTiles() |>
+    addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
+    addFullscreenControl() |>
+    addResetMapButton() |>
+    addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE)) |>
+    addMiniMap(position = "bottomright") |>
+    addAwesomeMarkers(
+      icon = makeAwesomeIcon(icon = "camera", iconColor = "black", library = "ion", markerColor = "white"),
+      group = "Camera Locations",
+      popup = paste(
+        "<b>", "Location: ", "</b>", locations_for_map$location, "<br><br>",
+        "<b>", "Treatment:", "</b>", locations_for_map$treatment, "<br><br>",
+        "<b>", "Deployed:", "</b>", locations_for_map$start_date, "<br><br>",
+        "<b>", "Refreshed:", "</b>", locations_for_map$end_date, "<br><br>"
+      )
+    ) |>
+    addLayersControl(
+      overlayGroups = c("Satellite Imagery", "Camera Locations"),
+      options = layersControlOptions(collapsed = FALSE),
+      position = "topleft"
+    )
+)
   
 ```
+
+<br>
 
 # Number of Images Collected
 
-The figure below displays the total number of images collected on the most common 8 species present in the `r com_full` camera project.
+@fig-nimages below displays the total number of images collected on the most common 8 species present in the `r com_full` camera project. The most commonly observed species was `r nimages[1, 1] |> pull()` with `r nimages[1, 2] |> pull()` images collected over the course of the project. 
 
 ```{r}
-#| label: number of images by species
+#| label: fig-nimages
+#| fig-cap: "Number of images captured by species"
+#| fig-cap-location: bottom
+#| fig-dpi: 300
+#| out-width: "70%"
 #| include: true
 #| echo: false
 #| eval: true
 #| warning: false
 #| message: false
 
-knitr::include_graphics(here("Communities/OMGD19/Figures/Number of Images.png"))
+knitr::include_graphics(paste0("Figures/", com_acr, "/Number of Images.png"))
 
 ```
 
-
-
-For a complete list of all the species, you can go to the project on WildTrax and click on the 'Species Verification' tab of the project.
+For a complete list of all the species, you can go to the project on WildTrax and click on the 'Species' tab of the project.
 
 # Independent Detections Over Time
 
-With camera data, one useful metric to track over time is the number of "independent" detections captured for each species. In this case, an independent detection is defined as an image or series of images captured for a given species within a specific time interval. In the figure below we present the number of independent detections for each of the 8 main species using a 30 minute time interval; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals.
+With camera data, one useful metric to track over time is the number of "independent" detections captured for each species. In this case, an independent detection is defined as an image or series of images captured for a given species within a specific time interval. 
+
+In the figure below we present the number of independent detections for each of the 8 most common species detected in the `r com_acr` project using a 30 minute time interval; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals.
 
 ```{r}
 #| label: independent detections
-#| include: true
+#| include: false
 #| echo: false
-#| eval: true
+#| eval: false
 #| warning: false
 #| message: false
+
+# This is the overall faceted independent detections plot, which I think is a bit confusing, so I'm leaving it out for now. 
 
 knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections.png"))
 
@@ -202,119 +253,99 @@ knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections.
 
 Here is displayed each of the species independent detections individually, which can be toggled through using the tabs below.
 
-::: panel-tabset
-### White-tailed Deer {.unnumbered}
+Note that the y-axis of the plots for each species may differ depending on the number of detections captured. The x-axis represents the camera deployment span in this project, from October 2023 to October 2024.
 
 ```{r}
-#| label: independent detections wtd
+#| echo: false
+#| results: asis
+#| include: true
+#| eval: true
+#| warning: false
+#| message: false
+
+file_names <- paste0("Independent Detections ", species, ".png")
+
+figure_letters <- letters[1:length(species)]
+
+cat("::: panel-tabset\n\n")
+
+for (i in seq_along(species)) {
+  title <- species[i]
+  letter <- figure_letters[i]
+  img_path <- here::here("Figures/OMGD19", file_names[i])
+  rel_path <- fs::path_rel(img_path, start = getwd())
+
+  cat("### ", title, " {.unnumbered}\n\n", sep = "")
+  
+  # Output raw HTML as a single string
+  html <- glue::glue(
+    '<div style="text-align: center;">
+       <img src="{rel_path}" style="width:80%;">
+       <figcaption style="text-align: center; font-size: 0.95em; margin-top: 0.5em;">
+         <strong>Figure 1{letter}.</strong> Independent detections of <em>{title}</em>
+       </figcaption>
+     </div>\n\n'
+  )
+  
+  cat(html)
+}
+
+cat(":::\n")
+
+```
+
++ **White-tailed deer** were primarily detected in the summer months of June, July, and August. 
++ Because they are nocturnal, detection of **Black Bears** began in May.
++ **Moose** were consistently detected year round, as were **Coyote** and **Canada Lynx**.
++ Detections of **Snowshoe Hare** were also consistent year round, with the exception of the later summer months (August).
++ **Woodland Caribou** and **Gray Wolf** detections were infrequent and sporadic across the duration of the project.
+
+<br>
+
+The table below summarises the number of images collected for each species and the number of independent detections.
+
+<br>
+
+```{r}
 #| include: true
 #| echo: false
 #| eval: true
 #| warning: false
 #| message: false
+#| results: asis
 
-knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections White-tailed Deer.png"))
+ndetect <- df_ind_detect |>
+  group_by(species_common_name) |>
+  tally(name = "detect") |>
+  filter(species_common_name != "Unidentified")
 
-```
+joined_table <- nimages |>
+  left_join(ndetect, by = "species_common_name")
 
-### Black Bear {.unnumbered}
+htmltools::div(
+  style = "display: flex; flex-direction: column; align-items: center;",
 
-```{r}
-#| label: independent detections bb
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
+  htmltools::tagList(
+    DT::datatable(
+      joined_table,
+      options = list(
+        searching = TRUE,
+        paging = TRUE,
+        pageLength = 10,
+        autoWidth = TRUE
+      ),
+      width = "70%",
+      colnames = c("Species", "Number of Images", "Number of Detections")
+    ),
 
-knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Black Bear.png"))
-
-```
-
-### Canada Lynx {.unnumbered}
-
-```{r}
-#| label: independent detections cl
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Canada Lynx.png"))
-
-```
-
-### Coyote {.unnumbered}
-
-```{r}
-#| label: independent detections coyote
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Coyote.png"))
+    htmltools::tags$figcaption(
+      style = "text-align: center; font-size: 1.1em; margin-top: 0.5em;",
+      strong("Table 1."), " Number of images captured and independent detections by species in the camera project."
+    )
+  )
+)
 
 ```
-
-### Gray Wolf {.unnumbered}
-
-```{r}
-#| label: independent detections gw
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Gray Wolf.png"))
-
-```
-
-### Moose {.unnumbered}
-
-```{r}
-#| label: independent detections moose
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Moose.png"))
-
-```
-
-### Snowshoe Hare {.unnumbered}
-
-```{r}
-#| label: independent detections hare
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Snowshoe Hare.png"))
-
-```
-
-### Woodland Caribou {.unnumbered}
-
-```{r}
-#| label: independent detections wc
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections Woodland Caribou.png"))
-
-```
-:::
 
 # Temporal Activity Patterns
 
@@ -533,7 +564,16 @@ corrplot(M, method = "color",
 
 # Evaluating Oil Sands Disturbances
 
-In this section we present the results from `r com_full` camera deployments evaluating the impact of specific oil sands stressors on wildlife within `r com_acr`: pipelines and roads. To do this, we estimated the species-specific density at each camera using the Time in Front of Camera (TIFC) approach (Becker et al., 2022). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Analagous to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area effectively sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density'). 
+In this section we present the results from `r com_full` camera deployments evaluating the impact of specific oil sands stressors on wildlife within `r com_acr`: pipelines and roads. To do this, we estimated the species-specific density at each camera using the Time in Front of Camera (TIFC) approach (Becker et al., 2022). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Analagous to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area effectively sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
+
+```{r}
+
+# Map of the densities at each camera. 
+
+```
+
+
+
 
 The following plots show the average camera density at each of the clusters. There are 3 reference clusters, 2 road clusters, and 1 linear features cluster (pipelines). The tabs can be used to toggle through each individual species results.
 

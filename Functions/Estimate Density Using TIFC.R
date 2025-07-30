@@ -377,7 +377,7 @@ group_tags_into_series <- function(tag_report, threshold, summarise = FALSE) {
 #' @param main_report_clean
 #'
 
-calc_time_by_series <- function(main_report_clean) {
+calculate_time_by_series <- function(main_report_clean) {
 
   # Path to Google Drive
   g_drive <- "G:/Shared drives/ABMI Mammals/"

@@ -8,10 +8,12 @@
 
 # Attach packages
 library(tidyverse)
-library(wildrtrax)
+
+# Set path to Shared Google Drive (G Drive) - CBME Community Camera Results
+g_drive_cbme <- "G:/Shared drives/CBME Community Camera Results/"
 
 # Load data
-load("Communities/OMGD19/OMGD19 Data Objects.RData")
+load(paste0(g_drive_cbme, "OMGD19/Data/OMGD19 Data Objects.RData"))
 
 species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
              "Canada Lynx", "Woodland Caribou", "Gray Wolf")
@@ -31,11 +33,38 @@ names(species_colours) <- species
 
 #-----------------------------------------------------------------------------------------------------------------------
 
+# Locations summary
+
+location_ranges <- df_od |>
+  group_by(project_location) |>
+  summarize(start_date = min(date), end_date = max(date), .groups = "drop") |>
+  mutate(project_location = forcats::fct_reorder(project_location, start_date)) |>
+  separate(project_location, into = c("project", "location"), sep = "_")
+
+ggplot(location_ranges, aes(y = location)) +
+  geom_segment(aes(x = start_date, xend = end_date, yend = location),
+               linewidth = 2, color = "steelblue") +
+  scale_x_date(date_breaks = "2 months", date_labels = "%b %Y") +
+  labs(x = "Date", y = "Camera Location",
+       title = "Camera Operation Periods by Location") +
+  theme_minimal() +
+  theme(
+    axis.text.y = element_text(size = 9),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    panel.grid.major.y = element_blank()
+  )
+
+# Not going to save this plot, not very interesting for this community. But will keep the code here.
+
+
+#-----------------------------------------------------------------------------------------------------------------------
+
+
 # Number of Images
 
-remove <- c("Human", "STAFF/SETUP", "NONE", "Vehicle")
+remove <- c("Human", "STAFF/SETUP", "NONE", "Vehicle", "Unidentified")
 
-plot1 <- main_report |>
+nimages <- main_report |>
   mutate(species_common_name = case_when(
     species_common_name == "Deer" ~ "White-tailed Deer",
     species_common_name == "Mule Deer" ~ "White-tailed Deer",
@@ -47,7 +76,10 @@ plot1 <- main_report |>
   tally() |>
   arrange(desc(n)) |>
   filter(!species_common_name %in% remove,
-         n > 40) |>
+         n > 40)
+
+fig_nimages <- nimages |>
+  filter(species_common_name %in% species) |>
   mutate(species_common_name = fct_reorder(as.factor(species_common_name), n)) |>
   ggplot(mapping = aes(x = species_common_name, y = n, fill = species_common_name)) +
   geom_col(color = "black") +
@@ -55,37 +87,34 @@ plot1 <- main_report |>
   coord_flip() +
   scale_y_continuous(labels = scales::comma) +
   labs(title = "",
-       y = "Images",
+       y = "Number of Images",
        x = "") +
   theme_minimal() +
   theme(legend.position = "none",
         axis.text.y = element_text(size = 12),
         axis.text.x = element_text(size = 12),
-        axis.title.x = element_text(size = 16, margin = margin(0.25, 0, 0, 0, unit = "cm")),
+        axis.title.x = element_text(size = 16, margin = margin(0.75, 0, 0, 0, unit = "cm")),
         plot.title = element_text(size = 18))
 
-plot1
+# View the figure
+fig_nimages
 
-ggsave(filename = "Communities/MNA Region 1/Figures/Number of Images.png", plot1,
-       width = 7, height = 5, dpi = 250, bg = "white")
+# Save the figure to Google Drive
+ggsave(filename = paste0(g_drive_cbme, "OMGD19/Figures/Number of Images.png"),
+       fig_nimages,
+       width = 7, height = 5, dpi = 500, bg = "white")
+
+# Save the figure to the Figures folder in the CBM repository
+ggsave(filename = "Figures/OMGD19/Number of Images.png",
+       fig_nimages,
+       width = 7, height = 5, dpi = 500, bg = "white")
 
 #-----------------------------------------------------------------------------------------------------------------------
 
 # Independent Detections
 
-df_ind_detect <- main_report |>
-  mutate(species_common_name = case_when(
-    species_common_name == "Deer" ~ "White-tailed Deer",
-    species_common_name == "Mule Deer" ~ "White-tailed Deer",
-    species_common_name == "Bear" ~ "Black Bear",
-    species_common_name == "Foxes" ~ "Red Fox",
-    str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
-    TRUE ~ species_common_name)) |>
-  mutate(project_id = 2929) |>
+fig_ind_detect_all <- df_ind_detect |>
   filter(species_common_name %in% species) |>
-  wt_ind_detect(threshold = 30, units = "minutes")
-
-plot2 <- df_ind_detect |>
   ggplot(mapping = aes(x = start_time, fill = species_common_name)) +
   geom_histogram(bins = 50) +
   labs(x = "",
@@ -108,31 +137,57 @@ plot2 <- df_ind_detect |>
         axis.text.y = element_text(size = 10),
         axis.title.y = element_text(size = 16))
 
-plot2
+fig_ind_detect_all
 
-ggsave(filename = "Communities/OMGD19/Figures/Independent Detections.png", plot2,
-       width = 7, height = 7, dpi = 250, bg = "white")
+# Save the figure to Google Drive
+ggsave(filename = paste0(g_drive_cbme, "OMGD19/Figures/Independent Detections.png"),
+       fig_ind_detect_all,
+       width = 7, height = 5, dpi = 500, bg = "white")
+
+# Save the figure to the Figures folder in the CBM repository
+ggsave(filename = "Figures/OMGD19/Independent Detections.png",
+       fig_ind_detect_all,
+       width = 7, height = 5, dpi = 500, bg = "white")
 
 # Now we do each species individually
 
+x_range <- range(df_ind_detect$start_time, na.rm = TRUE) + c(-1, 1) * lubridate::days(1)
+
 for (sp in species) {
 
-  plot3 <- df_ind_detect |>
+  p <- df_ind_detect |>
     filter(species_common_name == sp) |>
     ggplot(mapping = aes(x = start_time, fill = species_common_name)) +
     geom_histogram(bins = 50) +
     labs(x = "",
          y = "Number of Detections") +
-    scale_y_continuous(breaks = scales::breaks_pretty()) +
+    scale_y_continuous(
+      limits = function(x) {
+        c(0, max(5, ceiling(max(x, na.rm = TRUE))))
+      },
+      breaks = scales::pretty_breaks(n = 5)
+    ) +
+    scale_x_datetime(
+      limits = x_range,
+      date_breaks = "2 months",
+      date_labels = "%b %Y"
+    ) +
     scale_fill_manual(values = species_colours[sp]) +
     theme_minimal() +
     theme(legend.position = "none",
-          axis.text.x = element_text(size = 9),
-          axis.text.y = element_text(size = 9),
-          axis.title.y = element_text(size = 13))
+          axis.text.x = element_text(size = 11),
+          axis.text.y = element_text(size = 11),
+          axis.title.y = element_text(size = 14, margin = margin(0, 0.5, 0, 0, unit = "cm")))
 
-  ggsave(filename = paste0("Communities/MNA Region 1/Figures/Independent Detections ", sp, ".png"), plot3,
-         width = 5, height = 3, dpi = 250, bg = "white")
+  # Save the figure to Google Drive
+  ggsave(filename = paste0(g_drive_cbme, "OMGD19/Figures/Independent Detections ", sp, ".png"),
+         p,
+         width = 7, height = 5, dpi = 500, bg = "white")
+
+  # Save the figure to the Figures folder in the CBM repository
+  ggsave(filename = paste0("Figures/OMGD19/Independent Detections ", sp, ".png"),
+         p,
+         width = 7, height = 5, dpi = 500, bg = "white")
 
 }
 
@@ -176,34 +231,6 @@ for (sp in species) {
 
 }
 
-
-
-
-#-----------------------------------------------------------------------------------------------------------------------
-
-library(corrplot)
-
-# Make into correct format:
-
-corr <- df_ind_detect |>
-  mutate(species_common_name = factor(species_common_name)) |>
-  group_by(location, species_common_name, .drop = FALSE) |>
-  tally() |>
-  ungroup() |>
-  pivot_wider(id_cols = location, names_from = species_common_name, values_from = n) |>
-  select(-location)
-
-M <- cor(corr)
-
-par(mfrow=c(1,1))
-
-corrplot(M, method = "color",
-         type = "upper",
-         order = "hclust",
-         tl.col = "black", tl.srt = 45,
-         diag = FALSE)
-
-#-----------------------------------------------------------------------------------------------------------------------
 
 # Comparisons to ABMI BADR
 
