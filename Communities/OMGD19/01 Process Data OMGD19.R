@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
-# Title:   Estimate Density 2023-2024 MNA Region 1 Camera Data
+# Title:   Estimate Density 2023-2024 OMGD19 Camera Data
 # Date:    March 2025
 # Authors: Marcus Becker
 
@@ -13,16 +13,25 @@ library(googledrive)
 library(googlesheets4)
 library(overlap)
 library(activity)
+library(corrplot)
 
 # Set path to Shared Google Drive (G Drive) - ABMI Mammals
 g_drive_abmi <- "G:/Shared drives/ABMI Mammals/"
+# Set path to Shared Google Drive (G Drive) - CBME Community Camera Results
+g_drive_cbme <- "G:/Shared drives/CBME Community Camera Results/"
 
 # Species character strings
 load(paste0(g_drive_abmi, "Data/Lookup Tables/WildTrax Species Strings.RData"))
 
+# Source functions
+files <- list.files("Functions", full.names = TRUE)
+for (file in files) {
+  source(file)
+}
+
 # Authenticate into WildTrax
-Sys.setenv(WT_USERNAME = key_get("WT_USERNAME", keyring = "wildtrax"),
-           WT_PASSWORD = key_get("WT_PASSWORD", keyring = "wildtrax"))
+Sys.setenv(WT_USERNAME = key_get("WT_USERNAME"),
+           WT_PASSWORD = key_get("WT_PASSWORD"))
 
 wt_auth()
 
@@ -69,12 +78,9 @@ location_report <- wt_download_report(project_id = project_ids,
 
 # Step 2. Estimate density
 
-# Source functions for density estimation via TIFC workflow
-source("./Functions/Estimate Density Using TIFC.R")
-
 # Deployment time periods
 # First, get operating days (od):
-df_od <- get_operating_days(
+df_od_summary <- get_operating_days(
   image_report = image_report,
   # Keep project
   include_project = TRUE,
@@ -83,6 +89,15 @@ df_od <- get_operating_days(
   # Include ABMI seasons
   .abmi_seasons = TRUE
 )
+
+# Also pull the raw od
+df_od <- get_operating_days(
+  image_report = image_report,
+  include_project = TRUE,
+  summarise = FALSE,
+  .abmi_seasons = TRUE
+)
+
 
 # Calculate time in front of camera (TIFC)
 
@@ -99,14 +114,14 @@ df_tifc <- main_report |>
   # First calculate time by series
   calculate_time_by_series() |>
   # Then sum by time period
-  sum_total_time(tbd = df_od)
+  sum_total_time(sd = df_od_summary)
 
 # Calculate density at each location
 
 # EDD categories
 sheet_id <- drive_find(type = "spreadsheet",
                        shared_drive = "ABMI Mammals") |>
-  filter(str_detect(name, "MNA Region 1")) |>
+  filter(str_detect(name, "OMGD19")) |>
   select(id) |>
   pull()
 
@@ -134,13 +149,13 @@ df_density_sum <- df_density_long |>
   # Summarise density
   group_by(project, location, species_common_name) |>
   summarise(density_km2 = weighted.mean(density_km2, w = total_season_days),
-            total_days = sum(total_season_days))
+            total_days = sum(total_season_days)) |>
+  ungroup() |>
+  select(-total_days)
 
 #-----------------------------------------------------------------------------------------------------------------------
 
-# Prepare data for diel
-
-source("Functions/Date to Radian.R")
+# Prepare data for diel modeling
 
 species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
              "Canada Lynx", "Woodland Caribou", "Gray Wolf")
@@ -176,10 +191,67 @@ rad_time <- df |>
 
 #-----------------------------------------------------------------------------------------------------------------------
 
+# Generate Independent Detections
+
+df_ind_detect <- main_report |>
+  mutate(species_common_name = case_when(
+    species_common_name == "Deer" ~ "White-tailed Deer",
+    species_common_name == "Mule Deer" ~ "White-tailed Deer",
+    species_common_name == "Bear" ~ "Black Bear",
+    species_common_name == "Foxes" ~ "Red Fox",
+    str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
+    TRUE ~ species_common_name)) |>
+  mutate(project_id = 2929) |>
+  #filter(species_common_name %in% species) |>
+  wt_ind_detect(threshold = 30, units = "minutes")
+
+#-----------------------------------------------------------------------------------------------------------------------
+
+# Species Co-Occurrences
+
+corr <- df_ind_detect |>
+  mutate(species_common_name = factor(species_common_name)) |>
+  group_by(location, species_common_name, .drop = FALSE) |>
+  tally() |>
+  ungroup() |>
+  pivot_wider(id_cols = location, names_from = species_common_name, values_from = n) |>
+  select(-location)
+
+M <- cor(corr)
+
+#-----------------------------------------------------------------------------------------------------------------------
+
+# Number of images
+
+remove <- c("Human", "STAFF/SETUP", "NONE", "Vehicle", "Unidentified")
+
+nimages <- main_report |>
+  mutate(species_common_name = case_when(
+    species_common_name == "Deer" ~ "White-tailed Deer",
+    species_common_name == "Mule Deer" ~ "White-tailed Deer",
+    species_common_name == "Bear" ~ "Black Bear",
+    species_common_name == "Foxes" ~ "Red Fox",
+    str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
+    TRUE ~ species_common_name)) |>
+  group_by(species_common_name) |>
+  tally() |>
+  arrange(desc(n)) |>
+  filter(!species_common_name %in% remove)
+
+#-----------------------------------------------------------------------------------------------------------------------
 
 # Step 3. Save results for future scripts
 
-save(df_density_sum, df_density_long, location_report, image_report, main_report, rad_time, M,
-     file = "Communities/MNA Region 1/MNA Region 1 Data Objects.RData")
+save(df_density_sum, # Densities by location and species
+     df_od_summary, # Number of operating days per location
+     df_od, # Raw operating days
+     location_report, # Locations
+     df_ind_detect, # Independent detections
+     nimages, # Number of images per species
+     image_report, # Image report
+     main_report, # Main report
+     rad_time, # Radian time
+     M, # Species Co-Occurrences
+     file = paste0(g_drive_cbme, "OMGD19/Data/OMGD19 Data Objects.RData"))
 
 #-----------------------------------------------------------------------------------------------------------------------

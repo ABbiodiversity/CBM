@@ -9,6 +9,18 @@
   border-radius: 8px;
 }
 
+.carousel {
+  overflow-x: hidden;
+}
+
+.carousel-inner {
+  overflow-x: hidden;
+}
+
+.carousel-item {
+  text-align: center;
+}
+
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
   background-size: 100% 100%;
@@ -34,4 +46,14 @@
   font-weight: 300;
   padding-bottom: 1em;
 }
+
+figure {
+  text-align: center;
+}
+
+figure figcaption {
+  font-size: 1.1em;
+}
+
+
 </style>
