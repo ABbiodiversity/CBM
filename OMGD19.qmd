@@ -556,106 +556,512 @@ tags$div(
 
 In this section we present the results from `r com_full` camera deployments evaluating the impact of specific oil sands stressors on wildlife within `r com_acr`: pipelines and roads. To do this, we estimated the species-specific density at each camera using the Time in Front of Camera (TIFC) approach (Becker et al., 2022). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Analagous to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area effectively sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
 
-```{r}
-#| label: new-label
-#| echo: false
-#| include: true
-#| message: false
-#| warning: false
-#| results: 'asis'
-
-df_density_os <- df_density_os |>
-  group_by(species_common_name) |>
-  mutate(rank = dense_rank(desc(density_km2))) |>
-  filter(rank > 3) |>
-  mutate(project = factor(project, levels = c("OSM Regional Monitoring", "OMGD19 Local Monitoring"))) |>
-  arrange(project)
-
-
-
-
-```
-
-
-
-```{r}
-#| label: interactive-filters
-#| echo: false
-#| include: true
-#| message: false
-#| warning: false
-#| results: 'asis'
-
-df_density_os <- df_density_os |>
-  group_by(species_common_name) |>
-  mutate(rank = dense_rank(desc(density_km2))) |>
-  filter(rank > 3) |>
-  ungroup() |>
-  mutate(
-    project = factor(project, levels = c("OSM Regional Monitoring", "OMGD19 Local Monitoring")),
-    # NEW: create colour_group to use in plotting
-    colour_group = case_when(
-      project == "OMGD19 Local Monitoring" ~ species_common_name,
-      TRUE ~ "OtherProject"
-    )
-  ) |>
-  arrange(project)
-
-# Wrap in SharedData
-shared_data <- SharedData$new(df_density_os)
-
-p <- shared_data |>
-  ggplot(aes(x = treatment, y = density_km2, color = colour_group)) +
-  geom_point(size = 4, alpha = 0.7) +
-  scale_color_manual(
-    values = c(species_colours, OtherProject = "grey70"),
-    guide = "none"
-  ) +
-  labs(x = "", y = expression(Density~(Animals~per~km^2))) +
-  theme_minimal() +
-  theme(legend.position = "none")
-
-cb <- filter_checkbox("data_source", "Select Source:",
-                             shared_data, ~project, inline = FALSE)
-
-select <- filter_select("data_source", "Select Species:",
-                               shared_data, ~species_common_name, multiple = FALSE)
-
-bscols(widths = c(4, 4), cb, select)
-
-
-```
-
 ::: {.callout-tip collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
-Use the “Autoscale” button in the top-right of the plot to reset the axis after using the filters above
+Click on each of the Data Sources (e.g., 'OSM Regional Monitoring') within the legend to hide or display the data associated with each project. 
 :::
 
 ```{r}
-#| label: interactive-filtered-plot
+#| label: set-up
 #| echo: false
 #| include: true
+#| eval: true
 #| message: false
 #| warning: false
-#| results: 'asis'
 
-ggplotly(p) |>
+data <- df_density_os |>
+  mutate(project = factor(
+    project, levels = c("OSM Regional Monitoring", "OMGD19 Local Monitoring"))) |>
+  group_by(species_common_name) |>
+  mutate(rank = if_else(
+    project == "OSM Regional Monitoring",
+    dense_rank(desc(density_km2)),
+    NA_integer_  # Don't rank OMGD19 — set to NA
+  )) |>
+  ungroup() |>
+  filter(is.na(rank) | rank > 3)
+  
+figure_letters <- letters[1:length(species)]
+
+plot_list <- list()
+
+for (sp in seq_along(species)) {
+  
+  title <- species[sp]
+  letter <- figure_letters[sp]
+  
+  d <- data[data$species_common_name == title, ]
+  
+  p <- d |>
+  ggplot(aes(x = treatment, y = density_km2, color = project,
+             text = paste0(
+               "Site: ", site,
+               "<br>",
+               "Density: ", round(density_km2, 2)
+             ))) +
+  geom_point(size = 4, alpha = 0.7) +
+  scale_color_manual(
+    values = c("OMGD19 Local Monitoring" = species_colours[[title]], 
+               "OSM Regional Monitoring" = "grey70"),
+    name = "Data Source: "
+  ) +
+  labs(x = "") +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 13),
+        axis.title.y = element_text(size = 14),
+        legend.text = element_text(size = 12),
+        legend.title = element_text(size = 14))
+  
+  plot_list[[title]] <- p
+  
+}
+
+```
+
+::: panel-tabset
+
+## White-tailed Deer {.unnumbered}
+
+```{r}
+#| label: wtd-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "White-tailed Deer"
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+  
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+  
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = 1.17
+    ),
+    height = 600
+  ) |>
   config(
     modeBarButtonsToRemove = c(
       "zoom2d", "pan2d", "select2d", "lasso2d",
       "zoomIn2d", "zoomOut2d", "resetScale2d",
       "hoverClosestCartesian", "hoverCompareCartesian",
-      "toggleSpikelines", "toImage"
+      "toggleSpikelines", "toImage", "autoScale2d"
     ),
     displaylogo = FALSE,
     displayModeBar = TRUE
   )
-
+  
+htmltools::div(
+  style = "text-align: center; height: auto;",
+  htmltools::div(
+    style = "display: inline-block; width: 80%; height: 600px;",
+    p_plotly
+  )
+)
+  
 ```
 
+## Black Bear {.unnumbered}
+
+```{r}
+#| label: bb-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Black Bear"
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+  
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+  
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = 1.17
+    ),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d", "pan2d", "select2d", "lasso2d",
+      "zoomIn2d", "zoomOut2d", "resetScale2d",
+      "hoverClosestCartesian", "hoverCompareCartesian",
+      "toggleSpikelines", "toImage", "autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+  
+htmltools::div(
+  style = "text-align: center; height: auto;",
+  htmltools::div(
+    style = "display: inline-block; width: 80%; height: 600px;",
+    p_plotly
+  )
+)
+  
+```
+
+## Moose {.unnumbered}
+
+```{r}
+#| label: moose-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Moose"
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+  
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+  
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = 1.17
+    ),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d", "pan2d", "select2d", "lasso2d",
+      "zoomIn2d", "zoomOut2d", "resetScale2d",
+      "hoverClosestCartesian", "hoverCompareCartesian",
+      "toggleSpikelines", "toImage", "autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+  
+htmltools::div(
+  style = "text-align: center; height: auto;",
+  htmltools::div(
+    style = "display: inline-block; width: 80%; height: 600px;",
+    p_plotly
+  )
+)
+  
+```
+
+## Coyote {.unnumbered}
+
+```{r}
+#| label: coyote-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Coyote"
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+  
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+  
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = 1.17
+    ),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d", "pan2d", "select2d", "lasso2d",
+      "zoomIn2d", "zoomOut2d", "resetScale2d",
+      "hoverClosestCartesian", "hoverCompareCartesian",
+      "toggleSpikelines", "toImage", "autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+  
+htmltools::div(
+  style = "text-align: center; height: auto;",
+  htmltools::div(
+    style = "display: inline-block; width: 80%; height: 600px;",
+    p_plotly
+  )
+)
+  
+```
+
+## Snowshoe Hare {.unnumbered}
+
+```{r}
+#| label: hare-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Snowshoe Hare"
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+  
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+  
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = 1.17
+    ),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d", "pan2d", "select2d", "lasso2d",
+      "zoomIn2d", "zoomOut2d", "resetScale2d",
+      "hoverClosestCartesian", "hoverCompareCartesian",
+      "toggleSpikelines", "toImage", "autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+  
+htmltools::div(
+  style = "text-align: center; height: auto;",
+  htmltools::div(
+    style = "display: inline-block; width: 80%; height: 600px;",
+    p_plotly
+  )
+)
+  
+```
+
+## Canada Lynx {.unnumbered}
+
+```{r}
+#| label: lynx-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Canada Lynx"
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+  
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+  
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = 1.17
+    ),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d", "pan2d", "select2d", "lasso2d",
+      "zoomIn2d", "zoomOut2d", "resetScale2d",
+      "hoverClosestCartesian", "hoverCompareCartesian",
+      "toggleSpikelines", "toImage", "autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+  
+htmltools::div(
+  style = "text-align: center; height: auto;",
+  htmltools::div(
+    style = "display: inline-block; width: 80%; height: 600px;",
+    p_plotly
+  )
+)
+  
+```
+
+## Woodland Caribou {.unnumbered}
+
+```{r}
+#| label: caribou-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Woodland Caribou"
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+  
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+  
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = 1.17
+    ),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d", "pan2d", "select2d", "lasso2d",
+      "zoomIn2d", "zoomOut2d", "resetScale2d",
+      "hoverClosestCartesian", "hoverCompareCartesian",
+      "toggleSpikelines", "toImage", "autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+  
+htmltools::div(
+  style = "text-align: center; height: auto;",
+  htmltools::div(
+    style = "display: inline-block; width: 80%; height: 600px;",
+    p_plotly
+  )
+)
+  
+```
+
+## Gray Wolf {.unnumbered}
+
+```{r}
+#| label: wolf-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Gray Wolf"
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+  
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+  
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(
+      orientation = "h",
+      x = 0.5,
+      xanchor = "center",
+      y = 1.17
+    ),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d", "pan2d", "select2d", "lasso2d",
+      "zoomIn2d", "zoomOut2d", "resetScale2d",
+      "hoverClosestCartesian", "hoverCompareCartesian",
+      "toggleSpikelines", "toImage", "autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+  
+htmltools::div(
+  style = "text-align: center; height: auto;",
+  htmltools::div(
+    style = "display: inline-block; width: 80%; height: 600px;",
+    p_plotly
+  )
+)
+  
+```
+
+:::
 
 The following plots show the average camera density at each of the clusters. There are 3 reference clusters, 2 road clusters, and 1 linear features cluster (pipelines). The tabs can be used to toggle through each individual species results.
-
-::: panel-tabset
 
 ## White-tailed Deer
 
@@ -769,7 +1175,6 @@ knitr::include_graphics(here("Communities/OMGD19/Figures/Woodland Caribou Densit
 
 ```
 
-:::
 
 # Comparison to Regional OSM Monitoring
 
