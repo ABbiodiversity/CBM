@@ -19,6 +19,8 @@ library(corrplot)
 g_drive_abmi <- "G:/Shared drives/ABMI Mammals/"
 # Set path to Shared Google Drive (G Drive) - CBME Community Camera Results
 g_drive_cbme <- "G:/Shared drives/CBME Community Camera Results/"
+# Set path to Shared Google Drive (G Drive) - OSM BADR
+g_drive_osm <- "G:/Shared drives/OSM BADR Mammals/"
 
 # Species character strings
 load(paste0(g_drive_abmi, "Data/Lookup Tables/WildTrax Species Strings.RData"))
@@ -30,8 +32,8 @@ for (file in files) {
 }
 
 # Authenticate into WildTrax
-Sys.setenv(WT_USERNAME = key_get("WT_USERNAME"),
-           WT_PASSWORD = key_get("WT_PASSWORD"))
+Sys.setenv(WT_USERNAME = "marcusabecker89",
+           WT_PASSWORD = "beCCM00!^RRe")
 
 wt_auth()
 
@@ -39,7 +41,7 @@ wt_auth()
 
 # Step 1. Download data
 
-# MNA Region 1 Project(s)
+# OMGD19 Project(s)
 projects <- wt_get_download_summary(sensor_id = "CAM") |>
   filter(str_detect(organization, "MNA Region 1")) |>
   select(project, project_id) # 2929
@@ -97,7 +99,6 @@ df_od <- get_operating_days(
   summarise = FALSE,
   .abmi_seasons = TRUE
 )
-
 
 # Calculate time in front of camera (TIFC)
 
@@ -240,9 +241,80 @@ nimages <- main_report |>
 
 #-----------------------------------------------------------------------------------------------------------------------
 
+# Densities at OS stressors for comparison with OSM BADR regional monitoring
+
+dens_omgd19 <- df_density_sum |>
+  # Categorize into treatments
+  mutate(treatment = case_when(
+    str_detect(location, "MNA19-1-") ~ "Roads",
+    str_detect(location, "MNA19-2-") ~ "Roads",
+    str_detect(location, "MNA19-3-") ~ "Reference",
+    str_detect(location, "MNA19-4-") ~ "Reference",
+    str_detect(location, "MNA19-5-") ~ "Linear Features",
+    str_detect(location, "MNA19-6-") ~ "Reference"
+  )) |>
+  # 'JEM' (i.e., site) codes
+  # Extract everything from location except the last digit
+  mutate(site = str_extract(location, ".*(?=-[^-]*$)")) |>
+  # Pare back some outlier values
+  mutate(density_km2 = ifelse(density_km2 > 5, 5, density_km2)) |>
+  group_by(site, species_common_name, treatment) |>
+  summarise(density_km2 = mean(density_km2)) |>
+  ungroup() |>
+  mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Roads"))) |>
+  # Add project
+  mutate(project = "OMGD19 Local Monitoring")
+
+# OSM BADR data
+
+lure <- read_csv(paste0(g_drive_abmi, "Data/Lure/ABMI Lure Effect Summary 2024-04-24.csv")) |>
+  mutate(species_common_name = str_replace_all(species_common_name, "(?<!^)([A-Z])", " \\1")) |>
+  select(species_common_name, TA)
+
+dens_badr <- read_csv(paste0(g_drive_osm, "Results/Densities to use in the summaries.csv")) |>
+  filter(str_detect(project, "ABMI OSM")) |>
+  filter(treatment == "reference" | treatment == "dense linear features" | treatment == "roads") |>
+  pivot_longer(c(`Gray.Wolf`, Moose, `White.tailed.Deer`, `Snowshoe.Hare`, Coyote, `Canada.Lynx`, `Woodland.Caribou`, `Black.Bear`), names_to = "species_common_name", values_to = "density_km2") |>
+  select(project, location, species_common_name, density_km2, treatment, fine_scale, landscape_unit, jem, lure) |>
+  mutate(species_common_name = case_when(
+    species_common_name == "Gray.Wolf" ~ "Gray Wolf",
+    species_common_name == "White.tailed.Deer" ~ "White-tailed Deer",
+    species_common_name == "Black.Bear" ~ "Black Bear",
+    species_common_name == "Canada.Lynx" ~ "Canada Lynx",
+    species_common_name == "Woodland.Caribou" ~ "Woodland Caribou",
+    species_common_name == "Snowshoe.Hare" ~ "Snowshoe Hare",
+    TRUE ~ species_common_name
+  )) |>
+  mutate(fine_scale = case_when(
+    fine_scale == "10-30" ~ "On",
+    fine_scale == "100" ~ "Off",
+    fine_scale == "300" ~ "Off",
+    TRUE ~ fine_scale
+  )) |>
+  left_join(lure) |>
+  mutate(density_km2 = ifelse(lure == "Yes", density_km2 / TA, density_km2)) |>
+  group_by(project, jem, landscape_unit, treatment, species_common_name) |>
+  summarise(density_km2 = mean(density_km2)) |>
+  ungroup() |>
+  mutate(site = paste0(landscape_unit, "_", jem)) |>
+  select(project, site, treatment, species_common_name, density_km2) |>
+  mutate(treatment = case_when(
+    treatment == "roads" ~ "Roads",
+    treatment == "dense linear features" ~ "Linear Features",
+    treatment == "reference" ~ "Reference"
+  )) |>
+  mutate(project = "OSM Regional Monitoring") |>
+  mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Roads")))
+
+# Bind together
+df_density_os <- bind_rows(dens_badr, dens_omgd19)
+
+#-----------------------------------------------------------------------------------------------------------------------
+
 # Step 3. Save results for future scripts
 
 save(df_density_sum, # Densities by location and species
+     df_density_os, # Densities for OS stressors (regional and local)
      df_od_summary, # Number of operating days per location
      df_od, # Raw operating days
      location_report, # Locations
@@ -255,3 +327,5 @@ save(df_density_sum, # Densities by location and species
      file = paste0(g_drive_cbme, "OMGD19/Data/OMGD19 Data Objects.RData"))
 
 #-----------------------------------------------------------------------------------------------------------------------
+
+

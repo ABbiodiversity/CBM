@@ -55,5 +55,16 @@ figure figcaption {
   font-size: 1.1em;
 }
 
+.leaflet-tooltip {
+  font-size: 1.1rem;       /* Bigger text */
+  padding: 6px 12px;       /* More padding inside the bubble */
+  background-color: #ffffffcc; /* Slight transparency */
+  color: #000;
+  border: 2px solid #333;  /* Make it pop a bit more */
+  border-radius: 6px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Soft shadow */
+}
+
+
 
 </style>

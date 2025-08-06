@@ -8,6 +8,8 @@
 
 # Attach packages
 library(tidyverse)
+library(overlap)
+library(fs)
 
 # Set path to Shared Google Drive (G Drive) - CBME Community Camera Results
 g_drive_cbme <- "G:/Shared drives/CBME Community Camera Results/"
@@ -19,17 +21,15 @@ species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Har
              "Canada Lynx", "Woodland Caribou", "Gray Wolf")
 
 species_colours <- c(
-  "#4E6E58",  # deep green (forest)
-  "#A17C6B",  # muted brown (soil / fur)
-  "#79929D",  # soft blue-grey (sky / water)
-  "#C2B280",  # dry grass / tan
-  "#5B5B5B",  # dark grey (stone / shadow)
-  "#7B9E87",  # sage green
-  "#A9A9A9",  # light grey (mist)
-  "#D6B88A"   # light brown (field / bark)
+  "White-tailed Deer"  = "#3A86FF",
+  "Snowshoe Hare"      = "#E63946",
+  "Moose"              = "#06D6A0",
+  "Canada Lynx"        = "#FFBE0B",
+  "Black Bear"         = "#8338EC",
+  "Woodland Caribou"   = "#FB5607",
+  "Coyote"             = "#3366CC",
+  "Gray Wolf"          = "#FF006E"
 )
-
-names(species_colours) <- species
 
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -190,6 +190,44 @@ for (sp in species) {
          width = 7, height = 5, dpi = 500, bg = "white")
 
 }
+
+#-----------------------------------------------------------------------------------------------------------------------
+
+# Temporal activity
+
+output_dir <- "Figures/OMGD19"
+
+output_dir_drive <- paste0(g_drive_cbme, "OMGD19/Figures")
+
+# Loop through each species
+for (sp in species) {
+
+  # Extract rad_time for the species
+  times <- rad_time |>
+    filter(species_common_name == sp) |>
+    pull(rad_time)
+
+  # Define output file path
+  file_name <- paste0("Activity ", sp,  ".png")
+
+  # File paths
+  file_paths <- c(
+    file.path(output_dir, file_name),
+    file.path(output_dir_drive, file_name))
+
+  # Save the plot in both locations
+  for (path in file_paths) {
+    png(path, width = 800, height = 600, res = 120)
+    densityPlot(times,
+                col = species_colours[[sp]],
+                lty = 1,
+                lwd = 3,
+                main = sp)
+    dev.off()
+  }
+
+}
+
 
 #-----------------------------------------------------------------------------------------------------------------------
 

@@ -63,6 +63,10 @@ library(overlap)
 library(corrplot)
 library(DT)
 library(here)
+library(htmltools)
+library(htmlwidgets)
+library(crosstalk)
+library(plotly)
 
 # Community acronym
 com_acr <- "OMGD19"
@@ -87,17 +91,15 @@ species <- c(
   "Gray Wolf")
 
 species_colours <- c(
-  "#4E6E58",  
-  "#A17C6B",  
-  "#79929D",  
-  "#C2B280",  
-  "#5B5B5B",  
-  "#7B9E87",  
-  "#A9A9A9",  
-  "#D6B88A"   
+  "White-tailed Deer"  = "#3A86FF",  
+  "Snowshoe Hare"      = "#E63946",  
+  "Moose"              = "#06D6A0",  
+  "Canada Lynx"        = "#FFBE0B",  
+  "Black Bear"         = "#8338EC",  
+  "Woodland Caribou"   = "#FB5607",  
+  "Coyote"             = "#3366CC",  
+  "Gray Wolf"          = "#FF006E"
 )
-
-names(species_colours) <- species
 
 ```
 
@@ -177,6 +179,8 @@ locations_for_map <- location_report |>
   )) |>
   left_join(location_ranges, by = "location")
 
+buffer <- 0.1
+
 htmltools::tags$div(
   style = "display: flex; justify-content: center;",
   
@@ -184,6 +188,12 @@ htmltools::tags$div(
           width = "90%", height = "750px") |>
     addTiles() |>
     addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
+    fitBounds(
+    lng1 = min(locations_for_map$longitude) - buffer,
+    lat1 = min(locations_for_map$latitude) - buffer,
+    lng2 = max(locations_for_map$longitude) + buffer,
+    lat2 = max(locations_for_map$latitude) + buffer
+  ) |>
     addFullscreenControl() |>
     addResetMapButton() |>
     addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE)) |>
@@ -218,7 +228,7 @@ htmltools::tags$div(
 #| fig-cap: "Number of images captured by species"
 #| fig-cap-location: bottom
 #| fig-dpi: 300
-#| out-width: "70%"
+#| out-width: "80%"
 #| include: true
 #| echo: false
 #| eval: true
@@ -238,7 +248,7 @@ With camera data, one useful metric to track over time is the number of "indepen
 In the figure below we present the number of independent detections for each of the 8 most common species detected in the `r com_acr` project using a 30 minute time interval; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals.
 
 ```{r}
-#| label: independent detections
+#| label: none
 #| include: false
 #| echo: false
 #| eval: false
@@ -253,9 +263,10 @@ knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections.
 
 Here is displayed each of the species independent detections individually, which can be toggled through using the tabs below.
 
-Note that the y-axis of the plots for each species may differ depending on the number of detections captured. The x-axis represents the camera deployment span in this project, from October 2023 to October 2024.
+Note that the y-axis of the plots for each species may differ depending on the number of detections captured. The x-axis represents the camera deployment span in this project, from October 2023 to October 2024. The y-axis represents the number of detections captured, which is pooled across all the cameras from the project.
 
 ```{r}
+#| label: ind-detections
 #| echo: false
 #| results: asis
 #| include: true
@@ -282,7 +293,7 @@ for (i in seq_along(species)) {
     '<div style="text-align: center;">
        <img src="{rel_path}" style="width:80%;">
        <figcaption style="text-align: center; font-size: 0.95em; margin-top: 0.5em;">
-         <strong>Figure 1{letter}.</strong> Independent detections of <em>{title}</em>
+         <strong>Figure 3{letter}.</strong> Independent detections of <strong>{title}</strong> across the study time period.
        </figcaption>
      </div>\n\n'
   )
@@ -295,7 +306,7 @@ cat(":::\n")
 ```
 
 + **White-tailed deer** were primarily detected in the summer months of June, July, and August. 
-+ Because they are nocturnal, detection of **Black Bears** began in May.
++ Because they are nocturnal, detection of **Black Bears** began in May, and peaked in late June and early July.
 + **Moose** were consistently detected year round, as were **Coyote** and **Canada Lynx**.
 + Detections of **Snowshoe Hare** were also consistent year round, with the exception of the later summer months (August).
 + **Woodland Caribou** and **Gray Wolf** detections were infrequent and sporadic across the duration of the project.
@@ -351,192 +362,54 @@ htmltools::div(
 
 Given that camera traps operate 24 hours a day, 7 days a week, and can record animal motion down to second-level precision, they represent a powerful tool to explore and contrast the activity patterns of the species they detect. Such analyses can give insight into competition, predation, and coexistence.
 
-In this section we present the temporal (diel) activity patterns for each of the 8 species from the `r com_full` cameras.
-
-::: panel-tabset
-
-## White-tailed Deer
+In this section we present the temporal (diel) activity patterns for each of the 8 focal species from the `r com_full` cameras. The x-axis of each of the following plots represents the 24-hr daily cycle, and the line represents the relative activity level detected by the cameras.
 
 ```{r}
-#| label: temporal patterns wtd
 #| include: true
 #| echo: false
 #| eval: true
 #| warning: false
 #| message: false
+#| results: asis
 
-wtd <- rad_time |>
-  filter(species_common_name == "White-tailed Deer") |>
-  pull(rad_time)
+# Set folder containing the plots
+file_names <- paste0("Activity ", species, ".png")
+figure_letters <- letters[1:length(species)]
 
-densityPlot(wtd, col = species_colours["White-tailed Deer"], 
-            lty = 1, 
-            lwd = 2,
-            main = "White-tailed Deer")
+cat("::: panel-tabset\n\n")
 
-```
+for (i in seq_along(species)) {
+  title <- species[i]
+  letter <- figure_letters[i]
+  img_path <- here::here("Figures/OMGD19", file_names[i])
+  rel_path <- fs::path_rel(img_path, start = getwd())
+  
+  cat("### ", title, " {.unnumbered}\n\n", sep = "")
+  
+  # Render the image and caption
+  html <- glue::glue(
+    '<div style="text-align: center;">
+       <img src="{rel_path}" style="width:80%;">
+       <figcaption style="text-align: center; font-size: 0.95em; margin-top: 0.5em;">
+         <strong>Figure 4{letter}.</strong> Daily activity pattern of <strong>{title}</strong> based on camera trap detections.
+       </figcaption>
+     </div>\n\n'
+  )
+  
+  cat(html)
+}
 
-White-tailed deer demonstrate a diurnal activity pattern, with peaks both during the dawn (6am-9am) and dusk (7pm) periods of the day.  
+cat(":::\n")
 
-## Black Bear
-
-```{r}
-#| label: temporal patterns bb
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-wtd <- rad_time |>
-  filter(species_common_name == "Black Bear") |>
-  pull(rad_time)
-
-densityPlot(wtd, col = species_colours["Black Bear"], 
-            lty = 1, 
-            lwd = 2,
-            main = "Black Bear")
-```
-
-Black Bear are more active in the evenings and overnight. 
-
-## Canada Lynx
-
-```{r}
-#| label: temporal patterns cl
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-cl <- rad_time |>
-  filter(species_common_name == "Canada Lynx") |>
-  pull(rad_time)
-
-densityPlot(cl, col = species_colours["Canada Lynx"], 
-            lty = 1, 
-            lwd = 2,
-            main = "Canada Lynx")
 
 ```
 
-## Coyote
-
-```{r}
-#| label: temporal patterns coyote
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-coy <- rad_time |>
-  filter(species_common_name == "Coyote") |>
-  pull(rad_time)
-
-densityPlot(coy, col = species_colours["Coyote"], 
-            lty = 1, 
-            lwd = 2,
-            main = "Coyote")
-
-```
-
-Coyotes are primarily active during the nighttime. 
-
-## Gray Wolf
-
-```{r}
-#| label: temporal patterns gw
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-gw <- rad_time |>
-  filter(species_common_name == "Gray Wolf") |>
-  pull(rad_time)
-
-densityPlot(gw, col = species_colours["Gray Wolf"], 
-            lty = 1, 
-            lwd = 2,
-            main = "Gray Wolf")
-
-```
-
-Wolves are primarily active at dusk.
-
-## Moose
-
-```{r}
-#| label: temporal patterns moose
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-moo <- rad_time |>
-  filter(species_common_name == "Moose") |>
-  pull(rad_time)
-
-densityPlot(moo, col = species_colours["Moose"], 
-            lty = 1, 
-            lwd = 2,
-            main = "Moose")
-
-```
-
-Moose activity peaks during the nighttime and dawn periods, with much less activity throughout the day. 
-
-## Snowshoe Hare
-
-```{r}
-#| label: temporal patterns sh
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-sh <- rad_time |>
-  filter(species_common_name == "Snowshoe Hare") |>
-  pull(rad_time)
-
-densityPlot(sh, col = species_colours["Snowshoe Hare"], 
-            lty = 1, 
-            lwd = 2,
-            main = "Snowshoe Hare")
-
-```
-
-Snowshoe Hare are most active at night, with very few detections on the cameras during the day.  
-
-## Woodland Caribou
-
-```{r}
-#| label: temporal patterns wc
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-
-wc <- rad_time |>
-  filter(species_common_name == "Woodland Caribou") |>
-  pull(rad_time)
-
-densityPlot(wc, col = species_colours["Woodland Caribou"], 
-            lty = 1, 
-            lwd = 2,
-            main = "Woodland Caribou")
-
-```
-
-Caribou are most active during the midday. 
-
-:::
++ **White-tailed deer** are primarily active during twilight hours, specifically at dawn and dusk. This pattern is known as *crepuscular*. The majority of the activity, however, was captured during the dawn hours (6:00 to 9:00). 
++ **Black Bear** were similarily crepuscular, although the peak was much more pronounced during the dusk hours (between 18:00 and 24:00).
++ Based on the cameras in the `r com_acr` project, **Moose** were primarily active during the night time (00:00 to 6:00).
++ **Coyote** and **Snowshoe Hare** were similar to Moose, but had slightly elevated (and increasing) activity levels throughout the evening hours.
++ **Canada Lynx** activity peaked during the midday (12:00). **Caribou** were similar, with a slightly earlier peak (10:00).
++ Finally, **Gray Wolf** showed a slightly crepuscular tendency, however the dusk activity peak was more pronounced. 
 
 # Species Co-Occurences
 
@@ -562,17 +435,222 @@ corrplot(M, method = "color",
 
 ```
 
+# Species Density
+
+In addition to the number of images and counts of independent detections, we can estimate the density of each species at each camera. Density is the number of animals per unit area, which translates to abundance when scaled up to a larger region of interest. 
+
+To estimate the density of each wildlife species at each camera, we used the Time in Front of Camera (TIFC) approach (Becker et al., 2022). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Similar to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
+
+The following map displays the spatial distribution in densities of the 8 focal species between the 18 cameras of the OMGD19 camera project. Note that cameras with no detections of a particular species (i.e., a density of '0') are represented with a black circle. 
+
+<br>
+
+```{r}
+#| label: map-species-density
+#| include: true
+#| echo: false
+#| results: asis
+#| eval: true
+#| warning: false
+#| message: false
+
+densities_to_map <- locations_for_map |>
+  left_join(df_density_sum) |>
+  select(-project) |>
+  mutate(density_km2 = ifelse(density_km2 > 5, 5, density_km2)) |>
+  mutate(log_density = log10(density_km2 + 1))
+
+# Species palette as a list
+species_palette <- list(
+  "White-tailed Deer"  = "#3A86FF",  
+  "Snowshoe Hare"      = "#E63946",  
+  "Moose"              = "#06D6A0",  
+  "Canada Lynx"        = "#FFBE0B",  
+  "Black Bear"         = "#8338EC",  
+  "Woodland Caribou"   = "#FB5607",  
+  "Coyote"             = "#3366CC",  
+  "Gray Wolf"          = "#FF006E"
+)
+
+buffer <- 0.1
+
+# Create base map
+leaf_map <- leaflet(width = "90%", height = "750px") |>
+  addProviderTiles("Esri.WorldGrayCanvas", group = "Gray Canvas") |>
+  fitBounds(
+    lng1 = min(densities_to_map$longitude) - buffer,
+    lat1 = min(densities_to_map$latitude) - buffer,
+    lng2 = max(densities_to_map$longitude) + buffer,
+    lat2 = max(densities_to_map$latitude) + buffer
+  ) |>
+  addFullscreenControl() 
+
+max_log <- max(densities_to_map$log_density, na.rm = TRUE)
+
+# Loop over species and add circle markers for each base group
+for (sp in species) {
+  
+  data <- densities_to_map |> 
+  filter(species_common_name == sp) |>
+  mutate(
+    scaled_radius = pmax(log_density / max_log * 15, 4),
+    fill_color = ifelse(density_km2 == 0, "#222222", species_palette[[sp]]),
+    label_text = ifelse(
+      density_km2 == 0,
+      paste0(
+        "<table>",
+        "<tr><td>Camera location:</td><td align='right'><b>", location, "</b></td></tr>",
+        "<tr><td>Treatment:</td><td align='right'><b>", treatment, "</b></td></tr>",
+        "<tr><td colspan='2'><i>No detections at this location</i></td></tr>",
+        "</table>"
+      ),
+      paste0(
+        "<table>",
+        "<tr><td>Camera location:</td><td align='right'><b>", location, "</b></td></tr>",
+        "<tr><td>Treatment:</td><td align='right'><b>", treatment, "</b></td></tr>",
+        "<tr><td>", species_common_name, " Density:</td><td align='right'><b>",
+        round(density_km2, 2), " per km²</b></td></tr>",
+        "</table>"
+      )
+    )
+  )
+  
+  leaf_map <- leaf_map |>
+    addCircleMarkers(
+      data = data,
+      lng = ~longitude,
+      lat = ~latitude,
+      radius = ~scaled_radius,
+      fillColor = ~fill_color,
+      fillOpacity = 0.85,
+      stroke = TRUE,
+      color = "#FFFFFF",
+      weight = 1,
+      group = sp,
+      label = ~ lapply(label_text, HTML),
+      labelOptions = labelOptions(
+        html = TRUE,
+        direction = "top",
+        textsize = "14px",
+        style = list(
+          "padding" = "6px"
+        )
+      )
+    )
+}
+
+leaf_map <- leaf_map |>
+  addLayersControl(
+    baseGroups = species,
+    options = layersControlOptions(collapsed = FALSE),
+    position = "topleft"
+  )
+
+tags$div(
+  style = "display: flex; justify-content: center;",
+  leaf_map)
+
+```
+
 # Evaluating Oil Sands Disturbances
 
 In this section we present the results from `r com_full` camera deployments evaluating the impact of specific oil sands stressors on wildlife within `r com_acr`: pipelines and roads. To do this, we estimated the species-specific density at each camera using the Time in Front of Camera (TIFC) approach (Becker et al., 2022). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Analagous to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area effectively sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
 
 ```{r}
+#| label: new-label
+#| echo: false
+#| include: true
+#| message: false
+#| warning: false
+#| results: 'asis'
 
-# Map of the densities at each camera. 
+df_density_os <- df_density_os |>
+  group_by(species_common_name) |>
+  mutate(rank = dense_rank(desc(density_km2))) |>
+  filter(rank > 3) |>
+  mutate(project = factor(project, levels = c("OSM Regional Monitoring", "OMGD19 Local Monitoring"))) |>
+  arrange(project)
+
+
+
 
 ```
 
 
+
+```{r}
+#| label: interactive-filters
+#| echo: false
+#| include: true
+#| message: false
+#| warning: false
+#| results: 'asis'
+
+df_density_os <- df_density_os |>
+  group_by(species_common_name) |>
+  mutate(rank = dense_rank(desc(density_km2))) |>
+  filter(rank > 3) |>
+  ungroup() |>
+  mutate(
+    project = factor(project, levels = c("OSM Regional Monitoring", "OMGD19 Local Monitoring")),
+    # NEW: create colour_group to use in plotting
+    colour_group = case_when(
+      project == "OMGD19 Local Monitoring" ~ species_common_name,
+      TRUE ~ "OtherProject"
+    )
+  ) |>
+  arrange(project)
+
+# Wrap in SharedData
+shared_data <- SharedData$new(df_density_os)
+
+p <- shared_data |>
+  ggplot(aes(x = treatment, y = density_km2, color = colour_group)) +
+  geom_point(size = 4, alpha = 0.7) +
+  scale_color_manual(
+    values = c(species_colours, OtherProject = "grey70"),
+    guide = "none"
+  ) +
+  labs(x = "", y = expression(Density~(Animals~per~km^2))) +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+cb <- filter_checkbox("data_source", "Select Source:",
+                             shared_data, ~project, inline = FALSE)
+
+select <- filter_select("data_source", "Select Species:",
+                               shared_data, ~species_common_name, multiple = FALSE)
+
+bscols(widths = c(4, 4), cb, select)
+
+
+```
+
+::: {.callout-tip collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
+Use the “Autoscale” button in the top-right of the plot to reset the axis after using the filters above
+:::
+
+```{r}
+#| label: interactive-filtered-plot
+#| echo: false
+#| include: true
+#| message: false
+#| warning: false
+#| results: 'asis'
+
+ggplotly(p) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d", "pan2d", "select2d", "lasso2d",
+      "zoomIn2d", "zoomOut2d", "resetScale2d",
+      "hoverClosestCartesian", "hoverCompareCartesian",
+      "toggleSpikelines", "toImage"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+
+```
 
 
 The following plots show the average camera density at each of the clusters. There are 3 reference clusters, 2 road clusters, and 1 linear features cluster (pipelines). The tabs can be used to toggle through each individual species results.
