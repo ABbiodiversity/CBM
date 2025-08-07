@@ -1,6 +1,6 @@
 # ----------------------------------------------------------------------------------------------------------------------
 
-# Title:   Generate Plots for 2023-2024 MNA Region 1 Camera Data Report
+# Title:   Generate Plots for 2023-2024 OMGD19 Camera Data Report
 # Date:    March 2025
 # Authors: Marcus Becker
 
@@ -265,7 +265,7 @@ for (sp in species) {
 
   ggsave(paste0("./Communities/MNA Region 1/Figures/", sp, " Density Treatments.png"),
          plot,
-         width = 4, height = 4, dpi = 250, bg = "white")
+         width = 4, height = 4, dpi = 500, bg = "white")
 
 }
 
@@ -311,7 +311,7 @@ d_badr <- read_csv(paste0(g_drive_osm, "Results/Densities to use in the summarie
   mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Roads")))
 
 dens1 <- dens |>
-  mutate(project = "MNA Region 1") |>
+  mutate(project = "OMGD19") |>
   rename(site = jem)
 
 sum <- d_badr |>
@@ -363,7 +363,33 @@ for (sp in species) {
 
 }
 
+## New way of doing it.
+# dens1 (omgd19) and d_badr (osm badr)
 
+# Combined dataset
+dens_all <- bind_rows(d_badr, dens1)
+
+# Wrap in SharedData
+shared_data <- SharedData$new(dens_all)
+
+cb_filter <- filter_checkbox("data_source", "Select Source",
+                             shared_data, ~project)
+
+
+# White-tailed deer
+dens_all_deer <- dens_all |>
+  filter(species_common_name == "White-tailed Deer")
+
+p <- ggplot(dens_all_deer,
+  aes(x = treatment, y = density_km2, color = project, text = site)) +
+  geom_point(size = 3, alpha = 0.8) +
+  labs(x = "", y = "Density") +
+  scale_color_manual(values = c("ABMI" = "red",
+                                "OMGD19" = "blue")) +
+  theme_minimal()
+
+ggplotly(p, tooltip = "text") |>
+  layout(legend = list(title = list(text = "Data Source")))
 
 
 
