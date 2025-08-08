@@ -1,0 +1,70 @@
+<style>
+.carousel.card {
+  padding-top: 2em;
+}
+
+.carousel img {
+  width: 90%;
+  margin-bottom: 110px;
+  border-radius: 8px;
+}
+
+.carousel {
+  overflow-x: hidden;
+}
+
+.carousel-inner {
+  overflow-x: hidden;
+}
+
+.carousel-item {
+  text-align: center;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-size: 100% 100%;
+  transform: scale(1.5);
+  filter: drop-shadow(0 0 4px #000);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  width: 5%;
+}
+
+.carousel-caption {
+  padding-top: 1em;
+}
+
+.carousel-indicators [data-bs-target] {
+  background-color: #333;
+}
+
+.headline {
+  font-size: 1.25em;
+  font-weight: 300;
+  padding-bottom: 1em;
+}
+
+figure {
+  text-align: center;
+}
+
+figure figcaption {
+  font-size: 1.1em;
+}
+
+.leaflet-tooltip {
+  font-size: 1.1rem;       /* Bigger text */
+  padding: 6px 12px;       /* More padding inside the bubble */
+  background-color: #ffffffcc; /* Slight transparency */
+  color: #000;
+  border: 2px solid #333;  /* Make it pop a bit more */
+  border-radius: 6px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Soft shadow */
+}
+
+
+
+</style>

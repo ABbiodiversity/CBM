@@ -1,0 +1,9 @@
+project:
+  type: website
+  output-dir: docs
+
+format:
+  html:
+    grid:
+      margin-width: 300px
+      body-width: 1050px

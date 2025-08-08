@@ -1,11 +1,6 @@
 ---
 title: "Otipemisiwak Métis Government Lac La Biche District 19"
 subtitle: "Results from the Oil Sands Monitoring Wildlife Camera Project"
-format:
-  html:
-    grid:
-      margin-width: 300px
-      body-width: 1050px
 navbar: right
 theme: cosmo
 date: "`r format(Sys.time(), '%d %B, %Y')`"
