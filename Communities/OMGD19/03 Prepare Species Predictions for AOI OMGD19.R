@@ -90,31 +90,10 @@ for (sp in species) {
 
   }
 
-library(leaflet)
+#-----------------------------------------------------------------------------------------------------------------------
 
-pal <- colorNumeric(
-  palette = colorRampPalette(c("navy", "skyblue", "gold", "red"))(100),
-  domain = values(moose_raster),
-  na.color = "transparent"
-)
 
-mapview(kgrid_aoi)
 
-leaflet() |>
-  addTiles() |>
-  addRasterImage(moose_raster, colors = pal, opacity = 0.85) |>
-  addLegend(
-    pal = pal,
-    values = values(moose_raster),
-    title = "Moose Presence<br>Probability",
-    labFormat = labelFormat(
-      transform = function(x) x * 100,  # Convert proportion to percent
-      suffix = "%",
-      digits = 0
-    ),
-    at = c(0, 0.25, 5),
-    opacity = 1
-  )
 
 
 

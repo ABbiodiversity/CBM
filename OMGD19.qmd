@@ -15,13 +15,15 @@ author:
   - name: "David Evans"
     affiliation: "ABMI"
     email: "david.evans@ualberta.ca"
-  - name: "Marcus Becker"
-    affiliation: "ABMI"
-    email: "marcus.becker@ualberta.ca"
   - name: "Robbie Potts"
     email: "rnpotts@ualberta.ca"
     affiliation: "ABMI"
+  - name: "Marcus Becker"
+    affiliation: "ABMI"
+    email: "marcus.becker@ualberta.ca"
 editor: visual
+bibliography: references.bib
+nocite: '@*'
 toc: true
 toc-depth: 3
 toc-expand: true
@@ -68,6 +70,7 @@ library(htmlwidgets)
 library(crosstalk)
 library(plotly)
 library(terra)
+library(glue)
 
 # Community acronym
 com_acr <- "OMGD19"
@@ -240,13 +243,13 @@ knitr::include_graphics(paste0("Figures/", com_acr, "/Number of Images.png"))
 
 ```
 
-For a complete list of all the species, you can go to the project on WildTrax and click on the 'Species' tab of the project.
+For a complete list of all the species, you can go to the project on WildTrax and click on the 'Species' tab of the project. Since no other species had more than 20 images collected over the course of the project and across all cameras, we will focus our analysis on the 8 species shown here (**White-tailed deer, Black Bear, Moose, Coyote, Snowshoe Hare, Canada Lynx, Woodland Caribou, and Gray Wolf**). 
 
 # Independent Detections Over Time
 
-With camera data, one useful metric to track over time is the number of "independent" detections captured for each species. In this case, an independent detection is defined as an image or series of images captured for a given species within a specific time interval. 
+With camera data, one useful metric to track over time is the number of "independent" detections captured for each species. In this case, an independent detection is defined as an image or collection of images captured for a given species that can be thought of as a single detection event.
 
-In the figure below we present the number of independent detections for each of the 8 most common species detected in the `r com_acr` project using a 30 minute time interval; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals.
+In the figure below we present the number of independent detections for each of the 8 focal species detected in the `r com_acr` project. We use a 30 minute time interval to separate detection events; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals.
 
 ```{r}
 #| label: none
@@ -262,9 +265,7 @@ knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections.
 
 ```
 
-Here is displayed each of the species independent detections individually, which can be toggled through using the tabs below.
-
-Note that the y-axis of the plots for each species may differ depending on the number of detections captured. The x-axis represents the camera deployment span in this project, from October 2023 to October 2024. The y-axis represents the number of detections captured, which is pooled across all the cameras from the project.
+You can toggle through the figures for each species using the tabs below. The x-axis represents the camera deployment span in this project, from October 2023 to October 2024. The y-axis represents the number of detections captured, which is pooled across all the cameras from the project. Note that the y-axis of the plots for each species may differ depending on the number of detections captured.
 
 ```{r}
 #| label: ind-detections
@@ -363,7 +364,7 @@ htmltools::div(
 
 Given that camera traps operate 24 hours a day, 7 days a week, and can record animal motion down to second-level precision, they represent a powerful tool to explore and contrast the activity patterns of the species they detect. Such analyses can give insight into competition, predation, and coexistence.
 
-In this section we present the temporal (diel) activity patterns for each of the 8 focal species from the `r com_full` cameras. The x-axis of each of the following plots represents the 24-hr daily cycle, and the line represents the relative activity level detected by the cameras.
+In this section we present the temporal (diel) activity patterns for each of the 8 focal species from the `r com_acr` cameras. The x-axis of each of the following plots represents the 24-hr daily cycle, and the line represents the relative activity level detected by the cameras. This data is pooled across all 18 cameras in the project.
 
 ```{r}
 #| include: true
@@ -409,22 +410,23 @@ cat(":::\n")
 + **Black Bear** were similarily crepuscular, although the peak was much more pronounced during the dusk hours (between 18:00 and 24:00).
 + Based on the cameras in the `r com_acr` project, **Moose** were primarily active during the night time (00:00 to 6:00).
 + **Coyote** and **Snowshoe Hare** were similar to Moose, but had slightly elevated (and increasing) activity levels throughout the evening hours.
-+ **Canada Lynx** activity peaked during the midday (12:00). **Caribou** were similar, with a slightly earlier peak (10:00).
-+ Finally, **Gray Wolf** showed a slightly crepuscular tendency, however the dusk activity peak was more pronounced. 
++ **Canada Lynx** activity peaked during the midday (12:00). **Caribou** were similar, with a slightly earlier, and more pronounced, peak (10:00).
++ Finally, **Gray Wolf** showed a slightly crepuscular tendency, however the dusk activity peak was more extreme. 
 
 # Species Co-Occurences
 
 Camera trap data are being increasingly used to model multiple species communities, and we can use this data to explore the co-occurrence patterns of the species in the community.
 
-The plot below displays pairwise correlations between the species on the left and the species on the top row. Blue colours indicate positive correlation, meaning that the two species are positively associated with one another. Red colours indicate the opposite, that where you have high counts of one species you likely have low counts of the other (and vice versa).
+Figure 5 below displays pairwise correlations between the species on the left and the species on the top row. Blue colours indicate positive correlation, meaning that the two species are positively associated with one another. Red colours indicate the opposite, that where you have high counts of one species you likely have low counts of the other (and vice versa).
 
 ```{r}
-#| label: species co-occurrences
+#| label: cooccurrences
 #| include: true
 #| echo: false
 #| eval: true
 #| warning: false
 #| message: false
+#| fig-cap: "Figure 5. Co-Occurrence values for the 8 focal species."
 
 par(mfrow=c(1,1))
 
@@ -440,11 +442,15 @@ corrplot(M, method = "color",
 
 In addition to the number of images and counts of independent detections, we can estimate the density of each species at each camera. Density is the number of animals per unit area, which translates to abundance when scaled up to a larger region of interest. 
 
-To estimate the density of each wildlife species at each camera, we used the Time in Front of Camera (TIFC) approach (Becker et al., 2022). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Similar to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
+To estimate the density of each wildlife species at each camera, we used the Time in Front of Camera (TIFC) approach (@becker2022applying). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Similar to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
 
-The following map displays the spatial distribution in densities of the 8 focal species between the 18 cameras of the OMGD19 camera project. Note that cameras with no detections of a particular species (i.e., a density of '0') are represented with a black circle. 
+The following map displays the spatial distribution in densities of the 8 focal species between the 18 cameras of the OMGD19 camera project. Note that cameras with no detections of a particular species (i.e., a density of '0') are represented with a black circle.
 
 <br>
+
+::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
+You can hover over each camera location to see the calculated density of each species at that deployment.
+:::
 
 ```{r}
 #| label: map-species-density
@@ -484,7 +490,8 @@ leaf_map <- leaflet(width = "90%", height = "750px") |>
     lng2 = max(densities_to_map$longitude) + buffer,
     lat2 = max(densities_to_map$latitude) + buffer
   ) |>
-  addFullscreenControl() 
+  addFullscreenControl() |>
+  addResetMapButton()
 
 max_log <- max(densities_to_map$log_density, na.rm = TRUE)
 
@@ -553,16 +560,21 @@ tags$div(
 
 ```
 
+<br>
+
 # Evaluating Oil Sands Disturbances
 
-In this section we present the results from `r com_full` camera deployments evaluating the impact of specific oil sands stressors on wildlife within `r com_acr`: pipelines and roads. To do this, we estimated the species-specific density at each camera using the Time in Front of Camera (TIFC) approach (Becker et al., 2022). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Analagous to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area effectively sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
+In this section we present the results from `r com_acr` camera deployments evaluating the impact of specific oil sands stressors on wildlife within `r com_acr`: **pipelines** and **roads**. The effect of these stressors on species' density is evaluated by comparing values to a **reference** (low disturbance) area. 
 
-The following plots show the density of each species at each cluster of cameras. Each point represent the average density value among the cameras of the cluster. There are 3 reference clusters, 2 road clusters, and 1 linear features cluster (pipelines). The tabs can be used to toggle through each individual species results. 
+The following plots show the density of each species at each cluster of cameras. Each point represents the average density value among the cameras of the cluster. For instance, the 4 cameras that belong to the 'MNA 19-6' cluster (which is a reference cluster) had white-tailed deer density values of 4.75, 4.79, 5, and 3.36 animals per km<sup>2</sup>, for an average density of 4.47. This is represented by the top point in the Reference column of Figure 6a below. 
 
-We can also compare the results from the 6 camera clusters deployed by `r com_acr` to those deployed as part of the broader regional OSM monitoring done by the ABMI. The ABMI deploys clusters of cameras (called 'Joint Environmental Monitoring Sites', or JEMS) in a similar fashion to `r com_acr`, targeting the physical footprint and adjacent areas of oil sands industry disturbances. There are two common stressors examined by the `r com_acr` cameras and the regional monitoring done by the ABMI: **linear features** and **roads**, as well as **reference (low disturbance)** areas. In the figures below for each species, we also plot out the values obtained from ABMI JEM sites alongside the `r com_acr` values.
+There are 3 reference clusters, 1 linear features cluster (pipelines), and 2 road features cluster. The tabs can be used to toggle through each individual species results. 
 
-::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 20px;"}
+We can also compare the results from the 6 camera clusters deployed by `r com_acr` to those deployed as part of the broader regional OSM monitoring done by the ABMI. The ABMI deploys clusters of cameras (called 'Joint Environmental Monitoring Sites', or JEMS) in a similar fashion to `r com_acr`, targeting the physical footprint and adjacent areas of oil sands industry disturbances (@Bayne2021OSMFramework). There are two stressors examined by both the `r com_acr` cameras and the regional monitoring done by the ABMI: **linear features** and **roads**, as well as **reference (low disturbance)** areas. In the figures below for each species, we also plot out the values obtained from ABMI JEM sites alongside the `r com_acr` values.
+
+::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
 Click on each **Data Source** (e.g., 'OSM Regional Monitoring') within each of the plot legends to hide or display the data associated with each source.
+Hover over each point to view which cluster the value is associated with.
 :::
 
 ```{r}
@@ -599,7 +611,7 @@ for (sp in seq_along(species)) {
   p <- d |>
   ggplot(aes(x = treatment, y = density_km2, color = project,
              text = paste0(
-               "Site: ", site,
+               "Cluster: ", site,
                "<br>",
                "Density: ", round(density_km2, 2)
              ))) +
@@ -627,7 +639,6 @@ for (sp in seq_along(species)) {
 ## White-tailed Deer {.unnumbered}
 
 ```{r}
-#| label: wtd-plotly
 #| echo: false
 #| include: true
 #| eval: true
@@ -635,45 +646,52 @@ for (sp in seq_along(species)) {
 #| warning: false
 
 sp <- "White-tailed Deer"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
 
 p <- plot_list[[sp]]
 
 p_plotly <- ggplotly(p, tooltip = "text")
-  
+
+# Hide OSM series by default
 for (i in seq_along(p_plotly$x$data)) {
   if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
     p_plotly$x$data[[i]]$visible <- "legendonly"
   }
 }
-  
+
 p_plotly <- p_plotly |>
   layout(
     yaxis = list(title = list(standoff = 30,
                               text = "Density (Animals per km<sup>2</sup>)")),
-    legend = list(
-      orientation = "h",
-      x = 0.5,
-      xanchor = "center",
-      y = 1.17
-    ),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
     height = 600
   ) |>
   config(
     modeBarButtonsToRemove = c(
-      "zoom2d", "pan2d", "select2d", "lasso2d",
-      "zoomIn2d", "zoomOut2d", "resetScale2d",
-      "hoverClosestCartesian", "hoverCompareCartesian",
-      "toggleSpikelines", "toImage", "autoScale2d"
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
     ),
     displaylogo = FALSE,
     displayModeBar = TRUE
   )
-  
-htmltools::div(
-  style = "text-align: center; height: auto;",
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
   htmltools::div(
-    style = "display: inline-block; width: 80%; height: 600px;",
+    style = "display:inline-block; width:80%; height:600px;",
     p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
   )
 )
   
@@ -690,45 +708,52 @@ htmltools::div(
 #| warning: false
 
 sp <- "Black Bear"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
 
 p <- plot_list[[sp]]
 
 p_plotly <- ggplotly(p, tooltip = "text")
-  
+
+# Hide OSM series by default
 for (i in seq_along(p_plotly$x$data)) {
   if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
     p_plotly$x$data[[i]]$visible <- "legendonly"
   }
 }
-  
+
 p_plotly <- p_plotly |>
   layout(
     yaxis = list(title = list(standoff = 30,
                               text = "Density (Animals per km<sup>2</sup>)")),
-    legend = list(
-      orientation = "h",
-      x = 0.5,
-      xanchor = "center",
-      y = 1.17
-    ),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
     height = 600
   ) |>
   config(
     modeBarButtonsToRemove = c(
-      "zoom2d", "pan2d", "select2d", "lasso2d",
-      "zoomIn2d", "zoomOut2d", "resetScale2d",
-      "hoverClosestCartesian", "hoverCompareCartesian",
-      "toggleSpikelines", "toImage", "autoScale2d"
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
     ),
     displaylogo = FALSE,
     displayModeBar = TRUE
   )
-  
-htmltools::div(
-  style = "text-align: center; height: auto;",
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
   htmltools::div(
-    style = "display: inline-block; width: 80%; height: 600px;",
+    style = "display:inline-block; width:80%; height:600px;",
     p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
   )
 )
   
@@ -745,45 +770,52 @@ htmltools::div(
 #| warning: false
 
 sp <- "Moose"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
 
 p <- plot_list[[sp]]
 
 p_plotly <- ggplotly(p, tooltip = "text")
-  
+
+# Hide OSM series by default
 for (i in seq_along(p_plotly$x$data)) {
   if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
     p_plotly$x$data[[i]]$visible <- "legendonly"
   }
 }
-  
+
 p_plotly <- p_plotly |>
   layout(
     yaxis = list(title = list(standoff = 30,
                               text = "Density (Animals per km<sup>2</sup>)")),
-    legend = list(
-      orientation = "h",
-      x = 0.5,
-      xanchor = "center",
-      y = 1.17
-    ),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
     height = 600
   ) |>
   config(
     modeBarButtonsToRemove = c(
-      "zoom2d", "pan2d", "select2d", "lasso2d",
-      "zoomIn2d", "zoomOut2d", "resetScale2d",
-      "hoverClosestCartesian", "hoverCompareCartesian",
-      "toggleSpikelines", "toImage", "autoScale2d"
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
     ),
     displaylogo = FALSE,
     displayModeBar = TRUE
   )
-  
-htmltools::div(
-  style = "text-align: center; height: auto;",
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
   htmltools::div(
-    style = "display: inline-block; width: 80%; height: 600px;",
+    style = "display:inline-block; width:80%; height:600px;",
     p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
   )
 )
   
@@ -800,45 +832,52 @@ htmltools::div(
 #| warning: false
 
 sp <- "Coyote"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
 
 p <- plot_list[[sp]]
 
 p_plotly <- ggplotly(p, tooltip = "text")
-  
+
+# Hide OSM series by default
 for (i in seq_along(p_plotly$x$data)) {
   if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
     p_plotly$x$data[[i]]$visible <- "legendonly"
   }
 }
-  
+
 p_plotly <- p_plotly |>
   layout(
     yaxis = list(title = list(standoff = 30,
                               text = "Density (Animals per km<sup>2</sup>)")),
-    legend = list(
-      orientation = "h",
-      x = 0.5,
-      xanchor = "center",
-      y = 1.17
-    ),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
     height = 600
   ) |>
   config(
     modeBarButtonsToRemove = c(
-      "zoom2d", "pan2d", "select2d", "lasso2d",
-      "zoomIn2d", "zoomOut2d", "resetScale2d",
-      "hoverClosestCartesian", "hoverCompareCartesian",
-      "toggleSpikelines", "toImage", "autoScale2d"
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
     ),
     displaylogo = FALSE,
     displayModeBar = TRUE
   )
-  
-htmltools::div(
-  style = "text-align: center; height: auto;",
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
   htmltools::div(
-    style = "display: inline-block; width: 80%; height: 600px;",
+    style = "display:inline-block; width:80%; height:600px;",
     p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
   )
 )
   
@@ -855,45 +894,52 @@ htmltools::div(
 #| warning: false
 
 sp <- "Snowshoe Hare"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
 
 p <- plot_list[[sp]]
 
 p_plotly <- ggplotly(p, tooltip = "text")
-  
+
+# Hide OSM series by default
 for (i in seq_along(p_plotly$x$data)) {
   if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
     p_plotly$x$data[[i]]$visible <- "legendonly"
   }
 }
-  
+
 p_plotly <- p_plotly |>
   layout(
     yaxis = list(title = list(standoff = 30,
                               text = "Density (Animals per km<sup>2</sup>)")),
-    legend = list(
-      orientation = "h",
-      x = 0.5,
-      xanchor = "center",
-      y = 1.17
-    ),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
     height = 600
   ) |>
   config(
     modeBarButtonsToRemove = c(
-      "zoom2d", "pan2d", "select2d", "lasso2d",
-      "zoomIn2d", "zoomOut2d", "resetScale2d",
-      "hoverClosestCartesian", "hoverCompareCartesian",
-      "toggleSpikelines", "toImage", "autoScale2d"
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
     ),
     displaylogo = FALSE,
     displayModeBar = TRUE
   )
-  
-htmltools::div(
-  style = "text-align: center; height: auto;",
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
   htmltools::div(
-    style = "display: inline-block; width: 80%; height: 600px;",
+    style = "display:inline-block; width:80%; height:600px;",
     p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
   )
 )
   
@@ -910,45 +956,52 @@ htmltools::div(
 #| warning: false
 
 sp <- "Canada Lynx"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
 
 p <- plot_list[[sp]]
 
 p_plotly <- ggplotly(p, tooltip = "text")
-  
+
+# Hide OSM series by default
 for (i in seq_along(p_plotly$x$data)) {
   if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
     p_plotly$x$data[[i]]$visible <- "legendonly"
   }
 }
-  
+
 p_plotly <- p_plotly |>
   layout(
     yaxis = list(title = list(standoff = 30,
                               text = "Density (Animals per km<sup>2</sup>)")),
-    legend = list(
-      orientation = "h",
-      x = 0.5,
-      xanchor = "center",
-      y = 1.17
-    ),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
     height = 600
   ) |>
   config(
     modeBarButtonsToRemove = c(
-      "zoom2d", "pan2d", "select2d", "lasso2d",
-      "zoomIn2d", "zoomOut2d", "resetScale2d",
-      "hoverClosestCartesian", "hoverCompareCartesian",
-      "toggleSpikelines", "toImage", "autoScale2d"
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
     ),
     displaylogo = FALSE,
     displayModeBar = TRUE
   )
-  
-htmltools::div(
-  style = "text-align: center; height: auto;",
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
   htmltools::div(
-    style = "display: inline-block; width: 80%; height: 600px;",
+    style = "display:inline-block; width:80%; height:600px;",
     p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
   )
 )
   
@@ -965,45 +1018,52 @@ htmltools::div(
 #| warning: false
 
 sp <- "Woodland Caribou"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
 
 p <- plot_list[[sp]]
 
 p_plotly <- ggplotly(p, tooltip = "text")
-  
+
+# Hide OSM series by default
 for (i in seq_along(p_plotly$x$data)) {
   if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
     p_plotly$x$data[[i]]$visible <- "legendonly"
   }
 }
-  
+
 p_plotly <- p_plotly |>
   layout(
     yaxis = list(title = list(standoff = 30,
                               text = "Density (Animals per km<sup>2</sup>)")),
-    legend = list(
-      orientation = "h",
-      x = 0.5,
-      xanchor = "center",
-      y = 1.17
-    ),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
     height = 600
   ) |>
   config(
     modeBarButtonsToRemove = c(
-      "zoom2d", "pan2d", "select2d", "lasso2d",
-      "zoomIn2d", "zoomOut2d", "resetScale2d",
-      "hoverClosestCartesian", "hoverCompareCartesian",
-      "toggleSpikelines", "toImage", "autoScale2d"
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
     ),
     displaylogo = FALSE,
     displayModeBar = TRUE
   )
-  
-htmltools::div(
-  style = "text-align: center; height: auto;",
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
   htmltools::div(
-    style = "display: inline-block; width: 80%; height: 600px;",
+    style = "display:inline-block; width:80%; height:600px;",
     p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
   )
 )
   
@@ -1020,45 +1080,52 @@ htmltools::div(
 #| warning: false
 
 sp <- "Gray Wolf"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
 
 p <- plot_list[[sp]]
 
 p_plotly <- ggplotly(p, tooltip = "text")
-  
+
+# Hide OSM series by default
 for (i in seq_along(p_plotly$x$data)) {
   if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
     p_plotly$x$data[[i]]$visible <- "legendonly"
   }
 }
-  
+
 p_plotly <- p_plotly |>
   layout(
     yaxis = list(title = list(standoff = 30,
                               text = "Density (Animals per km<sup>2</sup>)")),
-    legend = list(
-      orientation = "h",
-      x = 0.5,
-      xanchor = "center",
-      y = 1.17
-    ),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
     height = 600
   ) |>
   config(
     modeBarButtonsToRemove = c(
-      "zoom2d", "pan2d", "select2d", "lasso2d",
-      "zoomIn2d", "zoomOut2d", "resetScale2d",
-      "hoverClosestCartesian", "hoverCompareCartesian",
-      "toggleSpikelines", "toImage", "autoScale2d"
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
     ),
     displaylogo = FALSE,
     displayModeBar = TRUE
   )
-  
-htmltools::div(
-  style = "text-align: center; height: auto;",
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
   htmltools::div(
-    style = "display: inline-block; width: 80%; height: 600px;",
+    style = "display:inline-block; width:80%; height:600px;",
     p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
   )
 )
   
@@ -1066,7 +1133,23 @@ htmltools::div(
 
 :::
 
++ **White-tailed deer** have the highest densities across both stressor treatments and the reference areas among all the species. Density was highest in the reference clusters, and lower in both the linear features cluster and the two roads clusters.
++ The opposite pattern was found for **Black Bear**, where lower densities were found in the reference clusters and higher densities in the stressor treatments, particularly the two road clusters.
++ **Moose** densities were relatively low across all camera clusters, especially in areas of linear features (pipelines).
++ **Coyotes** were attracted to to road features, but not linear features. The same pattern was observed for **Snowshoe Hare** and **Canada Lynx**. 
++ **Caribou** and **Wolf** densities (and overall detections) were very low across all clusters, making it difficult to assess patterns and response to stressors. However, wolf density does seem to be higher in reference areas. 
+
 # Species Predictions
+
+The ABMI compiles all remote camera data collected in Alberta’s boreal region (including the Oil Sands Region) and uses it to develop habitat models for each species. These models incorporate species’ responses to land cover (e.g., vegetation and forest types), human disturbance, and climate variables.
+
+The maps below show one output from these models: the predicted probability of species presence within the OMGD19 area of interest. The area is divided into 1 km<sup>2</sup> pixels, and for each pixel, the model estimates the probability of presence for each species based on the habitat and disturbance present in that location.
+
+<br>
+
+::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
+Use the buttons on the top right of the map to toggle through each species' predictions. You can also turn on Satellite Imagery and use the NONE (Blank) button to view the imagery underneath the predictions.
+:::
 
 ```{r}
 #| label: map-species-predictions
@@ -1151,5 +1234,9 @@ htmltools::tags$div(
 
 ```
 
+<br>
 
+# Recommendations and Next Steps
+
+# References
 

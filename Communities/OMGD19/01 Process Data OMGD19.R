@@ -211,6 +211,7 @@ df_ind_detect <- main_report |>
 # Species Co-Occurrences
 
 corr <- df_ind_detect |>
+  filter(species_common_name %in% species) |>
   mutate(species_common_name = factor(species_common_name)) |>
   group_by(location, species_common_name, .drop = FALSE) |>
   tally() |>
