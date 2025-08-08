@@ -33,7 +33,7 @@ for (file in files) {
 
 # Authenticate into WildTrax
 Sys.setenv(WT_USERNAME = "marcusabecker89",
-           WT_PASSWORD = "beCCM00!^RRe")
+           WT_PASSWORD = "")
 
 wt_auth()
 
