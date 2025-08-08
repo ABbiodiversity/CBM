@@ -48,7 +48,7 @@ po/*~
 # RStudio Connect folder
 rsconnect/
 
-# Figures folder
-Figures/
+# Figures folder - Not sure if needed yet.
+#Figures/
 
 /.quarto/
