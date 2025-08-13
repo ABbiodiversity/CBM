@@ -1,6 +1,11 @@
 ---
 title: "Otipemisiwak Métis Government Lac La Biche District 19"
 subtitle: "Results from the Oil Sands Monitoring Wildlife Camera Project"
+format:
+  html:
+    grid:
+      margin-width: 300px
+      body-width: 1050px
 navbar: right
 theme: cosmo
 date: "`r format(Sys.time(), '%d %B, %Y')`"
@@ -33,7 +38,7 @@ css: assets/styles.css
 #| echo: false
 source("Functions/Carousel.R")
 carousel("gallery-carousel", 10000, 
-         yaml.load_file("carousel.yml"))
+         yaml.load_file("carousel1.yml"))
 ```
 
 ::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
@@ -238,7 +243,17 @@ knitr::include_graphics(paste0("Figures/", com_acr, "/Number of Images.png"))
 
 ```
 
-For a complete list of all the species, you can go to the project on WildTrax and click on the 'Species' tab of the project. Since no other species had more than 20 images collected over the course of the project and across all cameras, we will focus our analysis on the 8 species shown here (**White-tailed deer, Black Bear, Moose, Coyote, Snowshoe Hare, Canada Lynx, Woodland Caribou, and Gray Wolf**). 
+For a complete list of all the species, you can go to the project on WildTrax and click on the 'Species' tab of the project. Since no other species had more than 20 images collected over the course of the project and across all cameras, we will focus our analysis on the 8 species shown here ([White-tailed deer](https://portal.wildtrax.ca/home/camera-deployments/species-verification.html?projectId=2929&speciesId=2699), [Black Bear](https://portal.wildtrax.ca/home/camera-deployments/species-verification.html?projectId=2929&speciesId=2635), [Moose](https://portal.wildtrax.ca/home/camera-deployments/species-verification.html?projectId=2929&speciesId=2678), [Coyote](https://portal.wildtrax.ca/home/camera-deployments/species-verification.html?projectId=2929&speciesId=2658), [Snowshoe Hare](https://portal.wildtrax.ca/home/camera-deployments/species-verification.html?projectId=2929&speciesId=2740), [Canada Lynx](https://portal.wildtrax.ca/home/camera-deployments/species-verification.html?projectId=2929&speciesId=2654), [Woodland Caribou](https://portal.wildtrax.ca/home/camera-deployments/species-verification.html?projectId=2929&speciesId=2781), and [Gray Wolf](https://portal.wildtrax.ca/home/camera-deployments/species-verification.html?projectId=2929&speciesId=2668)).
+
+<br>
+
+```{r}
+#| warning: false
+#| echo: false
+
+carousel("species-carousel", 10000, 
+         yaml.load_file("carousel2.yml"))
+```
 
 # Independent Detections Over Time
 
@@ -303,7 +318,7 @@ cat(":::\n")
 ```
 
 + **White-tailed deer** were primarily detected in the summer months of June, July, and August. 
-+ Because they are nocturnal, detection of **Black Bears** began in May, and peaked in late June and early July.
++ Because they hibernate over the winter, detection of **Black Bears** began in May, and peaked in late June and early July.
 + **Moose** were consistently detected year round, as were **Coyote** and **Canada Lynx**.
 + Detections of **Snowshoe Hare** were also consistent year round, with the exception of the later summer months (August).
 + **Woodland Caribou** and **Gray Wolf** detections were infrequent and sporadic across the duration of the project.
@@ -567,6 +582,8 @@ There are 3 reference clusters, 1 linear features cluster (pipelines), and 2 roa
 
 We can also compare the results from the 6 camera clusters deployed by `r com_acr` to those deployed as part of the broader regional OSM monitoring done by the ABMI. The ABMI deploys clusters of cameras (called 'Joint Environmental Monitoring Sites', or JEMS) in a similar fashion to `r com_acr`, targeting the physical footprint and adjacent areas of oil sands industry disturbances (@Bayne2021OSMFramework). There are two stressors examined by both the `r com_acr` cameras and the regional monitoring done by the ABMI: **linear features** and **roads**, as well as **reference (low disturbance)** areas. In the figures below for each species, we also plot out the values obtained from ABMI JEM sites alongside the `r com_acr` values.
 
+Based on the regional monitoring data, the average density value for each stressor is represented by a horizontal dark grey line on the plots below. When comparing `r com_acr` cluster values to these averages, it is important to note that these are pooled averages from sites surveyed across the entire Oil Sands Region, and represent a variety of geographic characteristics. 
+
 ::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
 Click on each **Data Source** (e.g., 'OSM Regional Monitoring') within each of the plot legends to hide or display the data associated with each source.
 Hover over each point to view which cluster the value is associated with.
@@ -587,10 +604,22 @@ data <- df_density_os |>
   mutate(rank = if_else(
     project == "OSM Regional Monitoring",
     dense_rank(desc(density_km2)),
-    NA_integer_  # Don't rank OMGD19 — set to NA
+    NA_integer_  # Don't rank OMGD19, set to NA
   )) |>
   ungroup() |>
-  filter(is.na(rank) | rank > 3)
+  filter(is.na(rank) | rank > 3) |>
+  mutate(treatment = factor(treatment),
+         xnum = as.numeric(treatment))
+
+# Average stressor treatment values
+avg_values <- data |>
+  filter(!str_detect(project, "OMGD19")) |>
+  group_by(species_common_name, treatment) |>
+  summarise(avg_density_km2 = mean(density_km2)) |>
+  ungroup() |>
+  mutate(treatment = factor(treatment),
+         xnum = as.numeric(treatment),
+         project = "OSM Regional Monitoring")
   
 figure_letters <- letters[1:length(species)]
 
@@ -602,26 +631,52 @@ for (sp in seq_along(species)) {
   letter <- figure_letters[sp]
   
   d <- data[data$species_common_name == title, ]
+  d_avg <- avg_values[avg_values$species_common_name == title, ]
   
-  p <- d |>
-  ggplot(aes(x = treatment, y = density_km2, color = project,
-             text = paste0(
-               "Cluster: ", site,
-               "<br>",
-               "Density: ", round(density_km2, 2)
-             ))) +
+p <- ggplot(
+  d,
+  aes(
+    x = xnum,
+    y = density_km2,
+    color = project,
+    text = paste0(
+      "Cluster: ", site, "<br>",
+      "Treatment: ", as.character(treatment), "<br>",
+      "Density: ", round(density_km2, 2)
+    )
+  )
+) +
+  geom_segment(
+    data = d_avg,
+    aes(
+      x = xnum - 0.1, xend = xnum + 0.1,
+      y = avg_density_km2, yend = avg_density_km2,
+    ),
+    inherit.aes = FALSE,
+    linewidth = 1.75,
+    lineend = "butt",
+    color = "grey50"
+  ) +
   geom_point(size = 4, alpha = 0.7) +
+  scale_x_continuous(
+    breaks = sort(unique(d$xnum)),
+    labels = levels(d$treatment)
+  ) +
   scale_color_manual(
-    values = c("OMGD19 Local Monitoring" = species_colours[[title]], 
-               "OSM Regional Monitoring" = "grey70"),
+    values = c(
+      "OMGD19 Local Monitoring" = species_colours[[title]],
+      "OSM Regional Monitoring" = "grey70"
+    ),
     name = "Data Source: "
   ) +
-  labs(x = "") +
+  labs(x = "", y = "Density (Animals per km\u00B2)") +
   theme_minimal() +
-  theme(axis.text = element_text(size = 13),
-        axis.title.y = element_text(size = 14),
-        legend.text = element_text(size = 12),
-        legend.title = element_text(size = 14))
+  theme(
+    axis.text = element_text(size = 13),
+    axis.title.y = element_text(size = 14),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 14)
+  )
   
   plot_list[[title]] <- p
   
@@ -674,7 +729,7 @@ p_plotly <- p_plotly |>
   )
 
 cap_text <- htmltools::HTML(
-  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
 ))
 
 htmltools::tags$figure(
@@ -736,7 +791,7 @@ p_plotly <- p_plotly |>
   )
 
 cap_text <- htmltools::HTML(
-  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
 ))
 
 htmltools::tags$figure(
@@ -798,7 +853,7 @@ p_plotly <- p_plotly |>
   )
 
 cap_text <- htmltools::HTML(
-  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
 ))
 
 htmltools::tags$figure(
@@ -860,7 +915,7 @@ p_plotly <- p_plotly |>
   )
 
 cap_text <- htmltools::HTML(
-  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
 ))
 
 htmltools::tags$figure(
@@ -922,7 +977,7 @@ p_plotly <- p_plotly |>
   )
 
 cap_text <- htmltools::HTML(
-  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
 ))
 
 htmltools::tags$figure(
@@ -984,7 +1039,7 @@ p_plotly <- p_plotly |>
   )
 
 cap_text <- htmltools::HTML(
-  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
 ))
 
 htmltools::tags$figure(
@@ -1046,7 +1101,7 @@ p_plotly <- p_plotly |>
   )
 
 cap_text <- htmltools::HTML(
-  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
 ))
 
 htmltools::tags$figure(
@@ -1108,7 +1163,7 @@ p_plotly <- p_plotly |>
   )
 
 cap_text <- htmltools::HTML(
-  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default)."
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from OMGD19 (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
 ))
 
 htmltools::tags$figure(
@@ -1128,11 +1183,11 @@ htmltools::tags$figure(
 
 :::
 
-+ **White-tailed deer** have the highest densities across both stressor treatments and the reference areas among all the species. Density was highest in the reference clusters, and lower in both the linear features cluster and the two roads clusters.
-+ The opposite pattern was found for **Black Bear**, where lower densities were found in the reference clusters and higher densities in the stressor treatments, particularly the two road clusters.
-+ **Moose** densities were relatively low across all camera clusters, especially in areas of linear features (pipelines).
-+ **Coyotes** were attracted to to road features, but not linear features. The same pattern was observed for **Snowshoe Hare** and **Canada Lynx**. 
-+ **Caribou** and **Wolf** densities (and overall detections) were very low across all clusters, making it difficult to assess patterns and response to stressors. However, wolf density does seem to be higher in reference areas. 
++ **White-tailed deer** have the highest densities across both stressor treatments and the reference areas among all the species. Density was highest in the reference clusters, and lower in both the linear features cluster and the two roads clusters. Deer values in the `r com_acr` reference clusters were all higher than the regional average.
++ The opposite pattern was found for **Black Bear**, where lower densities were found in the reference clusters and higher densities in the stressor treatments, particularly the two road clusters. The two road clusters were substantially higher than the regional average, whereas the reference and linear features cluster values were more comparable. 
++ **Moose** densities were relatively low across all camera clusters, especially in areas of linear features (pipelines). With the exception of roads, these values were lower than the regional averages.
++ **Coyotes** were attracted to to road features, but not linear features. The same pattern was observed for **Snowshoe Hare** and **Canada Lynx**. In all three cases, the road clusters had dramatically higher density values than the regional average. 
++ **Caribou** and **Wolf** densities (and overall detections) were very low across all clusters, making it difficult to assess patterns and response to stressors. However, wolf densities were higher in the reference clusters compared to the two disturbance treatments, and were above the regional average. 
 
 # Species Predictions
 
@@ -1202,6 +1257,14 @@ for (sp in species) {
 
 map <- map |>
   addTiles(group = "NONE (Blank)", options = tileOptions(opacity = 0)) |>
+  addAwesomeMarkers(data = st_as_sf(locations_for_map, coords = c("longitude", "latitude"), crs = 4326),
+                    icon = makeAwesomeIcon(icon = "camera", iconColor = "black", library = "ion", markerColor = "white"),
+      group = "Camera Locations",
+      popup = paste(
+        "<b>", "Location: ", "</b>", locations_for_map$location, "<br><br>",
+        "<b>", "Treatment:", "</b>", locations_for_map$treatment, "<br><br>",
+        "<b>", "Deployed:", "</b>", locations_for_map$start_date, "<br><br>",
+        "<b>", "Refreshed:", "</b>", locations_for_map$end_date, "<br><br>")) |>
   addLegend(
     pal = pal,
     values = domain_raw,
@@ -1215,11 +1278,12 @@ map <- map |>
     )
   ) |>
   addLayersControl(
-    overlayGroups = c("Satellite Imagery"),
+    overlayGroups = c("Satellite Imagery",
+                      "Camera Locations"),
     baseGroups = c(species, "NONE (Blank)"),
     options = layersControlOptions(collapsed = FALSE)
   ) |>
-  hideGroup("Satellite Imagery")
+  hideGroup(c("Satellite Imagery", "Camera Locations"))
 
 # Print map
 
@@ -1228,6 +1292,14 @@ htmltools::tags$div(
   map)
 
 ```
+
+<br>
+
++ **White-tailed Deer** are predicted to show a higher probability of occurrence in the southern portion of the `r com_acr` traditional territory, where warmer climate and greater human disturbance favour the species.
++ **Black Bears** are predicted to occur throughout the territory, including the more northern forested areas toward Fort McMurray.
++ **Moose** are predicted to occur across the territory, with a higher probability of occurrence in less disturbed areas such as east of Lac La Biche.
++ **Coyotes** are predicted to be concentrated in the southwest where they are associated with agricultural development, whereas **Snowshoe Hare** and **Canada Lynx** show the opposite pattern with a higher probability of occurrence in more forested and northern areas.
++ **Woodland Caribou** are predicted to occur in the northeast of the territory, overlapping the East Side Athabasca River caribou range (ESAR). **Gray Wolves** have a generally low probability of occurrence across the territory, with slight increases where human disturbance is lower.
 
 <br>
 
