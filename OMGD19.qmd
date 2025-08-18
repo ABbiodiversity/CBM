@@ -4,7 +4,7 @@ subtitle: "Results from the Oil Sands Monitoring Wildlife Camera Project"
 format:
   html:
     grid:
-      margin-width: 250px
+      margin-width: 200px
       body-width: 950px
 navbar: right
 theme: cosmo
