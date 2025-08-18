@@ -65,6 +65,27 @@ figure figcaption {
   box-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Soft shadow */
 }
 
+/* Affect Quarto tabsets only */
+.tabset .nav-tabs {
+  flex-wrap: wrap !important;      /* allow multiple lines */
+  justify-content: center !important;  /* center each line */
+}
+.tabset .nav-tabs .nav-item {
+  flex: 0 1 auto;                  /* let items size to content */
+}
+.tabset .nav-tabs .nav-link {
+  white-space: nowrap;             /* keep labels on one line */
+}
 
+h1.title {
+  font-size: 3.2rem;   /* main title */
+  font-weight: 700;    /* optional: bold */
+}
+
+.quarto-title-block .subtitle {
+  font-size: 1.8rem;      /* adjust as needed */
+  line-height: 1.3;
+  font-weight: 500;
+}
 
 </style>

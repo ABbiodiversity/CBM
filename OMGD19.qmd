@@ -4,8 +4,8 @@ subtitle: "Results from the Oil Sands Monitoring Wildlife Camera Project"
 format:
   html:
     grid:
-      margin-width: 300px
-      body-width: 1050px
+      margin-width: 250px
+      body-width: 950px
 navbar: right
 theme: cosmo
 date: "`r format(Sys.time(), '%d %B, %Y')`"
@@ -107,7 +107,7 @@ species_colours <- c(
 
 ```
 
-Members of the __`r com_full`__ (__`r com_acr`__) are interested in understanding the changes in wildlife condition and behaviour that they are noticing on the land. The health and abundance of wildlife populations is relied upon by members of `r com_acr` to support a traditional way of life. To ensure the sustainability of this way of life it is important to understand both how many animals, such as moose, are available for harvest every year and what the drivers of change are in the abundance of wildlife over time. These concerns led to the initiation of this wildlife monitoring program in 2023.
+Members of the __`r com_full`__ (__`r com_acr`__) are interested in understanding the changes in wildlife condition and behaviour that they are noticing on the land. The health and abundance of wildlife populations is relied upon by members of `r com_acr` to support a traditional way of life. To ensure the sustainability of this way of life it is important to understand both how many animals (such as moose) are available for harvest every year and what the drivers of change are in the abundance of wildlife over time. These concerns led to the initiation of this wildlife monitoring program in 2023.
 <br>
 <br>
 In 2023, `r com_acr` created a Community Knowledge Committee comprising both elders and youths to lead this project. This Community Knowledge Committee shares knowledge and disseminates information about the program across age ranges and the region. The Committee engages with ABMI staff about program updates, monitoring methods, study design, site locations, analysis, and integration of Indigenous knowledge indicators.
@@ -123,7 +123,7 @@ In 2023, `r com_acr` created a Community Knowledge Committee comprising both eld
 #| message: false
 #| fig-cap: "Community Knowledge Committee with ABMI staff."
 #| fig-align: center
-#| out-width: "80%"
+#| out-width: "85%"
 
 knitr::include_graphics("Images/OMGD19/CKC.JPG")
 
@@ -134,17 +134,25 @@ knitr::include_graphics("Images/OMGD19/CKC.JPG")
 The Committee deployed 18 cameras between late September 2023 and October 2024. These cameras were primarily deployed along the Old Conklin Road near Lac La Biche (see Figure below) in clusters of 4 cameras. Cameras were deployed based on the knowledge of the land, areas of interest by the committee, and areas of oil sands disturbance.
 <br>
 <br>
-The goal of the program is to evaluate the specific oil sands disturbance type of **pipelines** and **roads** compared to reference (low disturbance) areas. To achieve this, 2 clusters of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community.
+The goal of the program is to evaluate the specific oil sands disturbance type of **pipelines** and **roads** compared to reference (low disturbance) areas. To achieve this, 2 clusters (sets) of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community.
 
 ## Camera Refresh and Image Processing
 
-The wildlife cameras were refreshed (given new SD cards and batteries) in the field by the Community Knowledge Committee in 2024 and 2025. The CKC members uploaded and tagged all of the camera images on the online platform [WildTrax](www.wildtrax.ca)[^1]. WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) for users of environmental sensors such as remote cameras to provide support with processing, standardizing, and sharing data. Initial results from this first year of data collected at the 18 cameras are presented here in this report. 
+The wildlife cameras were refreshed (given new SD cards and batteries) in the field by the Community Knowledge Committee in 2024 and 2025. The CKC members uploaded and tagged all of the camera images on the online platform [WildTrax](www.wildtrax.ca)[^1]. WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) for users of environmental sensors such as remote cameras to provide support with processing, organizing, and sharing data. Initial results from this first year of data collected at the 18 cameras are presented here in this report. 
 
 [^1]: `r com_acr` images and wildlife tags can be viewed using [this link](https://portal.wildtrax.ca/home/camera-deployments.html?sensorId=CAM&projectId=2929) to the WildTrax platform. Note that viewers will need to have a WildTrax account with the appropriate permissions from the community and be logged in to see the images.
 
+# Project Highlights
+
+This section is a space for the Community Knowledge Committee to share their major takeaways from the project so far. This could be sharing surprises from and highlight specific images, camera deployment/refresh, potential to add quotes, or create videos and add them in. 
+
+One idea we came up with was:
+
+One highlight of the program has been documenting that Woodland Caribou are actively using the study area and were detected at multiple cameras. This was a very exciting discovery during the image tagging process and even led to members of the CKC seeing caribou in person when out servicing the cameras.
+
 # Camera Locations
 
-The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`. Satellite imagery can switched on and off using the button in the top left of the top.
+The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`. Camera cluster sites were chosen by the Community Knowledge Committee in a region that not only holds cultural significance but also is a traditional harvesting area for community food sources. Satellite imagery can be switched on and off using the button in the top left of the top.
 
 Click each camera location to see it's name, assigned treatment (road, pipeline, or reference), and when it was deployed and refreshed. 
 
@@ -225,14 +233,14 @@ htmltools::tags$div(
 
 # Number of Images Collected
 
-@fig-nimages below displays the total number of images collected on the most common 8 species present in the `r com_full` camera project. The most commonly observed species was `r nimages[1, 1] |> pull()` with `r nimages[1, 2] |> pull()` images collected over the course of the project. 
+@fig-nimages below displays the total number of images collected on the most common 8 species tagged in the `r com_full` camera project. The most commonly observed species was `r nimages[1, 1] |> pull()` with `r nimages[1, 2] |> pull()` images collected over the course of the project. 
 
 ```{r}
 #| label: fig-nimages
 #| fig-cap: "Number of images captured by species"
 #| fig-cap-location: bottom
 #| fig-dpi: 300
-#| out-width: "80%"
+#| out-width: "85%"
 #| include: true
 #| echo: false
 #| eval: true
@@ -257,7 +265,7 @@ carousel("species-carousel", 10000,
 
 # Independent Detections Over Time
 
-With camera data, one useful metric to track over time is the number of "independent" detections captured for each species. In this case, an independent detection is defined as an image or collection of images captured for a given species that can be thought of as a single detection event.
+The number of images of each species tells us part of the picture but just because there may be more images of one species doesn’t necessarily mean there are more of them in the area, they may have just spent more time in front of the camera. With camera data, it’s important to track the number of “independent” detections for each species. You can think of an independent detection as an image or collection of images for a visit from an animal or group of animals.
 
 In the figure below we present the number of independent detections for each of the 8 focal species detected in the `r com_acr` project. We use a 30 minute time interval to separate detection events; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals.
 
@@ -275,7 +283,7 @@ knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections.
 
 ```
 
-You can toggle through the figures for each species using the tabs below. The x-axis represents the camera deployment span in this project, from October 2023 to October 2024. The y-axis represents the number of detections captured, which is pooled across all the cameras from the project. Note that the y-axis of the plots for each species may differ depending on the number of detections captured.
+You can explore the figures for each species using the tabs below. The x-axis (bottom) represents the camera deployment timeline, from October 2023 to October 2024. The y-axis (left) shows the number of detections captured, from all of the cameras from the project. Note that the y-axis (left) of the plots for each species may change depending on the number of detections captured.
 
 ```{r}
 #| label: ind-detections
@@ -372,9 +380,9 @@ htmltools::div(
 
 # Temporal Activity Patterns
 
-Given that camera traps operate 24 hours a day, 7 days a week, and can record animal motion down to second-level precision, they represent a powerful tool to explore and contrast the activity patterns of the species they detect. Such analyses can give insight into competition, predation, and coexistence.
+Since camera traps take photos continuously 24 hours a day they can tell us when different species are active. These analyses can give insight into competition, predation, and coexistence.
 
-In this section we present the temporal (diel) activity patterns for each of the 8 focal species from the `r com_acr` cameras. The x-axis of each of the following plots represents the 24-hr daily cycle, and the line represents the relative activity level detected by the cameras. This data is pooled across all 18 cameras in the project.
+In this section we present the temporal (diel) activity patterns for each of the 8 focal species from the `r com_acr` cameras. The x-axis (bottom) of each of the following plots represents the 24-hr daily cycle, and the line represents the relative activity level detected by the cameras. This data is pooled across all 18 cameras in the project.
 
 ```{r}
 #| include: true
@@ -417,17 +425,23 @@ cat(":::\n")
 ```
 
 + **White-tailed deer** are primarily active during twilight hours, specifically at dawn and dusk. This pattern is known as *crepuscular*. The majority of the activity, however, was captured during the dawn hours (6:00 to 9:00). 
-+ **Black Bear** were similarily crepuscular, although the peak was much more pronounced during the dusk hours (between 18:00 and 24:00).
++ **Black Bear** were similarly crepuscular, although the peak was much more pronounced during the dusk hours (between 18:00 and 24:00).
 + Based on the cameras in the `r com_acr` project, **Moose** were primarily active during the night time (00:00 to 6:00).
 + **Coyote** and **Snowshoe Hare** were similar to Moose, but had slightly elevated (and increasing) activity levels throughout the evening hours.
-+ **Canada Lynx** activity peaked during the midday (12:00). **Caribou** were similar, with a slightly earlier, and more pronounced, peak (10:00).
++ **Canada Lynx** activity peaked during midday (12:00). **Caribou** were similar, with a slightly earlier, and more pronounced, peak (10:00).
 + Finally, **Gray Wolf** showed a slightly crepuscular tendency, however the dusk activity peak was more extreme. 
 
-# Species Co-Occurences
+# Species Overlap 
 
 Camera trap data are being increasingly used to model multiple species communities, and we can use this data to explore the co-occurrence patterns of the species in the community.
 
-Figure 5 below displays pairwise correlations between the species on the left and the species on the top row. Blue colours indicate positive correlation, meaning that the two species are positively associated with one another. Red colours indicate the opposite, that where you have high counts of one species you likely have low counts of the other (and vice versa).
+## Species that share the same spaces
+
+Blue boxes in Figure 5 below show species that are usually seen by the same cameras. For example, Black Bears and Moose often appear in the same areas because they rely on the same habitat like forests-that provide food and shelter. Even though bears sometimes hunt moose (especially calves), most adult Moose are big enough to defend themselves, so they don’t always avoid bear territory. Bears might also follow Moose for scavenging opportunities, which keeps them in the same general area without constant conflict.
+
+## Species rarely found together 
+
+Red boxes show species that tend to stay apart and weren't usually seen at the same camera. For example, White-tailed Deer might avoid areas with certain predators to reduce risk. But not all predators trigger avoidance: deer and Gray Wolves can have a blue box (positive correlation) because deer are fast and rely on the same habitats as wolves. Wolves can not catch every deer, so deer may tolerate the risk to access food or water. Other pairs of species, such as Moose and Caribou, do not have a predator/prey relationship but select for different habitat types because they browse on different vegetation for food. Moose prefer upload (drier) sites, whereas Caribou prefer lowland areas. 
 
 ```{r}
 #| label: cooccurrences
@@ -450,11 +464,11 @@ corrplot(M, method = "color",
 
 # Species Density
 
-In addition to the number of images and counts of independent detections, we can estimate the density of each species at each camera. Density is the number of animals per unit area, which translates to abundance when scaled up to a larger region of interest. 
+We can use the number of images and counts of independent detections to estimate the density of each species at each camera. Density is the number of animals per unit area, which we express below as the number of animals per square kilometer (km<sup>2</sup>).  
 
-To estimate the density of each wildlife species at each camera, we used the Time in Front of Camera (TIFC) approach (@becker2022applying). This method has previously been used to estimate densities of unmarked populations of both white-tailed deer and moose in the boreal region of Alberta. Similar to quadrat sampling, the TIFC approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
+To estimate the density of each wildlife species at each camera, we used the Time in Front of Camera (TIFC) approach (@becker2022applying). This method has previously been used to estimate densities of unmarked populations of both White-tailed Deer and Moose in the boreal region of Alberta (@laurent2021evaluating, @dickie2024habitat). Similar to quadrat sampling, this approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
 
-The following map displays the spatial distribution in densities of the 8 focal species between the 18 cameras of the OMGD19 camera project. Note that cameras with no detections of a particular species (i.e., a density of '0') are represented with a black circle.
+The following map displays the spatial distribution in densities of the 8 focal species between the 18 cameras of the OMGD19 camera project. Note that cameras with no detections of a particular species (i.e., a density of '0') are represented with a black circle. Smaller circles represent small densities of a species at that camera. Bigger circles indicate that the density is higher at that camera.
 
 <br>
 
@@ -574,13 +588,13 @@ tags$div(
 
 # Evaluating Oil Sands Disturbances
 
-In this section we present the results from `r com_acr` camera deployments evaluating the impact of specific oil sands stressors on wildlife within `r com_acr`: **pipelines** and **roads**. The effect of these stressors on species' density is evaluated by comparing values to a **reference** (low disturbance) area. 
+This section shows the results from the `r com_acr` camera deployments evaluating the impact of specific oil sands stressors on wildlife within `r com_acr`: **pipelines** and **roads**. The effect of these stressors on species' density is evaluated by comparing values to a **reference** (low disturbance) area. 
 
 The following plots show the density of each species at each cluster of cameras. Each point represents the average density value among the cameras of the cluster. For instance, the 4 cameras that belong to the 'MNA 19-6' cluster (which is a reference cluster) had white-tailed deer density values of 4.75, 4.79, 5, and 3.36 animals per km<sup>2</sup>, for an average density of 4.47. This is represented by the top point in the Reference column of Figure 6a below. 
 
-There are 3 reference clusters, 1 linear features cluster (pipelines), and 2 road features cluster. The tabs can be used to toggle through each individual species results. 
+There are 3 reference clusters, 1 linear features cluster (pipelines), and 2 road features cluster. The tabs can be used to go through each individual species results. 
 
-We can also compare the results from the 6 camera clusters deployed by `r com_acr` to those deployed as part of the broader regional OSM monitoring done by the ABMI. The ABMI deploys clusters of cameras (called 'Joint Environmental Monitoring Sites', or JEMS) in a similar fashion to `r com_acr`, targeting the physical footprint and adjacent areas of oil sands industry disturbances (@Bayne2021OSMFramework). There are two stressors examined by both the `r com_acr` cameras and the regional monitoring done by the ABMI: **linear features** and **roads**, as well as **reference (low disturbance)** areas. In the figures below for each species, we also plot out the values obtained from ABMI JEM sites alongside the `r com_acr` values.
+We can also compare the results from the 6 camera clusters deployed by `r com_acr` to those deployed as part of the broader regional OSM monitoring done by the ABMI. The ABMI deploys clusters of 2-4 cameras in a similar fashion to `r com_acr`, targeting the physical footprint and adjacent areas of oil sands industry disturbances (@Bayne2021OSMFramework). There are two stressors examined by both the `r com_acr` cameras and the regional monitoring done by the ABMI: **linear features** and **roads**, as well as **reference (low disturbance)** areas. In the figures below for each species, we also plot out the values obtained from ABMI sites alongside the `r com_acr` values.
 
 Based on the regional monitoring data, the average density value for each stressor is represented by a horizontal dark grey line on the plots below. When comparing `r com_acr` cluster values to these averages, it is important to note that these are pooled averages from sites surveyed across the entire Oil Sands Region, and represent a variety of geographic characteristics. 
 
@@ -651,11 +665,12 @@ p <- ggplot(
     aes(
       x = xnum - 0.1, xend = xnum + 0.1,
       y = avg_density_km2, yend = avg_density_km2,
+      color = project
     ),
     inherit.aes = FALSE,
     linewidth = 1.75,
     lineend = "butt",
-    color = "grey50"
+    show.legend = FALSE
   ) +
   geom_point(size = 4, alpha = 0.7) +
   scale_x_continuous(
@@ -1186,19 +1201,19 @@ htmltools::tags$figure(
 + **White-tailed deer** have the highest densities across both stressor treatments and the reference areas among all the species. Density was highest in the reference clusters, and lower in both the linear features cluster and the two roads clusters. Deer values in the `r com_acr` reference clusters were all higher than the regional average.
 + The opposite pattern was found for **Black Bear**, where lower densities were found in the reference clusters and higher densities in the stressor treatments, particularly the two road clusters. The two road clusters were substantially higher than the regional average, whereas the reference and linear features cluster values were more comparable. 
 + **Moose** densities were relatively low across all camera clusters, especially in areas of linear features (pipelines). With the exception of roads, these values were lower than the regional averages.
-+ **Coyotes** were attracted to to road features, but not linear features. The same pattern was observed for **Snowshoe Hare** and **Canada Lynx**. In all three cases, the road clusters had dramatically higher density values than the regional average. 
++ **Coyotes** were attracted to road features, but not linear features. The same pattern was observed for **Snowshoe Hare** and **Canada Lynx**. In all three cases, the road clusters had dramatically higher density values than the regional average. 
 + **Caribou** and **Wolf** densities (and overall detections) were very low across all clusters, making it difficult to assess patterns and response to stressors. However, wolf densities were higher in the reference clusters compared to the two disturbance treatments, and were above the regional average. 
 
-# Species Predictions
+# Where We Expect to Find Species
 
-The ABMI compiles all remote camera data collected in Alberta’s boreal region (including the Oil Sands Region) and uses it to develop habitat models for each species. These models incorporate species’ responses to land cover (e.g., vegetation and forest types), human disturbance, and climate variables.
+The ABMI compiles remote camera data collected in Alberta’s boreal region (including the Oil Sands Region) and uses it to develop habitat models for many species. These models incorporate species’ responses to land cover (e.g., vegetation and forest types), human disturbance, and climate variables (seasonal weather patterns).
 
-The maps below show one output from these models: the predicted probability of species presence within the OMGD19 area of interest. The area is divided into 1 km<sup>2</sup> pixels, and for each pixel, the model estimates the probability of presence for each species based on the habitat and disturbance present in that location.
+The maps below show where the models predict each species is most likely to be found in the `r com_acr` area of interest. The area is divided into 1 km<sup>2</sup> pixels, and for each pixel, the model estimates the probability of each species being there based on the habitat and disturbance present in that pixel.
 
 <br>
 
 ::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
-Use the buttons on the top right of the map to toggle through each species' predictions. You can also turn on Satellite Imagery and use the NONE (Blank) button to view the imagery underneath the predictions.
+Use the buttons on the top right of the map to toggle through each species' predictions. You can also turn on **Satellite Imagery** and use the **NONE (Blank)** button to view the imagery underneath the predictions, as well as use the **Camera Locations** button to see where `r com_acr` camera locations are.  
 :::
 
 ```{r}
@@ -1304,6 +1319,8 @@ htmltools::tags$div(
 <br>
 
 # Recommendations and Next Steps
+
+(This section is available to record the direction provided by the Community Knowledge Committee to help guide the next phases of the `r com_acr` wildlife monitoring program.)
 
 # References
 
