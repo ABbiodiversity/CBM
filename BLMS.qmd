@@ -1,0 +1,198 @@
+---
+title: "Buffalo Lake Métis Settlement"
+subtitle: "Results from the Cumulative Effects Wildlife Camera Project"
+format:
+  html:
+    grid:
+      margin-width: 200px
+      body-width: 950px
+navbar: right
+theme: cosmo
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author:
+  - name: "Timothy Patenaude"
+    affiliation: "Buffalo Lake Métis Settlement"
+  - name: "David Evans"
+    affiliation: "ABMI"
+    email: "david.evans@ualberta.ca"
+  - name: "Robbie Potts"
+    email: "rnpotts@ualberta.ca"
+    affiliation: "ABMI"
+  - name: "Marcus Becker"
+    affiliation: "ABMI"
+    email: "marcus.becker@ualberta.ca"
+editor: visual
+bibliography: references.bib
+nocite: '@*'
+toc: true
+toc-depth: 3
+toc-expand: true
+toc-location: left
+css: assets/styles.css
+---
+
+<br>
+
+```{r}
+#| warning: false
+#| echo: false
+source("Functions/Carousel.R")
+carousel("gallery-carousel", 10000, 
+         yaml.load_file("Images/BLMS/blms-carousel1.yml"))
+```
+
+::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
+This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, refer to the publication date and feel free to reach out to the authors.
+:::
+
+# Project Introduction
+
+```{r}
+#| label: load-all
+#| include: false
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+# Load packages
+library(tidyverse)
+library(leaflet)
+library(leaflet.extras)
+library(sf)
+library(activity)
+library(overlap)
+library(corrplot)
+library(DT)
+library(here)
+library(htmltools)
+library(htmlwidgets)
+library(crosstalk)
+library(plotly)
+library(terra)
+library(glue)
+
+# Community acronym
+com_acr <- "BLMS"
+
+# Community full name
+com_full <- "Buffalo Lake Métis Settlement"
+
+# Google Drive
+g_drive_cbme <- "G:/Shared drives/CBME Community Camera Results/"
+
+# Load data from the community (including pre-processed data)
+load(paste0(g_drive_cbme, com_acr, "/Data/", com_acr, " Data Objects.RData"))
+
+species <- c(
+  "White-tailed Deer", 
+  "Black Bear", 
+  "Moose", 
+  "Coyote", 
+  "Snowshoe Hare",
+  "Horse")
+
+species_colours <- c(
+  "White-tailed Deer"  = "#3A86FF",  
+  "Snowshoe Hare"      = "#E63946",  
+  "Moose"              = "#06D6A0",  
+  "Black Bear"         = "#8338EC",  
+  "Horse"              = "#FB5607",  
+  "Coyote"             = "#3366CC"  
+)
+
+```
+
+The Buffalo Lake Wildlife Camera Program (BLWCP) is a community-led initiative grounded in Indigenous knowledge and stewardship values to understand how wildlife, particularly moose, supports Métis culture and way of life in northeastern Alberta. Moose are central to the `r com_full` (`r com_acr`) as a vital food source and cultural symbol. In response to growing concerns over oil and gas development, `r com_acr` partnered with the Alberta Biodiversity Monitoring Institute (ABMI) to implement a camera-based wildlife monitoring program that compares two regions: one protected for wildlife conservation and one facing potential industrial development.
+
+`r com_acr` began this camera program in 2024 and deployed 41 cameras between April and November of 2024. Cameras were deployed in 2 grids of cameras focusing on two areas of interest to the Settlement: Rubellite West and Goose Lake. Rubellite West is to the West of the Settlement and is slated for potential oil and gas development. The Goose Lake area is within the Settlement and is a wildlife protection area. The goal of the camera program was to compare wildlife abundance between both important areas, as well as establish a baseline of wildlife abundance prior to potential development in the Rubellite West area.
+
+## Camera Refresh and Image Processing
+
+The wildlife cameras were refreshed (given new SD cards and batteries) in the field by the BLMS field crew in August 2025. BLMS community members uploaded and tagged all of the camera images on the online platform [WildTrax](www.wildtrax.ca)[^1]. WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) for users of environmental sensors such as remote cameras to provide support with processing, organizing, and sharing data. Initial results from this first year of data collected at the 40 cameras are presented here in this report.
+
+[^1]: `r com_acr` images and wildlife tags can be viewed using [this link](https://portal.wildtrax.ca/home/camera-deployments.html?sensorId=CAM&projectId=3150) to the WildTrax platform. Note that viewers will need to have a WildTrax account with the appropriate permissions from the community and be logged in to see the images.
+
+# Project Highlights
+
+This section is a space for BLMS staff and community members to share their major takeaways from the project so far. This could be sharing surprises from the images, camera deployment/refresh, potential to add quotes, or create videos and add them in! Highlight specific images, etc.
+
+One idea we came up with was:
+One highlight of the program has been seeing how abundant the moose are in the Rubelite west camera grid area! 
+
+# Camera Locations
+
+The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`.  Satellite imagery can be switched on and off using the button in the top left of the top.
+
+Click each camera location to see it's name, grid, and when it was deployed and refreshed. 
+
+<br>
+
+```{r}
+#| label: map-camera-locations
+#| include: true
+#| echo: false
+#| results: asis
+#| eval: true
+#| warning: false
+#| message: false
+
+cam <- makeAwesomeIcon(
+  icon = "camera",
+  iconColor = "black",
+  library = "ion",
+  markerColor = "white"
+)
+
+location_ranges <- df_od |>
+  group_by(project_location) |>
+  summarize(start_date = min(date), end_date = max(date), .groups = "drop") |>
+  separate(project_location, into = c("project", "location"), sep = "_")
+
+locations_for_map <- location_report |>
+  mutate(grid = ifelse(str_detect(location, "^GL"), "Goose Lake", "Rubellite West")) |>
+  left_join(location_ranges, by = "location")
+
+buffer <- 0.05
+
+htmltools::tags$div(
+  style = "display: flex; justify-content: center;",
+  
+  leaflet(data = st_as_sf(locations_for_map, coords = c("longitude", "latitude"), crs = 4326), 
+          width = "90%", height = "750px") |>
+    addTiles() |>
+    addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
+    fitBounds(
+    lng1 = min(locations_for_map$longitude) - buffer,
+    lat1 = min(locations_for_map$latitude) - buffer,
+    lng2 = max(locations_for_map$longitude) + buffer,
+    lat2 = max(locations_for_map$latitude) + buffer
+  ) |>
+    addFullscreenControl() |>
+    addResetMapButton() |>
+    addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE)) |>
+    addMiniMap(position = "bottomright") |>
+    addAwesomeMarkers(
+      icon = makeAwesomeIcon(icon = "camera", iconColor = "black", library = "ion", markerColor = "white"),
+      group = "Camera Locations",
+      popup = paste(
+        "<b>", "Location: ", "</b>", locations_for_map$location, "<br><br>",
+        "<b>", "Grid:", "</b>", locations_for_map$grid, "<br><br>",
+        "<b>", "Deployed:", "</b>", locations_for_map$start_date, "<br><br>",
+        "<b>", "Refreshed:", "</b>", locations_for_map$end_date, "<br><br>"
+      )
+    ) |>
+    addLayersControl(
+      overlayGroups = c("Satellite Imagery", "Camera Locations"),
+      options = layersControlOptions(collapsed = FALSE),
+      position = "topright"
+    )
+)
+  
+```
+
+
+
+
+
+
