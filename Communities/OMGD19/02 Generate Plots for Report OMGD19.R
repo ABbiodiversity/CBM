@@ -56,7 +56,6 @@ ggplot(location_ranges, aes(y = location)) +
 
 # Not going to save this plot, not very interesting for this community. But will keep the code here.
 
-
 #-----------------------------------------------------------------------------------------------------------------------
 
 

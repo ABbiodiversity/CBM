@@ -117,14 +117,13 @@ The wildlife cameras were refreshed (given new SD cards and batteries) in the fi
 
 This section is a space for BLMS staff and community members to share their major takeaways from the project so far. This could be sharing surprises from the images, camera deployment/refresh, potential to add quotes, or create videos and add them in! Highlight specific images, etc.
 
-One idea we came up with was:
-One highlight of the program has been seeing how abundant the moose are in the Rubelite west camera grid area! 
+One idea we came up with was: One highlight of the program has been seeing how abundant the moose are in the Rubelite west camera grid area!
 
 # Camera Locations
 
-The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`.  Satellite imagery can be switched on and off using the button in the top left of the top.
+The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`. Satellite imagery can be switched on and off using the button in the top left of the top.
 
-Click each camera location to see it's name, grid, and when it was deployed and refreshed. 
+Click each camera location to see it's name, grid, and when it was deployed and refreshed.
 
 <br>
 
@@ -190,9 +189,3 @@ htmltools::tags$div(
 )
   
 ```
-
-
-
-
-
-
