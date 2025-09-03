@@ -241,11 +241,12 @@ For a complete list of all the species, you can go to the project on WildTrax an
 ```{r}
 #| warning: false
 #| echo: false
-#| include: false
-#| eval: false
+#| include: true
+#| eval: true
+#| message: false
 
 carousel("species-carousel", 10000, 
-         yaml.load_file("carousel2.yml"))
+         yaml.load_file("Images/BLMS/blms-carousel2.yml"))
 ```
 
 # Independent Detections Over Time
@@ -552,7 +553,7 @@ tags$div(
 
 # Comparisons Between Grids
 
-We can use the density values from the individual cameras to calculate an **average** density value for all the cameras within each grid (Goose Lake and Rubellite West). There were 21 cameras deployed in Goose Lake and 19 in Rubellite West. 
+We can use the density values from the individual cameras to calculate an **average** density value for all the cameras within each grid (Goose Lake and Rubellite West). There were 21 cameras deployed in Goose Lake and 19 in Rubellite West. Each camera can be thought of as a sample of the larger landscape that we're interested in (i.e., the area of the grid) so averaging together the camera values can give us an estimate of the density of the species in that area. We can then compare these average densities between grids (as well as before and after potential development) to get a sense of which area has more animals.  
 
 Figure 6 below displays the average density value for each species for both grids. Note that the y-axis (left) values differ for each species, depending on their calculated densities.
 
