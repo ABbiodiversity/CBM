@@ -38,7 +38,7 @@ css: assets/styles.css
 #| echo: false
 source("Functions/Carousel.R")
 carousel("gallery-carousel", 10000, 
-         yaml.load_file("carousel1.yml"))
+         yaml.load_file("Images/OMGD19/carousel1.yml"))
 ```
 
 ::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
@@ -67,7 +67,6 @@ library(DT)
 library(here)
 library(htmltools)
 library(htmlwidgets)
-library(crosstalk)
 library(plotly)
 library(terra)
 library(glue)
@@ -107,10 +106,7 @@ species_colours <- c(
 
 ```
 
-Members of the __`r com_full`__ (__`r com_acr`__) are interested in understanding the changes in wildlife condition and behaviour that they are noticing on the land. The health and abundance of wildlife populations is relied upon by members of `r com_acr` to support a traditional way of life. To ensure the sustainability of this way of life it is important to understand both how many animals (such as moose) are available for harvest every year and what the drivers of change are in the abundance of wildlife over time. These concerns led to the initiation of this wildlife monitoring program in 2023.
-<br>
-<br>
-In 2023, `r com_acr` created a Community Knowledge Committee comprising both elders and youths to lead this project. This Community Knowledge Committee shares knowledge and disseminates information about the program across age ranges and the region. The Committee engages with ABMI staff about program updates, monitoring methods, study design, site locations, analysis, and integration of Indigenous knowledge indicators.
+Members of the **`r com_full`** (**`r com_acr`**) are interested in understanding the changes in wildlife condition and behaviour that they are noticing on the land. The health and abundance of wildlife populations is relied upon by members of `r com_acr` to support a traditional way of life. To ensure the sustainability of this way of life it is important to understand both how many animals (such as moose) are available for harvest every year and what the drivers of change are in the abundance of wildlife over time. These concerns led to the initiation of this wildlife monitoring program in 2023. <br> <br> In 2023, `r com_acr` created a Community Knowledge Committee comprising both elders and youths to lead this project. This Community Knowledge Committee shares knowledge and disseminates information about the program across age ranges and the region. The Committee engages with ABMI staff about program updates, monitoring methods, study design, site locations, analysis, and integration of Indigenous knowledge indicators.
 
 <br>
 
@@ -131,20 +127,17 @@ knitr::include_graphics("Images/OMGD19/CKC.JPG")
 
 <br>
 
-The Committee deployed 18 cameras between late September 2023 and October 2024. These cameras were primarily deployed along the Old Conklin Road near Lac La Biche (see Figure below) in clusters of 4 cameras. Cameras were deployed based on the knowledge of the land, areas of interest by the committee, and areas of oil sands disturbance.
-<br>
-<br>
-The goal of the program is to evaluate the specific oil sands disturbance type of **pipelines** and **roads** compared to reference (low disturbance) areas. To achieve this, 2 clusters (sets) of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community.
+The Committee deployed 18 cameras between late September 2023 and October 2024. These cameras were primarily deployed along the Old Conklin Road near Lac La Biche (see Figure below) in clusters of 4 cameras. Cameras were deployed based on the knowledge of the land, areas of interest by the committee, and areas of oil sands disturbance. <br> <br> The goal of the program is to evaluate the specific oil sands disturbance type of **pipelines** and **roads** compared to reference (low disturbance) areas. To achieve this, 2 clusters (sets) of 4 cameras were deployed along pipeline right of ways and roads at distances up to 100 metres. Additionally, 2 clusters of cameras were deployed in reference areas picked by the community.
 
 ## Camera Refresh and Image Processing
 
-The wildlife cameras were refreshed (given new SD cards and batteries) in the field by the Community Knowledge Committee in 2024 and 2025. The CKC members uploaded and tagged all of the camera images on the online platform [WildTrax](www.wildtrax.ca)[^1]. WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) for users of environmental sensors such as remote cameras to provide support with processing, organizing, and sharing data. Initial results from this first year of data collected at the 18 cameras are presented here in this report. 
+The wildlife cameras were refreshed (given new SD cards and batteries) in the field by the Community Knowledge Committee in 2024 and 2025. The CKC members uploaded and tagged all of the camera images on the online platform [WildTrax](www.wildtrax.ca)[^1]. WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) for users of environmental sensors such as remote cameras to provide support with processing, organizing, and sharing data. Initial results from this first year of data collected at the 18 cameras are presented here in this report.
 
 [^1]: `r com_acr` images and wildlife tags can be viewed using [this link](https://portal.wildtrax.ca/home/camera-deployments.html?sensorId=CAM&projectId=2929) to the WildTrax platform. Note that viewers will need to have a WildTrax account with the appropriate permissions from the community and be logged in to see the images.
 
 # Project Highlights
 
-This section is a space for the Community Knowledge Committee to share their major takeaways from the project so far. This could be sharing surprises from and highlight specific images, camera deployment/refresh, potential to add quotes, or create videos and add them in. 
+This section is a space for the Community Knowledge Committee to share their major takeaways from the project so far. This could be sharing surprises from and highlight specific images, camera deployment/refresh, potential to add quotes, or create videos and add them in.
 
 One idea we came up with was:
 
@@ -154,7 +147,7 @@ One highlight of the program has been documenting that Woodland Caribou are acti
 
 The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`. Camera cluster sites were chosen by the Community Knowledge Committee in a region that not only holds cultural significance but also is a traditional harvesting area for community food sources. Satellite imagery can be switched on and off using the button in the top left of the top.
 
-Click each camera location to see it's name, assigned treatment (road, pipeline, or reference), and when it was deployed and refreshed. 
+Click each camera location to see it's name, assigned treatment (road, pipeline, or reference), and when it was deployed and refreshed.
 
 <br>
 
@@ -233,7 +226,7 @@ htmltools::tags$div(
 
 # Number of Images Collected
 
-@fig-nimages below displays the total number of images collected on the most common 8 species tagged in the `r com_full` camera project. The most commonly observed species was `r nimages[1, 1] |> pull()` with `r nimages[1, 2] |> pull()` images collected over the course of the project. 
+@fig-nimages below displays the total number of images collected on the most common 8 species tagged in the `r com_full` camera project. The most commonly observed species was `r nimages[1, 1] |> pull()` with `r nimages[1, 2] |> pull()` images collected over the course of the project.
 
 ```{r}
 #| label: fig-nimages
@@ -260,7 +253,7 @@ For a complete list of all the species, you can go to the project on WildTrax an
 #| echo: false
 
 carousel("species-carousel", 10000, 
-         yaml.load_file("carousel2.yml"))
+         yaml.load_file("Images/OMGD19/carousel2.yml"))
 ```
 
 # Independent Detections Over Time
@@ -325,11 +318,11 @@ cat(":::\n")
 
 ```
 
-+ **White-tailed deer** were primarily detected in the summer months of June, July, and August. 
-+ Because they hibernate over the winter, detection of **Black Bears** began in May, and peaked in late June and early July.
-+ **Moose** were consistently detected year round, as were **Coyote** and **Canada Lynx**.
-+ Detections of **Snowshoe Hare** were also consistent year round, with the exception of the later summer months (August).
-+ **Woodland Caribou** and **Gray Wolf** detections were infrequent and sporadic across the duration of the project.
+-   **White-tailed deer** were primarily detected in the summer months of June, July, and August.
+-   Because they hibernate over the winter, detection of **Black Bears** began in May, and peaked in late June and early July.
+-   **Moose** were consistently detected year round, as were **Coyote** and **Canada Lynx**.
+-   Detections of **Snowshoe Hare** were also consistent year round, with the exception of the later summer months (August).
+-   **Woodland Caribou** and **Gray Wolf** detections were infrequent and sporadic across the duration of the project.
 
 <br>
 
@@ -424,14 +417,14 @@ cat(":::\n")
 
 ```
 
-+ **White-tailed deer** are primarily active during twilight hours, specifically at dawn and dusk. This pattern is known as *crepuscular*. The majority of the activity, however, was captured during the dawn hours (6:00 to 9:00). 
-+ **Black Bear** were similarly crepuscular, although the peak was much more pronounced during the dusk hours (between 18:00 and 24:00).
-+ Based on the cameras in the `r com_acr` project, **Moose** were primarily active during the night time (00:00 to 6:00).
-+ **Coyote** and **Snowshoe Hare** were similar to Moose, but had slightly elevated (and increasing) activity levels throughout the evening hours.
-+ **Canada Lynx** activity peaked during midday (12:00). **Caribou** were similar, with a slightly earlier, and more pronounced, peak (10:00).
-+ Finally, **Gray Wolf** showed a slightly crepuscular tendency, however the dusk activity peak was more extreme. 
+-   **White-tailed deer** are primarily active during twilight hours, specifically at dawn and dusk. This pattern is known as *crepuscular*. The majority of the activity, however, was captured during the dawn hours (6:00 to 9:00).
+-   **Black Bear** were similarly crepuscular, although the peak was much more pronounced during the dusk hours (between 18:00 and 24:00).
+-   Based on the cameras in the `r com_acr` project, **Moose** were primarily active during the night time (00:00 to 6:00).
+-   **Coyote** and **Snowshoe Hare** were similar to Moose, but had slightly elevated (and increasing) activity levels throughout the evening hours.
+-   **Canada Lynx** activity peaked during midday (12:00). **Caribou** were similar, with a slightly earlier, and more pronounced, peak (10:00).
+-   Finally, **Gray Wolf** showed a slightly crepuscular tendency, however the dusk activity peak was more extreme.
 
-# Species Overlap 
+# Species Overlap
 
 Camera trap data are being increasingly used to model multiple species communities, and we can use this data to explore the co-occurrence patterns of the species in the community.
 
@@ -439,9 +432,9 @@ Camera trap data are being increasingly used to model multiple species communiti
 
 Blue boxes in Figure 5 below show species that are usually seen by the same cameras. For example, Black Bears and Moose often appear in the same areas because they rely on the same habitat like forests-that provide food and shelter. Even though bears sometimes hunt moose (especially calves), most adult Moose are big enough to defend themselves, so they don’t always avoid bear territory. Bears might also follow Moose for scavenging opportunities, which keeps them in the same general area without constant conflict.
 
-## Species rarely found together 
+## Species rarely found together
 
-Red boxes show species that tend to stay apart and weren't usually seen at the same camera. For example, White-tailed Deer might avoid areas with certain predators to reduce risk. But not all predators trigger avoidance: deer and Gray Wolves can have a blue box (positive correlation) because deer are fast and rely on the same habitats as wolves. Wolves can not catch every deer, so deer may tolerate the risk to access food or water. Other pairs of species, such as Moose and Caribou, do not have a predator/prey relationship but select for different habitat types because they browse on different vegetation for food. Moose prefer upload (drier) sites, whereas Caribou prefer lowland areas. 
+Red boxes show species that tend to stay apart and weren't usually seen at the same camera. For example, White-tailed Deer might avoid areas with certain predators to reduce risk. But not all predators trigger avoidance: deer and Gray Wolves can have a blue box (positive correlation) because deer are fast and rely on the same habitats as wolves. Wolves can not catch every deer, so deer may tolerate the risk to access food or water. Other pairs of species, such as Moose and Caribou, do not have a predator/prey relationship but select for different habitat types because they browse on different vegetation for food. Moose prefer upload (drier) sites, whereas Caribou prefer lowland areas.
 
 ```{r}
 #| label: cooccurrences
@@ -464,7 +457,7 @@ corrplot(M, method = "color",
 
 # Species Density
 
-We can use the number of images and counts of independent detections to estimate the density of each species at each camera. Density is the number of animals per unit area, which we express below as the number of animals per square kilometer (km<sup>2</sup>).  
+We can use the number of images and counts of independent detections to estimate the density of each species at each camera. Density is the number of animals per unit area, which we express below as the number of animals per square kilometer (km<sup>2</sup>).
 
 To estimate the density of each wildlife species at each camera, we used the Time in Front of Camera (TIFC) approach (@becker2022applying). This method has previously been used to estimate densities of unmarked populations of both White-tailed Deer and Moose in the boreal region of Alberta (@laurent2021evaluating, @dickie2024habitat). Similar to quadrat sampling, this approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
 
@@ -588,19 +581,18 @@ tags$div(
 
 # Evaluating Oil Sands Disturbances
 
-This section shows the results from the `r com_acr` camera deployments evaluating the impact of specific oil sands stressors on wildlife within `r com_acr`: **pipelines** and **roads**. The effect of these stressors on species' density is evaluated by comparing values to a **reference** (low disturbance) area. 
+This section shows the results from the `r com_acr` camera deployments evaluating the impact of specific oil sands stressors on wildlife within `r com_acr`: **pipelines** and **roads**. The effect of these stressors on species' density is evaluated by comparing values to a **reference** (low disturbance) area.
 
-The following plots show the density of each species at each cluster of cameras. Each point represents the average density value among the cameras of the cluster. For instance, the 4 cameras that belong to the 'MNA 19-6' cluster (which is a reference cluster) had white-tailed deer density values of 4.75, 4.79, 5, and 3.36 animals per km<sup>2</sup>, for an average density of 4.47. This is represented by the top point in the Reference column of Figure 6a below. 
+The following plots show the density of each species at each cluster of cameras. Each point represents the average density value among the cameras of the cluster. For instance, the 4 cameras that belong to the 'MNA 19-6' cluster (which is a reference cluster) had white-tailed deer density values of 4.75, 4.79, 5, and 3.36 animals per km<sup>2</sup>, for an average density of 4.47. This is represented by the top point in the Reference column of Figure 6a below.
 
-There are 3 reference clusters, 1 linear features cluster (pipelines), and 2 road features cluster. The tabs can be used to go through each individual species results. 
+There are 3 reference clusters, 1 linear features cluster (pipelines), and 2 road features cluster. The tabs can be used to go through each individual species results.
 
 We can also compare the results from the 6 camera clusters deployed by `r com_acr` to those deployed as part of the broader regional OSM monitoring done by the ABMI. The ABMI deploys clusters of 2-4 cameras in a similar fashion to `r com_acr`, targeting the physical footprint and adjacent areas of oil sands industry disturbances (@Bayne2021OSMFramework). There are two stressors examined by both the `r com_acr` cameras and the regional monitoring done by the ABMI: **linear features** and **roads**, as well as **reference (low disturbance)** areas. In the figures below for each species, we also plot out the values obtained from ABMI sites alongside the `r com_acr` values.
 
-Based on the regional monitoring data, the average density value for each stressor is represented by a horizontal dark grey line on the plots below. When comparing `r com_acr` cluster values to these averages, it is important to note that these are pooled averages from sites surveyed across the entire Oil Sands Region, and represent a variety of geographic characteristics. 
+Based on the regional monitoring data, the average density value for each stressor is represented by a horizontal dark grey line on the plots below. When comparing `r com_acr` cluster values to these averages, it is important to note that these are pooled averages from sites surveyed across the entire Oil Sands Region, and represent a variety of geographic characteristics.
 
 ::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
-Click on each **Data Source** (e.g., 'OSM Regional Monitoring') within each of the plot legends to hide or display the data associated with each source.
-Hover over each point to view which cluster the value is associated with.
+Click on each **Data Source** (e.g., 'OSM Regional Monitoring') within each of the plot legends to hide or display the data associated with each source. Hover over each point to view which cluster the value is associated with.
 :::
 
 ```{r}
@@ -700,7 +692,6 @@ p <- ggplot(
 ```
 
 ::: panel-tabset
-
 ## White-tailed Deer {.unnumbered}
 
 ```{r}
@@ -1195,14 +1186,13 @@ htmltools::tags$figure(
 )
   
 ```
-
 :::
 
-+ **White-tailed deer** have the highest densities across both stressor treatments and the reference areas among all the species. Density was highest in the reference clusters, and lower in both the linear features cluster and the two roads clusters. Deer values in the `r com_acr` reference clusters were all higher than the regional average.
-+ The opposite pattern was found for **Black Bear**, where lower densities were found in the reference clusters and higher densities in the stressor treatments, particularly the two road clusters. The two road clusters were substantially higher than the regional average, whereas the reference and linear features cluster values were more comparable. 
-+ **Moose** densities were relatively low across all camera clusters, especially in areas of linear features (pipelines). With the exception of roads, these values were lower than the regional averages.
-+ **Coyotes** were attracted to road features, but not linear features. The same pattern was observed for **Snowshoe Hare** and **Canada Lynx**. In all three cases, the road clusters had dramatically higher density values than the regional average. 
-+ **Caribou** and **Wolf** densities (and overall detections) were very low across all clusters, making it difficult to assess patterns and response to stressors. However, wolf densities were higher in the reference clusters compared to the two disturbance treatments, and were above the regional average. 
+-   **White-tailed deer** have the highest densities across both stressor treatments and the reference areas among all the species. Density was highest in the reference clusters, and lower in both the linear features cluster and the two roads clusters. Deer values in the `r com_acr` reference clusters were all higher than the regional average.
+-   The opposite pattern was found for **Black Bear**, where lower densities were found in the reference clusters and higher densities in the stressor treatments, particularly the two road clusters. The two road clusters were substantially higher than the regional average, whereas the reference and linear features cluster values were more comparable.
+-   **Moose** densities were relatively low across all camera clusters, especially in areas of linear features (pipelines). With the exception of roads, these values were lower than the regional averages.
+-   **Coyotes** were attracted to road features, but not linear features. The same pattern was observed for **Snowshoe Hare** and **Canada Lynx**. In all three cases, the road clusters had dramatically higher density values than the regional average.
+-   **Caribou** and **Wolf** densities (and overall detections) were very low across all clusters, making it difficult to assess patterns and response to stressors. However, wolf densities were higher in the reference clusters compared to the two disturbance treatments, and were above the regional average.
 
 # Where We Expect to Find Species
 
@@ -1213,7 +1203,7 @@ The maps below show where the models predict each species is most likely to be f
 <br>
 
 ::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
-Use the buttons on the top right of the map to toggle through each species' predictions. You can also turn on **Satellite Imagery** and use the **NONE (Blank)** button to view the imagery underneath the predictions, as well as use the **Camera Locations** button to see where `r com_acr` camera locations are.  
+Use the buttons on the top right of the map to toggle through each species' predictions. You can also turn on **Satellite Imagery** and use the **NONE (Blank)** button to view the imagery underneath the predictions, as well as use the **Camera Locations** button to see where `r com_acr` camera locations are.
 :::
 
 ```{r}
@@ -1310,11 +1300,11 @@ htmltools::tags$div(
 
 <br>
 
-+ **White-tailed Deer** are predicted to show a higher probability of occurrence in the southern portion of the `r com_acr` traditional territory, where warmer climate and greater human disturbance favour the species.
-+ **Black Bears** are predicted to occur throughout the territory, including the more northern forested areas toward Fort McMurray.
-+ **Moose** are predicted to occur across the territory, with a higher probability of occurrence in less disturbed areas such as east of Lac La Biche.
-+ **Coyotes** are predicted to be concentrated in the southwest where they are associated with agricultural development, whereas **Snowshoe Hare** and **Canada Lynx** show the opposite pattern with a higher probability of occurrence in more forested and northern areas.
-+ **Woodland Caribou** are predicted to occur in the northeast of the territory, overlapping the East Side Athabasca River caribou range (ESAR). **Gray Wolves** have a generally low probability of occurrence across the territory, with slight increases where human disturbance is lower.
+-   **White-tailed Deer** are predicted to show a higher probability of occurrence in the southern portion of the `r com_acr` traditional territory, where warmer climate and greater human disturbance favour the species.
+-   **Black Bears** are predicted to occur throughout the territory, including the more northern forested areas toward Fort McMurray.
+-   **Moose** are predicted to occur across the territory, with a higher probability of occurrence in less disturbed areas such as east of Lac La Biche.
+-   **Coyotes** are predicted to be concentrated in the southwest where they are associated with agricultural development, whereas **Snowshoe Hare** and **Canada Lynx** show the opposite pattern with a higher probability of occurrence in more forested and northern areas.
+-   **Woodland Caribou** are predicted to occur in the northeast of the territory, overlapping the East Side Athabasca River caribou range (ESAR). **Gray Wolves** have a generally low probability of occurrence across the territory, with slight increases where human disturbance is lower.
 
 <br>
 
@@ -1323,4 +1313,3 @@ htmltools::tags$div(
 (This section is available to record the direction provided by the Community Knowledge Committee to help guide the next phases of the `r com_acr` wildlife monitoring program.)
 
 # References
-
