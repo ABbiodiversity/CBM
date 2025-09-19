@@ -47,6 +47,9 @@ projects <- wt_get_projects(sensor = "CAM") |>
 
 project_ids <- projects$project_id
 
+# Locations to remove (duplicated)
+remove <- c("CPDFN12", "CPDFN14", "CPDFN19")
+
 # Main report(s)
 main_reports <- map_df(.x = project_ids,
                        .f = ~ wt_download_report(
@@ -62,14 +65,17 @@ main_reports <- map_df(.x = project_ids,
   #filter(image_fov == "WITHIN") |>
   select(project, location, image_date_time, species_common_name, individual_count, image_id,
          # Note: Keep tag comments here
-         tag_comments)
-
-# Project location combos
-proj_loc <- main_reports |>
-  select(project, location) |>
-  distinct()
-
-
+         tag_comments) |>
+  filter(!location %in% remove) |>
+  # Change species_common_name values
+  mutate(species_common_name = case_when(
+    species_common_name == "Deer" ~ "White-tailed Deer",
+    species_common_name == "Bear" ~ "Black Bear",
+    species_common_name == "Foxes" ~ "Red Fox",
+    str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
+    species_common_name == "Wolf" ~ "Gray Wolf",
+    TRUE ~ species_common_name
+  ))
 
 # Image reports
 image_reports <- map_df(.x = project_ids,
@@ -82,7 +88,8 @@ image_reports <- map_df(.x = project_ids,
   left_join(projects) |>
   select(project, location, image_id, image_date_time, image_trigger_mode, image_fov,
          # Note: keep image comments here)
-         image_comments)
+         image_comments) |>
+  filter(!location %in% remove)
 
 # Locations
 location_reports <- map_df(.x = project_ids,
@@ -92,14 +99,11 @@ location_reports <- map_df(.x = project_ids,
                           reports = "location",
                           weather_cols = FALSE
                         )) |>
-  select(project_id, location, latitude, longitude) |>
-  left_join(projects) |>
-  distinct()
+  select(location, latitude, longitude) |>
+  distinct() |>
+  filter(!location %in% remove)
 
 # Other reports?
-
-location_reports <- location_reports |>
-  distinct()
 
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -108,7 +112,7 @@ location_reports <- location_reports |>
 # Deployment time periods
 # First, get operating days (od):
 df_od_summary <- get_operating_days(
-  image_report = image_report,
+  image_report = image_reports,
   # Keep project
   include_project = TRUE,
   # Summarise
@@ -119,7 +123,7 @@ df_od_summary <- get_operating_days(
 
 # Also pull the raw od
 df_od <- get_operating_days(
-  image_report = image_report,
+  image_report = image_reports,
   include_project = TRUE,
   summarise = FALSE,
   .abmi_seasons = TRUE
@@ -127,16 +131,7 @@ df_od <- get_operating_days(
 
 # Calculate time in front of camera (TIFC)
 
-df_tifc <- main_report |>
-  # Turn 'Deer' tags into White-tailed Deer (most likely)
-  mutate(species_common_name = case_when(
-    species_common_name == "Deer" ~ "White-tailed Deer",
-    species_common_name == "Mule Deer" ~ "White-tailed Deer",
-    species_common_name == "Bear" ~ "Black Bear",
-    species_common_name == "Foxes" ~ "Red Fox",
-    str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
-    TRUE ~ species_common_name
-  )) |>
+df_tifc <- main_reports |>
   # First calculate time by series
   calculate_time_by_series() |>
   # Then sum by time period
@@ -147,7 +142,7 @@ df_tifc <- main_report |>
 # EDD categories
 sheet_id <- drive_find(type = "spreadsheet",
                        shared_drive = "ABMI Mammals") |>
-  filter(str_detect(name, "OMGD19")) |>
+  filter(str_detect(name, "CPDFN")) |>
   select(id) |>
   pull()
 
@@ -186,16 +181,7 @@ df_density_sum <- df_density_long |>
 species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
              "Canada Lynx", "Woodland Caribou", "Gray Wolf")
 
-df <- main_report |>
-  # Turn 'Deer' tags into White-tailed Deer (most likely)
-  mutate(species_common_name = case_when(
-    species_common_name == "Deer" ~ "White-tailed Deer",
-    species_common_name == "Mule Deer" ~ "White-tailed Deer",
-    species_common_name == "Bear" ~ "Black Bear",
-    species_common_name == "Foxes" ~ "Red Fox",
-    str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
-    TRUE ~ species_common_name
-  )) |>
+df <- main_reports |>
   filter(species_common_name %in% species) |>
   filter(!individual_count == "VNA") |>
   mutate(individual_count = as.numeric(individual_count),
@@ -203,7 +189,8 @@ df <- main_report |>
          julian = as.numeric(format(image_date_time, "%j")),
          date = as.Date(image_date_time)) |>
   uncount(weights = individual_count) |>
-  left_join(location_report)
+  left_join(location_reports) |>
+  filter(!is.na(latitude))
 
 solar_time <- solartime(dat = df$image_date_time,
                         lat = df$latitude,
@@ -219,15 +206,8 @@ rad_time <- df |>
 
 # Generate Independent Detections
 
-df_ind_detect <- main_report |>
-  mutate(species_common_name = case_when(
-    species_common_name == "Deer" ~ "White-tailed Deer",
-    species_common_name == "Mule Deer" ~ "White-tailed Deer",
-    species_common_name == "Bear" ~ "Black Bear",
-    species_common_name == "Foxes" ~ "Red Fox",
-    str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
-    TRUE ~ species_common_name)) |>
-  mutate(project_id = project_ids) |>
+df_ind_detect <- main_reports |>
+  left_join(projects) |>
   #filter(species_common_name %in% species) |>
   wt_ind_detect(threshold = 30, units = "minutes")
 
@@ -250,16 +230,10 @@ M <- cor(corr)
 
 # Number of images
 
-remove <- c("Human", "STAFF/SETUP", "NONE", "Vehicle", "Unidentified")
+remove <- c("Human", "STAFF/SETUP", "NONE", "Vehicle", "Unidentified", "All Terrain Vehicle",
+            "Heavy Equipment", "Unidentified Vehicle")
 
-nimages <- main_report |>
-  mutate(species_common_name = case_when(
-    species_common_name == "Deer" ~ "White-tailed Deer",
-    species_common_name == "Mule Deer" ~ "White-tailed Deer",
-    species_common_name == "Bear" ~ "Black Bear",
-    species_common_name == "Foxes" ~ "Red Fox",
-    str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
-    TRUE ~ species_common_name)) |>
+nimages <- main_reports |>
   group_by(species_common_name) |>
   tally() |>
   arrange(desc(n)) |>
@@ -267,39 +241,117 @@ nimages <- main_report |>
 
 #-----------------------------------------------------------------------------------------------------------------------
 
+# Tag and Image Comments - Non-Resident/Resident Hunter Analysis
+
+tag_comments <- main_reports |>
+  select(project, location, image_date_time, tag_comments) |>
+  filter(!is.na(tag_comments))
+
+image_comments <- image_reports |>
+  select(project, location, image_date_time, image_id, image_comments) |>
+  filter(!is.na(image_comments))
+
+comments <- image_comments |>
+  full_join(tag_comments, by = c("location", "image_date_time", "project"),
+            relationship = "many-to-many") |>
+  # If there is both, take the image comment.
+  mutate(comment = ifelse(is.na(image_comments), tag_comments, image_comments)) |>
+  # Lots of miscellaneous categories, let's focus on those that fit this pattern.
+  filter(str_detect(comment, "^NR|^R")) |>
+  mutate(species_common_name = case_when(
+    str_detect(comment, "^NRH") ~ "Non-Resident Hunter",
+    str_detect(comment, "^RH ") ~ "Resident Hunter",
+    comment == "R" ~ "Resident",
+    .default = "Non-Resident"
+  )) |>
+  mutate(project_id = project, individual_count = 1) |>
+  # 10 minute threshold
+  wt_ind_detect(threshold = 10, units = "minutes") |>
+  select(project = project_id, location, detection, category = species_common_name, start_time) |>
+  # Only the projects set up for this purpose
+  filter(!str_detect(project, "CPFN 20th Baseline Cameras"))
+
+#-----------------------------------------------------------------------------------------------------------------------
+
 # Densities at OS stressors for comparison with OSM BADR regional monitoring
 
-dens_omgd19 <- df_density_sum |>
+jem_raw <- tibble(
+  JEM = c(
+    # NEW
+    "CPDFN-C1","CPDFN-C2","CPDFN-C3",
+    # ORIGINAL
+    "CPDFN-C4","CPDFN-C5","CPDFN-C6","CPDFN-C7","CPDFN-C8"
+  ),
+  Cameras = c(
+    # NEW
+    "C1 (on), C2 (on), C3 (off), C4 (off)",
+    "C2 (on)",
+    "C1 (on), C2 (off), C3 (off), C4 (on)",
+    # ORIGINAL
+    "C1 (off), C2 (on), C3 (on), C4 (on)",
+    "C1 (on), C2 (off), C3 (off), C4 (on)",
+    "C1 (on), C2 (off), C3 (off), C4 (off)",
+    "C1 (on), C2 (off), C3 (on), C4 (on)",
+    "C1 (off), C2 (off), C3 (on), C4 (on)"
+  )
+)
+
+fine_scale_cpdfn <- jem_raw |>
+  separate_rows(Cameras, sep = ",\\s*") |>
+  mutate(
+    cam = str_extract(Cameras, "C\\d+"),
+    fine_scale = str_extract(Cameras, "(?<=\\().+?(?=\\))") |> str_to_title(),
+    location = paste0(JEM, cam),
+    jem_num = str_extract(JEM, "\\d+") |> as.integer(),
+    cam_num = str_extract(cam, "\\d+") |> as.integer()
+  ) |>
+  arrange(jem_num, cam_num) |>
+  select(location, fine_scale)
+
+dens_cpdfn <- df_density_sum |>
+  filter(str_detect(project, "20th"),
+         location != "CPDFN-1") |>
   # Categorize into treatments
   mutate(treatment = case_when(
-    str_detect(location, "MNA19-1-") ~ "Roads",
-    str_detect(location, "MNA19-2-") ~ "Roads",
-    str_detect(location, "MNA19-3-") ~ "Reference",
-    str_detect(location, "MNA19-4-") ~ "Reference",
-    str_detect(location, "MNA19-5-") ~ "Linear Features",
-    str_detect(location, "MNA19-6-") ~ "Reference"
+    str_detect(location, "-C1") ~ "Linear Features",
+    str_detect(location, "-C3") ~ "Inactive Wellpads",
+    str_detect(location, "-C2") ~ "Linear Features",
+    TRUE ~ "Reference"
   )) |>
+  left_join(fine_scale_cpdfn) |>
   # 'JEM' (i.e., site) codes
-  # Extract everything from location except the last digit
-  mutate(site = str_extract(location, ".*(?=-[^-]*$)")) |>
-  # Pare back some outlier values
-  mutate(density_km2 = ifelse(density_km2 > 5, 5, density_km2)) |>
-  group_by(site, species_common_name, treatment) |>
+  mutate(
+    site = case_when(
+      str_detect(location, "CPDFN-C1") ~ "C1",
+      str_detect(location, "CPDFN-C2") ~ "C2",
+      str_detect(location, "CPDFN-C3") ~ "C3",
+      TRUE ~ location)) |>
+  group_by(site, species_common_name, treatment, fine_scale) |>
   summarise(density_km2 = mean(density_km2)) |>
   ungroup() |>
-  mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Roads"))) |>
+  mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Inactive Wellpads"))) |>
   # Add project
-  mutate(project = "OMGD19 Local Monitoring")
+  mutate(project = "CPDFN 20th Baseline Monitoring")
 
-# OSM BADR data
+# OSM BADR Regional Monitoring Data
 
 lure <- read_csv(paste0(g_drive_abmi, "Data/Lure/ABMI Lure Effect Summary 2024-04-24.csv")) |>
   mutate(species_common_name = str_replace_all(species_common_name, "(?<!^)([A-Z])", " \\1")) |>
   select(species_common_name, TA)
 
+ref_fine_scale <- read_csv(paste0(g_drive_osm, "Results/ABMI BADR and EH Camera Data 2025-05-06.csv")) |>
+  filter(treatment == "Reference") |>
+  select(project, location, fine_scale) |>
+  mutate(treatment = "reference") |>
+  mutate(fine_scale_new = ifelse(fine_scale == "Near", "Off", "On")) |>
+  select(-fine_scale)
+
 dens_badr <- read_csv(paste0(g_drive_osm, "Results/Densities to use in the summaries.csv")) |>
   filter(str_detect(project, "ABMI OSM")) |>
-  filter(treatment == "reference" | treatment == "dense linear features" | treatment == "roads") |>
+  filter(treatment == "reference" | treatment == "dense linear features" | treatment == "low activity well pads") |>
+  left_join(ref_fine_scale) |>
+  mutate(fine_scale = ifelse(is.na(fine_scale), fine_scale_new, fine_scale)) |>
+  select(-fine_scale_new) |>
   pivot_longer(c(`Gray.Wolf`, Moose, `White.tailed.Deer`, `Snowshoe.Hare`, Coyote, `Canada.Lynx`, `Woodland.Caribou`, `Black.Bear`), names_to = "species_common_name", values_to = "density_km2") |>
   select(project, location, species_common_name, density_km2, treatment, fine_scale, landscape_unit, jem, lure) |>
   mutate(species_common_name = case_when(
@@ -311,29 +363,23 @@ dens_badr <- read_csv(paste0(g_drive_osm, "Results/Densities to use in the summa
     species_common_name == "Snowshoe.Hare" ~ "Snowshoe Hare",
     TRUE ~ species_common_name
   )) |>
-  mutate(fine_scale = case_when(
-    fine_scale == "10-30" ~ "On",
-    fine_scale == "100" ~ "Off",
-    fine_scale == "300" ~ "Off",
-    TRUE ~ fine_scale
-  )) |>
   left_join(lure) |>
   mutate(density_km2 = ifelse(lure == "Yes", density_km2 / TA, density_km2)) |>
-  group_by(project, jem, landscape_unit, treatment, species_common_name) |>
+  group_by(project, jem, landscape_unit, treatment, fine_scale, species_common_name) |>
   summarise(density_km2 = mean(density_km2)) |>
   ungroup() |>
   mutate(site = paste0(landscape_unit, "_", jem)) |>
-  select(project, site, treatment, species_common_name, density_km2) |>
+  select(project, site, treatment, fine_scale, species_common_name, density_km2) |>
   mutate(treatment = case_when(
-    treatment == "roads" ~ "Roads",
+    treatment == "low activity well pads" ~ "Inactive Well Pads",
     treatment == "dense linear features" ~ "Linear Features",
     treatment == "reference" ~ "Reference"
   )) |>
   mutate(project = "OSM Regional Monitoring") |>
-  mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Roads")))
+  mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Inactive Well Pads")))
 
 # Bind together
-df_density_os <- bind_rows(dens_badr, dens_omgd19)
+df_density_os <- bind_rows(dens_badr, dens_cpdfn)
 
 #-----------------------------------------------------------------------------------------------------------------------
 
@@ -345,12 +391,13 @@ save(df_density_sum, # Densities by location and species
      df_od, # Raw operating days
      location_report, # Locations
      df_ind_detect, # Independent detections
+     comments,
      nimages, # Number of images per species
-     image_report, # Image report
-     main_report, # Main report
+     image_reports, # Image report
+     main_reports, # Main report
      rad_time, # Radian time
      M, # Species Co-Occurrences
-     file = paste0(g_drive_cbme, "OMGD19/Data/OMGD19 Data Objects.RData"))
+     file = paste0(g_drive_cbme, "CPDFN/Data/CPDFN Data Objects.RData"))
 
 #-----------------------------------------------------------------------------------------------------------------------
 

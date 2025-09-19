@@ -40,7 +40,7 @@ wt_auth()
 
 # Step 1. Download data
 
-# OMGD19 Project(s)
+# BLMS Project(s)
 projects <- wt_get_download_summary(sensor_id = "CAM") |>
   filter(str_detect(organization, "BLMS")) |>
   select(project, project_id) # 3150
@@ -238,7 +238,7 @@ save(df_density_sum, # Densities by location and species
      df_od_summary, # Number of operating days per location
      df_od, # Raw operating days
      location_report, # Locations
-     df_ind_detect, # Independent detections
+     df_ind_detect, # Independent detection
      nimages, # Number of images per species
      image_report, # Image report
      main_report, # Main report

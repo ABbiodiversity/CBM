@@ -48,7 +48,7 @@ consolidate_tags <- function(main_report) {
   # Species tags w/ full information.
   y <- main_report |>
     filter(species_common_name %in% native_sp,
-           !individual_count == "VNA") |>
+           is.na(individual_count) | individual_count != "VNA") |>
     mutate(individual_count = as.numeric(individual_count)) |>
     mutate(age_class = trimws(strrep(str_c(age_class, ", "), individual_count), whitespace = ", "),
            sex_class = trimws(strrep(str_c(sex_class, ", "), individual_count), whitespace = ", ")) |>
