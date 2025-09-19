@@ -167,7 +167,7 @@ df_density_sum <- df_density_long |>
   filter(total_season_days >= 20) |>
   # Remove Black Bears in Winter
   filter(!(species_common_name == "Black Bear" & season == "Winter")) |>
-  # Summarise density
+  # Summarise density across seasons (weighted by number of days)
   group_by(project, location, species_common_name) |>
   summarise(density_km2 = weighted.mean(density_km2, w = total_season_days),
             total_days = sum(total_season_days)) |>
@@ -275,19 +275,16 @@ comments <- image_comments |>
 
 # Densities at OS stressors for comparison with OSM BADR regional monitoring
 
+# From the Google Doc done by Dave E.
 jem_raw <- tibble(
   JEM = c(
-    # NEW
     "CPDFN-C1","CPDFN-C2","CPDFN-C3",
-    # ORIGINAL
     "CPDFN-C4","CPDFN-C5","CPDFN-C6","CPDFN-C7","CPDFN-C8"
   ),
   Cameras = c(
-    # NEW
     "C1 (on), C2 (on), C3 (off), C4 (off)",
     "C2 (on)",
     "C1 (on), C2 (off), C3 (off), C4 (on)",
-    # ORIGINAL
     "C1 (off), C2 (on), C3 (on), C4 (on)",
     "C1 (on), C2 (off), C3 (off), C4 (on)",
     "C1 (on), C2 (off), C3 (off), C4 (off)",
@@ -389,7 +386,7 @@ save(df_density_sum, # Densities by location and species
      df_density_os, # Densities for OS stressors (regional and local)
      df_od_summary, # Number of operating days per location
      df_od, # Raw operating days
-     location_report, # Locations
+     location_reports, # Locations
      df_ind_detect, # Independent detections
      comments,
      nimages, # Number of images per species
@@ -400,5 +397,3 @@ save(df_density_sum, # Densities by location and species
      file = paste0(g_drive_cbme, "CPDFN/Data/CPDFN Data Objects.RData"))
 
 #-----------------------------------------------------------------------------------------------------------------------
-
-
