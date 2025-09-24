@@ -109,7 +109,7 @@ species_colours <- c(
 
 ```
 
-The **`r com_full`** (`r com_acr`) OSM camera program started in 2022 with a focus of recording land users accessing the lands near Janvier who were not members of the community. Over the years the camera program has adapted to answer different questions and concerns expressed by the community. This webpage will focus on the results from both the Human Land Use and Wildlife Abundance study designs.
+The **`r com_full`** (`r com_acr`) OSM camera program started in 2022 with a focus of recording land users accessing the lands near Janvier who were not members of the community. Over the years the camera program has adapted to answer different questions and concerns expressed by the community, including understanding how wildlife abundances change in proximity to human disturbance (including oil sands industry disturbance). This webpage will focus on the results from both the Human Land Use and Wildlife Abundance study designs.
 
 ## Human Land Use Study
 
@@ -119,31 +119,36 @@ At the same time, they’re seeing more and more outsiders—like oil sands work
 
 `r com_acr` has been raising these concerns with oil sands companies for years, but often, they don’t take them seriously. So `r com_acr` decided to collect their own evidence. From 2022 to 2024, led by Stuart Janvier, Louie Janvier, Caiden Morice and Ave Dersche with support from ABMI, `r com_acr` ran a camera monitoring project to track who’s coming into their territory and what kinds of impacts they’re seeing. This section of the report shares the results of that project and helps show what they already knew—yes, oil sands development has created pathways for outsiders to come onto their land, and yes, it’s causing real problems for their community.
 
+## Wildlife Abundance Study
+
+In 2024 the cameras used in the Human Land Use study were retrieved and then deployed along the 20th Baseline to monitor wildlife. The 20th Baseline runs west to east with the Black Gold Sag-D plant to the West (high oil sands disturbance) and the proposed Dillon River Wildland with considerably less disturbance to the east (some old cutlines and occasional conventional well pads). The objective of this study is to document and compare the wildlife abundances calculated from the images collected from each camera deployed along the baseline to see if wildlife use the landscape differently when closer or further away from the area of high disturbance.
+
+Unfortunately during the spring of 2023 a large wildfire burned through the area and a number of cameras were lost. Cameras were re-deployed afterwards and the program continued.
+
 ## Camera Refresh and Image Processing
 
-The human land use cameras were refreshed (given new SD cards and batteries) in the field by `r com_acr` in December 2022. The images from the SD cards were uploaded and tagged on the online platform [WildTrax](www.wildtrax.ca). WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) for users of environmental sensors such as remote cameras to provide support with processing, organizing, and sharing data. 
+The human land use cameras were refreshed (given new SD cards and batteries) in the field by `r com_acr` in December 2022. The images from the SD cards were uploaded and tagged on the online platform [WildTrax](www.wildtrax.ca). WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) for users of environmental sensors such as remote cameras to provide support with processing, organizing, and sharing data.
 
 `r com_acr` have 4 projects available on WildTrax with the images stored and tagged:
 
-+ **[CPDFN Wildlife Cameras](https://portal.wildtrax.ca/cam/1312)**: Contains images from the 18 cameras initially deployed for the Human Land Use study in January 2022 and refreshed in November later that year.
-+ **[CPDFN Wildlife Cameras 2023](https://portal.wildtrax.ca/cam/2259)**: Contains images from the same 18 cameras over the next year (November 2022 to November 2023). Also includes a new location that monitors a salt lick identified by the community that is highly trafficked by wildlife.
-+ **[CPFN 20th Baseline Cameras](https://portal.wildtrax.ca/cam/3194)**: This project contains images from 13 cameras deployed for the Wildlife Abundance project along 20th baseline. 
-+ **[20th Baseline Cameras 2025](https://portal.wildtrax.ca/cam/3381)**: This project contains images from 20 cameras deployed further along 20th baseline for the Wildlife Abundance portion of the project.
+-   [**CPDFN Wildlife Cameras**](https://portal.wildtrax.ca/cam/1312): Contains images from the 18 cameras initially deployed for the Human Land Use study in January 2022 and refreshed in November later that year.
+-   [**CPDFN Wildlife Cameras 2023**](https://portal.wildtrax.ca/cam/2259): Contains images from the same 18 cameras over the next year (November 2022 to November 2023). Also includes a new location that monitors a salt lick identified by the community that is highly trafficked by wildlife.
+-   [**CPFN 20th Baseline Cameras**](https://portal.wildtrax.ca/cam/3194): This project contains images from 13 cameras deployed for the Wildlife Abundance project along 20th baseline.
+-   [**20th Baseline Cameras 2025**](https://portal.wildtrax.ca/cam/3381): This project contains images from 20 cameras deployed further along 20th baseline for the Wildlife Abundance portion of the project.
 
 Note that viewers will need to have a WildTrax account with the appropriate permissions from the community and be logged in to see the these images.
 
 # Project Highlights
 
-This section is a space for the CPFN to share their major takeaways from the project so far. This could be sharing surprises from the images, camera deployment/refresh, potential to add quotes, or create videos and add them in! Highlight specific images, etc.
+This section is a space for the `r com_acr` to share their major takeaways from the project so far. This could be sharing surprises from the images, camera deployment/refresh, potential to add quotes, or create videos and add them in! Highlight specific images, etc.
 
-One idea we came up with was:
-One highlight of the program was during the initial image tagging training land users gathered to review the images and discuss what they were seeing in the images to help inform the direction of the project. This discussion focused on non-community members photographed by the cameras, the number of deer, wolves, moose, caribou, and health of the photographed moose. 
+One idea we came up with was: One highlight of the program was during the initial image tagging training land users gathered to review the images and discuss what they were seeing in the images to help inform the direction of the project. This discussion focused on non-community members photographed by the cameras, the number of deer, wolves, moose, caribou, and health of the photographed moose.
 
 # Camera Locations
 
-The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`. Camera locations for the Human Land Use study were chosen by the community to reflect areas where monitoring was desired. Locations for the Wildlife Abundance study were chosen to assess how a gradient of land use and industry disturbance impacts wildlife distribition and abundance. 
+The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`. Camera locations for the Human Land Use study were chosen by the community to reflect areas where monitoring was desired. Locations for the Wildlife Abundance study were chosen to assess how a gradient of land use and industry disturbance impacts wildlife distribution and abundance.
 
-Click each camera location to see it's name and when it was deployed and refreshed.
+Click each camera location to see it's name, the study it belongs to, and when it was deployed and refreshed. Cameras that belong to the Human Land Use study are coloured light blue, and those that belong to the Wildlife Abundance Study are coloured white.
 
 <br>
 
@@ -156,11 +161,16 @@ Click each camera location to see it's name and when it was deployed and refresh
 #| warning: false
 #| message: false
 
-cam <- makeAwesomeIcon(
+# Define icons for each study
+icons <- awesomeIcons(
   icon = "camera",
   iconColor = "black",
   library = "ion",
-  markerColor = "white"
+  markerColor = ifelse(
+    locations_for_map$study == "Wildlife Abundance", 
+    "white",         
+    "lightblue"    
+  )
 )
 
 location_ranges <- df_od |>
@@ -170,42 +180,43 @@ location_ranges <- df_od |>
 
 locations_for_map <- location_reports |>
   left_join(location_ranges, by = "location") |>
-  filter(!is.na(latitude))
+  filter(!is.na(latitude)) |>
+  mutate(study = ifelse(str_detect(project, "Baseline"), "Wildlife Abundance", "Human Land Use")) |>
+  filter(!(location == "CPDFN-1" & study == "Wildlife Abundance"))
 
-buffer <- 0.1
+buffer <- 0.05
 
 htmltools::tags$div(
   style = "display: flex; justify-content: center;",
   
-  leaflet(data = st_as_sf(locations_for_map, coords = c("longitude", "latitude"), crs = 4326), 
-          width = "90%", height = "750px") |>
-    addTiles() |>
-    addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
-    fitBounds(
+  leaflet(data = st_as_sf(locations_for_map, coords = c("longitude", "latitude"), crs = 4326)) |>
+  addTiles() |>
+  addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
+  fitBounds(
     lng1 = min(locations_for_map$longitude) - buffer,
     lat1 = min(locations_for_map$latitude) - buffer,
     lng2 = max(locations_for_map$longitude) + buffer,
     lat2 = max(locations_for_map$latitude) + buffer
   ) |>
-    addFullscreenControl() |>
-    addResetMapButton() |>
-    addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE)) |>
-    addMiniMap(position = "bottomright") |>
-    addAwesomeMarkers(
-      icon = makeAwesomeIcon(icon = "camera", iconColor = "black", library = "ion", markerColor = "white"),
-      group = "Camera Locations",
-      popup = paste(
-        "<b>", "Location: ", "</b>", locations_for_map$location, "<br><br>",
-        # "<b>", "Treatment:", "</b>", locations_for_map$treatment, "<br><br>",
-        "<b>", "Deployed:", "</b>", locations_for_map$start_date, "<br><br>",
-        "<b>", "Refreshed:", "</b>", locations_for_map$end_date, "<br><br>"
-      )
-    ) |>
-    addLayersControl(
-      overlayGroups = c("Satellite Imagery", "Camera Locations"),
-      options = layersControlOptions(collapsed = FALSE),
-      position = "topleft"
+  addFullscreenControl() |>
+  addResetMapButton() |>
+  addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE)) |>
+  addMiniMap(position = "bottomright") |>
+  addAwesomeMarkers(
+    icon = icons,
+    group = "Camera Locations",
+    popup = paste(
+      "<b>", "Location: ", "</b>", locations_for_map$location, "<br><br>",
+      "<b>", "Study: ", "</b>", locations_for_map$study, "<br><br>",
+      "<b>", "Deployed:", "</b>", locations_for_map$start_date, "<br><br>",
+      "<b>", "Refreshed:", "</b>", locations_for_map$end_date, "<br><br>"
     )
+  ) |>
+  addLayersControl(
+    overlayGroups = c("Satellite Imagery", "Camera Locations"),
+    options = layersControlOptions(collapsed = FALSE),
+    position = "topright"
+  )
 )
   
 ```
@@ -214,7 +225,7 @@ htmltools::tags$div(
 
 # Number of Images Collected
 
-@fig-nimages below displays the total number of images collected on the most common 8 species tagged in the `r com_full` camera project. The most commonly observed species was `r nimages[1, 1] |> pull()` with `r nimages[1, 2] |> pull()` images collected over the course of the project.
+@fig-nimages below displays the total number of images collected on the most common 8 species tagged in the `r com_full` camera projects. The most commonly observed species was `r nimages[1, 1] |> pull()` with `r nimages[1, 2] |> pull()` images collected over the course of the project.
 
 ```{r}
 #| label: fig-nimages
@@ -232,7 +243,147 @@ knitr::include_graphics(paste0("Figures/", com_acr, "/Number of Images.png"))
 
 ```
 
-For a complete list of all the species, you can go projects on WildTrax (linked above) and click on the 'Species' tab within the project. Since no other species had more than 20 images collected over the course of the project and across all cameras, we will focus our analysis on the 8 species shown here. 
+For a complete list of all the species, you can go projects on WildTrax (linked above) and click on the 'Species' tab within the project. Since no other species had more than 20 images collected over the course of the project and across all cameras, we will focus our analysis on the 8 species shown here.
+
+```{r}
+#| echo: false
+#| warning: false
+library(dplyr)
+library(forcats)
+library(plotly)
+library(scales)
+
+# --- 1) Build counts: per-study and total ---
+n_by_study <- main_reports %>%
+    mutate(study = ifelse(str_detect(project, "Baseline"), "Wildlife Abundance", "Human Land Use")) |>
+  group_by(study, species_common_name) %>%
+  tally(name = "n") %>%
+  ungroup()
+
+n_total <- main_reports %>%
+    mutate(study = ifelse(str_detect(project, "Baseline"), "Wildlife Abundance", "Human Land Use")) |>
+  group_by(species_common_name) %>%
+  tally(name = "n") %>%
+  mutate(study = "Total") %>%
+  select(study, species_common_name, n)
+
+# Keep a consistent species order using TOTAL counts
+lvl_order <- n_total %>%
+  filter(!species_common_name %in% remove,
+         species_common_name %in% species) %>%
+  arrange(n) %>%
+  pull(species_common_name)
+
+remove <- c("Human", "STAFF/SETUP", "NONE", "Vehicle", "Unidentified", "All Terrain Vehicle",
+            "Heavy Equipment", "Unidentified Vehicle")
+
+# Cleaned data frames for each "view"
+df_total <- n_total %>%
+  filter(!species_common_name %in% remove,
+         species_common_name %in% species) %>%
+  mutate(species_common_name = factor(species_common_name, levels = lvl_order))
+
+study_levels <- n_by_study %>%
+  filter(!species_common_name %in% remove,
+         species_common_name %in% species) %>%
+  distinct(study) %>%
+  arrange(study) %>%
+  pull(study)
+
+dfs_by_study <- lapply(study_levels, function(s) {
+  n_by_study %>%
+    filter(study == s,
+           !species_common_name %in% remove,
+           species_common_name %in% species) %>%
+    mutate(species_common_name = factor(species_common_name, levels = lvl_order))
+})
+names(dfs_by_study) <- study_levels
+
+# --- 2) A small helper that reuses your ggplot look ---
+make_gg <- function(dat) {
+  ggplot(dat, aes(x = species_common_name, y = n, fill = species_common_name)) +
+    geom_col(color = "black") +
+    scale_fill_manual(values = species_colours) +
+    coord_flip() +
+    scale_y_continuous(labels = comma) +
+    labs(title = "", y = "Number of Images", x = "") +
+    theme_minimal() +
+    theme(
+      legend.position = "none",
+      axis.text.y = element_text(size = 12),
+      axis.text.x = element_text(size = 12),
+      axis.title.x = element_text(size = 16, margin = margin(0.75, 0, 0, 0, unit = "cm"))
+    )
+}
+
+# --- 3) Build ggplots and convert to plotly objects ---
+p_total   <- make_gg(df_total)
+ply_total <- ggplotly(p_total, tooltip = c("x", "y"))  # basic hover
+
+ply_studies <- lapply(dfs_by_study, function(d) ggplotly(make_gg(d), tooltip = c("x", "y")))
+
+# --- 4) Combine all traces and wire up a dropdown to toggle visibility ---
+# Collect all plotly traces (Total first, then each study)
+plist <- c(list(ply_total), ply_studies)
+
+# Count traces per view (ggplotly creates multiple traces—one per fill/geom)
+n_traces <- vapply(plist, function(p) length(p$x$data), integer(1))
+cum_idx  <- c(0, cumsum(n_traces))  # start indices by view
+
+# Start with all traces invisible
+all_visible <- rep(FALSE, sum(n_traces))
+
+# Build buttons: one for Total + one per study
+labels <- c("Total", study_levels)
+
+buttons <- lapply(seq_along(plist), function(i) {
+  vis <- all_visible
+  if (n_traces[i] > 0) {
+    # turn on only the traces that correspond to view i
+    vis[(cum_idx[i] + 1):cum_idx[i + 1]] <- TRUE
+  }
+  list(
+    method = "update",
+    args = list(list(visible = vis)),
+    label = labels[i]
+  )
+})
+
+# Start from the "Total" visibility
+start_visible <- all_visible
+if (n_traces[1] > 0) start_visible[1:n_traces[1]] <- TRUE
+
+# Create a base empty plotly object and append all traces
+p_combined <- plot_ly()
+for (p in plist) {
+  for (tr in p$x$data) {
+    p_combined <- add_trace(p_combined, !!!tr)
+  }
+}
+
+# Apply layout, axes, margins, and the dropdown
+p_final <- p_combined %>%
+  layout(
+    xaxis = list(title = "Number of Images", tickformat = ","),
+    yaxis = list(title = ""),
+    margin = list(l = 120, r = 20, t = 10, b = 40),
+    updatemenus = list(list(
+      type = "dropdown",
+      active = 0,
+      x = 1.02, xanchor = "left",
+      y = 1.10, yanchor = "top",
+      buttons = buttons,
+      direction = "down",
+      pad = list(r = 6, t = 6)
+    ))
+  ) %>%
+  style(visible = start_visible) %>%   # initialize visibility
+  config(displaylogo = FALSE)
+
+p_final
+
+```
+
 
 <br>
 

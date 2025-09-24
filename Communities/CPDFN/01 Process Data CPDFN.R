@@ -66,7 +66,9 @@ main_reports <- map_df(.x = project_ids,
   select(project, location, image_date_time, species_common_name, individual_count, image_id,
          # Note: Keep tag comments here
          tag_comments) |>
+  # Remove duplicated locations
   filter(!location %in% remove) |>
+  filter(!(location == "CPDFN-1" & project == "CPFN 20th Baseline Cameras")) |>
   # Change species_common_name values
   mutate(species_common_name = case_when(
     species_common_name == "Deer" ~ "White-tailed Deer",
@@ -89,7 +91,8 @@ image_reports <- map_df(.x = project_ids,
   select(project, location, image_id, image_date_time, image_trigger_mode, image_fov,
          # Note: keep image comments here)
          image_comments) |>
-  filter(!location %in% remove)
+  filter(!location %in% remove) |>
+  filter(!(location == "CPDFN-1" & project == "CPFN 20th Baseline Cameras"))
 
 # Locations
 location_reports <- map_df(.x = project_ids,
@@ -233,11 +236,24 @@ M <- cor(corr)
 remove <- c("Human", "STAFF/SETUP", "NONE", "Vehicle", "Unidentified", "All Terrain Vehicle",
             "Heavy Equipment", "Unidentified Vehicle")
 
-nimages <- main_reports |>
-  group_by(species_common_name) |>
+nimages_by_study <- main_reports |>
+  # Study study variable
+  mutate(study = ifelse(str_detect(project, "Baseline"), "Wildlife Abundance", "Human Land Use")) |>
+  group_by(study, species_common_name) |>
   tally() |>
   arrange(desc(n)) |>
-  filter(!species_common_name %in% remove)
+  filter(!species_common_name %in% remove) |>
+  ungroup()
+
+nimages_total <- main_reports |>
+  group_by(species_common_name) |>
+  tally() |>
+  mutate(study = "Total") |>
+  arrange(desc(n)) |>
+  filter(!species_common_name %in% remove) |>
+  ungroup()
+
+nimages <- bind_rows(nimages_by_study, nimages_total)
 
 #-----------------------------------------------------------------------------------------------------------------------
 
