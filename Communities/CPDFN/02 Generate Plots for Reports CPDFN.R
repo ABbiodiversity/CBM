@@ -23,6 +23,10 @@ load(paste0(g_drive_cbme, "CPDFN/Data/CPDFN Data Objects.RData"))
 species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
              "Canada Lynx", "Woodland Caribou", "Gray Wolf")
 
+species_plus_human <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
+                        "Canada Lynx", "Woodland Caribou", "Gray Wolf",
+                        "Human", "All Terrain Vehicle", "Heavy Equipment", "Vehicle")
+
 species_colours <- c(
   "White-tailed Deer"  = "#3A86FF",
   "Snowshoe Hare"      = "#E63946",
@@ -31,7 +35,11 @@ species_colours <- c(
   "Black Bear"         = "#8338EC",
   "Woodland Caribou"   = "#FB5607",
   "Coyote"             = "#3366CC",
-  "Gray Wolf"          = "#FF006E"
+  "Gray Wolf"          = "#FF006E",
+  "Human"              = "gray50",
+  "All Terrain Vehicle"   = "gray50",
+  "Heavy Equipment"             = "gray50",
+  "Vehicle"          = "gray50"
 )
 
 #-----------------------------------------------------------------------------------------------------------------------
@@ -83,36 +91,41 @@ ggsave(filename = paste0("Figures/", com_acr, "/Deployment Ranges.png"),
 
 # Number of Images
 
-fig_nimages <- nimages |>
-  filter(species_common_name %in% species) |>
-  mutate(species_common_name = fct_reorder(as.factor(species_common_name), n)) |>
-  ggplot(mapping = aes(x = species_common_name, y = n, fill = species_common_name)) +
-  geom_col(color = "black") +
-  scale_fill_manual(values = species_colours) +
-  coord_flip() +
-  scale_y_continuous(labels = scales::comma) +
-  labs(title = "",
-       y = "Number of Images",
-       x = "") +
-  theme_minimal() +
-  theme(legend.position = "none",
-        axis.text.y = element_text(size = 12),
-        axis.text.x = element_text(size = 12),
-        axis.title.x = element_text(size = 16, margin = margin(0.75, 0, 0, 0, unit = "cm")),
-        plot.title = element_text(size = 18))
+studies <- c("Total", "Human Land Use", "Wildlife Abundance")
 
-# View the figure
-fig_nimages
+for (s in studies) {
 
-# Save the figure to Google Drive
-ggsave(filename = paste0(g_drive_cbme, com_acr, "/Figures/Number of Images.png"),
-       fig_nimages,
-       width = 7, height = 5, dpi = 500, bg = "white")
+  fig_nimages <- nimages |>
+    filter(species_common_name %in% species_plus_human,
+           study == s,
+           n > 100) |>
+    mutate(species_common_name = fct_reorder(as.factor(species_common_name), n)) |>
+    ggplot(mapping = aes(x = species_common_name, y = n, fill = species_common_name)) +
+    geom_col(color = "black") +
+    scale_fill_manual(values = species_colours) +
+    coord_flip() +
+    scale_y_continuous(labels = scales::comma) +
+    labs(title = "",
+         y = "Number of Images",
+         x = "") +
+    theme_minimal() +
+    theme(legend.position = "none",
+          axis.text.y = element_text(size = 12),
+          axis.text.x = element_text(size = 12),
+          axis.title.x = element_text(size = 16, margin = margin(0.75, 0, 0, 0, unit = "cm")),
+          plot.title = element_text(size = 18))
 
-# Save the figure to the Figures folder in the CBM repository
-ggsave(filename = paste0("Figures/", com_acr, "/Number of Images.png"),
-       fig_nimages,
-       width = 7, height = 5, dpi = 500, bg = "white")
+  # Save the figure to Google Drive
+  ggsave(filename = paste0(g_drive_cbme, com_acr, "/Figures/Number of Images ", s, ".png"),
+         fig_nimages,
+         width = 7, height = 5, dpi = 500, bg = "white")
+
+  # Save the figure to the Figures folder in the CBM repository
+  ggsave(filename = paste0("Figures/", com_acr, "/Number of Images ", s, ".png"),
+         fig_nimages,
+         width = 7, height = 5, dpi = 500, bg = "white")
+
+}
 
 #-----------------------------------------------------------------------------------------------------------------------
 

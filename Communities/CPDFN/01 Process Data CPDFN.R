@@ -233,8 +233,7 @@ M <- cor(corr)
 
 # Number of images
 
-remove <- c("Human", "STAFF/SETUP", "NONE", "Vehicle", "Unidentified", "All Terrain Vehicle",
-            "Heavy Equipment", "Unidentified Vehicle")
+remove <- c("STAFF/SETUP", "NONE", "Unidentified")
 
 nimages_by_study <- main_reports |>
   # Study study variable

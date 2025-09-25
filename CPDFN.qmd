@@ -239,7 +239,36 @@ htmltools::tags$div(
 #| warning: false
 #| message: false
 
-knitr::include_graphics(paste0("Figures/", com_acr, "/Number of Images.png"))
+
+
+file_names <- paste0("Independent Detections ", species, ".png")
+
+figure_letters <- letters[1:length(species)]
+
+cat("::: panel-tabset\n\n")
+
+for (i in seq_along(species)) {
+  title <- species[i]
+  letter <- figure_letters[i]
+  img_path <- here::here("Figures/OMGD19", file_names[i])
+  rel_path <- fs::path_rel(img_path, start = getwd())
+
+  cat("### ", title, " {.unnumbered}\n\n", sep = "")
+  
+  # Output raw HTML as a single string
+  html <- glue::glue(
+    '<div style="text-align: center;">
+       <img src="{rel_path}" style="width:80%;">
+       <figcaption style="text-align: center; font-size: 0.95em; margin-top: 0.5em;">
+         <strong>Figure 3{letter}.</strong> Independent detections of <strong>{title}</strong> across the study time period.
+       </figcaption>
+     </div>\n\n'
+  )
+  
+  cat(html)
+}
+
+cat(":::\n")
 
 ```
 
@@ -248,139 +277,9 @@ For a complete list of all the species, you can go projects on WildTrax (linked 
 ```{r}
 #| echo: false
 #| warning: false
-library(dplyr)
-library(forcats)
-library(plotly)
-library(scales)
 
-# --- 1) Build counts: per-study and total ---
-n_by_study <- main_reports %>%
-    mutate(study = ifelse(str_detect(project, "Baseline"), "Wildlife Abundance", "Human Land Use")) |>
-  group_by(study, species_common_name) %>%
-  tally(name = "n") %>%
-  ungroup()
 
-n_total <- main_reports %>%
-    mutate(study = ifelse(str_detect(project, "Baseline"), "Wildlife Abundance", "Human Land Use")) |>
-  group_by(species_common_name) %>%
-  tally(name = "n") %>%
-  mutate(study = "Total") %>%
-  select(study, species_common_name, n)
 
-# Keep a consistent species order using TOTAL counts
-lvl_order <- n_total %>%
-  filter(!species_common_name %in% remove,
-         species_common_name %in% species) %>%
-  arrange(n) %>%
-  pull(species_common_name)
-
-remove <- c("Human", "STAFF/SETUP", "NONE", "Vehicle", "Unidentified", "All Terrain Vehicle",
-            "Heavy Equipment", "Unidentified Vehicle")
-
-# Cleaned data frames for each "view"
-df_total <- n_total %>%
-  filter(!species_common_name %in% remove,
-         species_common_name %in% species) %>%
-  mutate(species_common_name = factor(species_common_name, levels = lvl_order))
-
-study_levels <- n_by_study %>%
-  filter(!species_common_name %in% remove,
-         species_common_name %in% species) %>%
-  distinct(study) %>%
-  arrange(study) %>%
-  pull(study)
-
-dfs_by_study <- lapply(study_levels, function(s) {
-  n_by_study %>%
-    filter(study == s,
-           !species_common_name %in% remove,
-           species_common_name %in% species) %>%
-    mutate(species_common_name = factor(species_common_name, levels = lvl_order))
-})
-names(dfs_by_study) <- study_levels
-
-# --- 2) A small helper that reuses your ggplot look ---
-make_gg <- function(dat) {
-  ggplot(dat, aes(x = species_common_name, y = n, fill = species_common_name)) +
-    geom_col(color = "black") +
-    scale_fill_manual(values = species_colours) +
-    coord_flip() +
-    scale_y_continuous(labels = comma) +
-    labs(title = "", y = "Number of Images", x = "") +
-    theme_minimal() +
-    theme(
-      legend.position = "none",
-      axis.text.y = element_text(size = 12),
-      axis.text.x = element_text(size = 12),
-      axis.title.x = element_text(size = 16, margin = margin(0.75, 0, 0, 0, unit = "cm"))
-    )
-}
-
-# --- 3) Build ggplots and convert to plotly objects ---
-p_total   <- make_gg(df_total)
-ply_total <- ggplotly(p_total, tooltip = c("x", "y"))  # basic hover
-
-ply_studies <- lapply(dfs_by_study, function(d) ggplotly(make_gg(d), tooltip = c("x", "y")))
-
-# --- 4) Combine all traces and wire up a dropdown to toggle visibility ---
-# Collect all plotly traces (Total first, then each study)
-plist <- c(list(ply_total), ply_studies)
-
-# Count traces per view (ggplotly creates multiple traces—one per fill/geom)
-n_traces <- vapply(plist, function(p) length(p$x$data), integer(1))
-cum_idx  <- c(0, cumsum(n_traces))  # start indices by view
-
-# Start with all traces invisible
-all_visible <- rep(FALSE, sum(n_traces))
-
-# Build buttons: one for Total + one per study
-labels <- c("Total", study_levels)
-
-buttons <- lapply(seq_along(plist), function(i) {
-  vis <- all_visible
-  if (n_traces[i] > 0) {
-    # turn on only the traces that correspond to view i
-    vis[(cum_idx[i] + 1):cum_idx[i + 1]] <- TRUE
-  }
-  list(
-    method = "update",
-    args = list(list(visible = vis)),
-    label = labels[i]
-  )
-})
-
-# Start from the "Total" visibility
-start_visible <- all_visible
-if (n_traces[1] > 0) start_visible[1:n_traces[1]] <- TRUE
-
-# Create a base empty plotly object and append all traces
-p_combined <- plot_ly()
-for (p in plist) {
-  for (tr in p$x$data) {
-    p_combined <- add_trace(p_combined, !!!tr)
-  }
-}
-
-# Apply layout, axes, margins, and the dropdown
-p_final <- p_combined %>%
-  layout(
-    xaxis = list(title = "Number of Images", tickformat = ","),
-    yaxis = list(title = ""),
-    margin = list(l = 120, r = 20, t = 10, b = 40),
-    updatemenus = list(list(
-      type = "dropdown",
-      active = 0,
-      x = 1.02, xanchor = "left",
-      y = 1.10, yanchor = "top",
-      buttons = buttons,
-      direction = "down",
-      pad = list(r = 6, t = 6)
-    ))
-  ) %>%
-  style(visible = start_visible) %>%   # initialize visibility
-  config(displaylogo = FALSE)
-
-p_final
 
 ```
 
