@@ -161,6 +161,19 @@ Click each camera location to see it's name, the study it belongs to, and when i
 #| warning: false
 #| message: false
 
+# Camera data ranges
+location_ranges <- df_od |>
+  group_by(project_location) |>
+  summarize(start_date = min(date), end_date = max(date), .groups = "drop") |>
+  separate(project_location, into = c("project", "location"), sep = "_") 
+
+# Camera locations to map
+locations_for_map <- location_reports |>
+  left_join(location_ranges, by = "location") |>
+  filter(!is.na(latitude)) |>
+  mutate(study = ifelse(str_detect(project, "Baseline"), "Wildlife Abundance", "Human Land Use")) |>
+  filter(!(location == "CPDFN-1" & study == "Wildlife Abundance"))
+
 # Define icons for each study
 icons <- awesomeIcons(
   icon = "camera",
@@ -172,17 +185,6 @@ icons <- awesomeIcons(
     "lightblue"    
   )
 )
-
-location_ranges <- df_od |>
-  group_by(project_location) |>
-  summarize(start_date = min(date), end_date = max(date), .groups = "drop") |>
-  separate(project_location, into = c("project", "location"), sep = "_") 
-
-locations_for_map <- location_reports |>
-  left_join(location_ranges, by = "location") |>
-  filter(!is.na(latitude)) |>
-  mutate(study = ifelse(str_detect(project, "Baseline"), "Wildlife Abundance", "Human Land Use")) |>
-  filter(!(location == "CPDFN-1" & study == "Wildlife Abundance"))
 
 buffer <- 0.05
 
@@ -223,12 +225,22 @@ htmltools::tags$div(
 
 <br>
 
-# Number of Images Collected
+# Deployment and Retrieval Dates
 
-@fig-nimages below displays the total number of images collected on the most common 8 species tagged in the `r com_full` camera projects. The most commonly observed species was `r nimages[1, 1] |> pull()` with `r nimages[1, 2] |> pull()` images collected over the course of the project.
+
+
+# Results
+
+We first present the results from the Human Land Use Study.
+
+## Number of Images Collected
+
+@fig-nimages-hlu below displays the total number of images collected with the cameras used for the Human Land Use study. The most commonly observed species was `r nimages[1,1] |> pull()` with `r nimages[1, 2] |> pull()` images collected over the course of the project. The 
+
+on the most common 8 species tagged in the `r com_full` camera projects. The most commonly observed species was `r nimages[1, 1] |> pull()` with `r nimages[1, 2] |> pull()` images collected over the course of the project.
 
 ```{r}
-#| label: fig-nimages
+#| label: fig-nimages-hlu
 #| fig-cap: "Number of images captured by species"
 #| fig-cap-location: bottom
 #| fig-dpi: 300
@@ -240,35 +252,6 @@ htmltools::tags$div(
 #| message: false
 
 
-
-file_names <- paste0("Independent Detections ", species, ".png")
-
-figure_letters <- letters[1:length(species)]
-
-cat("::: panel-tabset\n\n")
-
-for (i in seq_along(species)) {
-  title <- species[i]
-  letter <- figure_letters[i]
-  img_path <- here::here("Figures/OMGD19", file_names[i])
-  rel_path <- fs::path_rel(img_path, start = getwd())
-
-  cat("### ", title, " {.unnumbered}\n\n", sep = "")
-  
-  # Output raw HTML as a single string
-  html <- glue::glue(
-    '<div style="text-align: center;">
-       <img src="{rel_path}" style="width:80%;">
-       <figcaption style="text-align: center; font-size: 0.95em; margin-top: 0.5em;">
-         <strong>Figure 3{letter}.</strong> Independent detections of <strong>{title}</strong> across the study time period.
-       </figcaption>
-     </div>\n\n'
-  )
-  
-  cat(html)
-}
-
-cat(":::\n")
 
 ```
 

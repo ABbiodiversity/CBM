@@ -104,6 +104,9 @@ species_colours <- c(
   "Gray Wolf"          = "#FF006E"
 )
 
+# To render:
+# quarto omgd19.qmd --output-dir docs --no-clean
+
 ```
 
 Members of the **`r com_full`** (**`r com_acr`**) are interested in understanding the changes in wildlife condition and behaviour that they are noticing on the land. The health and abundance of wildlife populations is relied upon by members of `r com_acr` to support a traditional way of life. To ensure the sustainability of this way of life it is important to understand both how many animals (such as moose) are available for harvest every year and what the drivers of change are in the abundance of wildlife over time. These concerns led to the initiation of this wildlife monitoring program in 2023. <br> <br> In 2023, `r com_acr` created a Community Knowledge Committee comprising both elders and youths to lead this project. This Community Knowledge Committee shares knowledge and disseminates information about the program across age ranges and the region. The Committee engages with ABMI staff about program updates, monitoring methods, study design, site locations, analysis, and integration of Indigenous knowledge indicators.

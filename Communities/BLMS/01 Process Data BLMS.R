@@ -49,7 +49,7 @@ project_ids <- projects$project_id
 
 # Main report(s)
 # Note: Don't need to loop, or use purrr, since there's only 1 project ID.
-main_report <- wt_download_report(project_id = project_ids,
+main_report <- wt_download_report(project_id = 3150,
                                   sensor_id = "CAM",
                                   report = "main",
                                   weather_cols = FALSE) |>
