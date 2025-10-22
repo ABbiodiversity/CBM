@@ -125,7 +125,7 @@ In 2024 the cameras used in the Human Land Use study were retrieved and then dep
 
 Unfortunately during the spring of 2023 a large wildfire burned through the area and a number of cameras were lost. Cameras were re-deployed afterwards and the program continued.
 
-## Camera Refresh and Image Processing
+# Camera Refresh and Image Processing
 
 The human land use cameras were refreshed (given new SD cards and batteries) in the field by `r com_acr` in December 2022. The images from the SD cards were uploaded and tagged on the online platform [WildTrax](www.wildtrax.ca). WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) for users of environmental sensors such as remote cameras to provide support with processing, organizing, and sharing data.
 
@@ -144,11 +144,19 @@ This section is a space for the `r com_acr` to share their major takeaways from 
 
 One idea we came up with was: One highlight of the program was during the initial image tagging training land users gathered to review the images and discuss what they were seeing in the images to help inform the direction of the project. This discussion focused on non-community members photographed by the cameras, the number of deer, wolves, moose, caribou, and health of the photographed moose.
 
+```{r}
+#| warning: false
+#| echo: false
+
+carousel("species-carousel", 10000, 
+         yaml.load_file("Images/CPDFN/carousel2.yml"))
+```
+
 # Camera Locations
 
 The following interactive map can be used to explore the locations of the cameras deployed by `r com_full`. Camera locations for the Human Land Use study were chosen by the community to reflect areas where monitoring was desired. Locations for the Wildlife Abundance study were chosen to assess how a gradient of land use and industry disturbance impacts wildlife distribution and abundance.
 
-Click each camera location to see it's name, the study it belongs to, and when it was deployed and refreshed. Cameras that belong to the Human Land Use study are coloured light blue, and those that belong to the Wildlife Abundance Study are coloured white.
+Click each camera location to see it's name, the study it belongs to, and when it was deployed and refreshed. Cameras that belong to the Human Land Use study are coloured light blue, and those that belong to the Wildlife Abundance Study are coloured white. You can use the check boxes in the top right of the map to turn on/off the satellite imagery as well as the camera location points. 
 
 <br>
 
@@ -186,12 +194,12 @@ icons <- awesomeIcons(
   )
 )
 
-buffer <- 0.05
+buffer <- 0.075
 
 htmltools::tags$div(
   style = "display: flex; justify-content: center;",
   
-  leaflet(data = st_as_sf(locations_for_map, coords = c("longitude", "latitude"), crs = 4326)) |>
+  leaflet(data = st_as_sf(locations_for_map, coords = c("longitude", "latitude"), crs = 4326), width = "90%", height = "750px") |>
   addTiles() |>
   addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
   fitBounds(
@@ -203,7 +211,7 @@ htmltools::tags$div(
   addFullscreenControl() |>
   addResetMapButton() |>
   addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE)) |>
-  addMiniMap(position = "bottomright") |>
+  addMiniMap(position = "bottomleft") |>
   addAwesomeMarkers(
     icon = icons,
     group = "Camera Locations",
@@ -227,7 +235,27 @@ htmltools::tags$div(
 
 # Deployment and Retrieval Dates
 
+@fig-ranges below displays the dates when each camera location was deployed and when the SD cards were retrieved (or the last day of image collection if the camera failed). These dates are marked with a point in the plot.
 
+Deployment first took place for the Human Land Use study in February 2022, and cameras were serviced for the first time at the end of November in the same year. These cameras were retrieved from their locations in the field in November the following year, totalling nearly 2 years of monitoring.
+
+A subset of the cameras (9) for the Wildlife Abundance study were first deployed in March 2023. This initial batch was collected and additional locations were added in February/March of 2024. Those cameras were serviced one year later in March 2025.  
+
+```{r}
+#| label: fig-ranges
+#| fig-cap: "Camera deployment and SD card retrieval dates."
+#| fig-cap-location: bottom
+#| fig-dpi: 500
+#| out-width: "85%"
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(paste0("Figures/", com_acr, "/Deployment Ranges.png"))
+
+```
 
 # Results
 
@@ -269,439 +297,6 @@ For a complete list of all the species, you can go projects on WildTrax (linked 
 
 <br>
 
-```{r}
-#| warning: false
-#| echo: false
 
-carousel("species-carousel", 10000, 
-         yaml.load_file("Images/OMGD19/carousel2.yml"))
-```
 
-# Independent Detections Over Time
 
-The number of images of each species tells us part of the picture but just because there may be more images of one species doesn’t necessarily mean there are more of them in the area, they may have just spent more time in front of the camera. With camera data, it’s important to track the number of “independent” detections for each species. You can think of an independent detection as an image or collection of images for a visit from an animal or group of animals.
-
-In the figure below we present the number of independent detections for each of the 8 focal species detected in the `r com_acr` project. We use a 30 minute time interval to separate detection events; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals.
-
-```{r}
-#| label: none
-#| include: false
-#| echo: false
-#| eval: false
-#| warning: false
-#| message: false
-
-# This is the overall faceted independent detections plot, which I think is a bit confusing, so I'm leaving it out for now. 
-
-knitr::include_graphics(here("Communities/OMGD19/Figures/Independent Detections.png"))
-
-```
-
-You can explore the figures for each species using the tabs below. The x-axis (bottom) represents the camera deployment timeline, from October 2023 to October 2024. The y-axis (left) shows the number of detections captured, from all of the cameras from the project. Note that the y-axis (left) of the plots for each species may change depending on the number of detections captured.
-
-```{r}
-#| label: ind-detections
-#| echo: false
-#| results: asis
-#| include: true
-#| eval: true
-#| warning: false
-#| message: false
-
-file_names <- paste0("Independent Detections ", species, ".png")
-
-figure_letters <- letters[1:length(species)]
-
-cat("::: panel-tabset\n\n")
-
-for (i in seq_along(species)) {
-  title <- species[i]
-  letter <- figure_letters[i]
-  img_path <- here::here("Figures/OMGD19", file_names[i])
-  rel_path <- fs::path_rel(img_path, start = getwd())
-
-  cat("### ", title, " {.unnumbered}\n\n", sep = "")
-  
-  # Output raw HTML as a single string
-  html <- glue::glue(
-    '<div style="text-align: center;">
-       <img src="{rel_path}" style="width:80%;">
-       <figcaption style="text-align: center; font-size: 0.95em; margin-top: 0.5em;">
-         <strong>Figure 3{letter}.</strong> Independent detections of <strong>{title}</strong> across the study time period.
-       </figcaption>
-     </div>\n\n'
-  )
-  
-  cat(html)
-}
-
-cat(":::\n")
-
-```
-
--   **White-tailed deer** were primarily detected in the summer months of June, July, and August.
--   Because they hibernate over the winter, detection of **Black Bears** began in May, and peaked in late June and early July.
--   **Moose** were consistently detected year round, as were **Coyote** and **Canada Lynx**.
--   Detections of **Snowshoe Hare** were also consistent year round, with the exception of the later summer months (August).
--   **Woodland Caribou** and **Gray Wolf** detections were infrequent and sporadic across the duration of the project.
-
-<br>
-
-The table below summarises the number of images collected for each species and the number of independent detections.
-
-<br>
-
-```{r}
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-#| results: asis
-
-ndetect <- df_ind_detect |>
-  group_by(species_common_name) |>
-  tally(name = "detect") |>
-  filter(species_common_name != "Unidentified")
-
-joined_table <- nimages |>
-  left_join(ndetect, by = "species_common_name")
-
-htmltools::div(
-  style = "display: flex; flex-direction: column; align-items: center;",
-
-  htmltools::tagList(
-    DT::datatable(
-      joined_table,
-      options = list(
-        searching = TRUE,
-        paging = TRUE,
-        pageLength = 10,
-        autoWidth = TRUE
-      ),
-      width = "70%",
-      colnames = c("Species", "Number of Images", "Number of Detections")
-    ),
-
-    htmltools::tags$figcaption(
-      style = "text-align: center; font-size: 1.1em; margin-top: 0.5em;",
-      strong("Table 1."), " Number of images captured and independent detections by species in the camera project."
-    )
-  )
-)
-
-```
-
-# Temporal Activity Patterns
-
-Since camera traps take photos continuously 24 hours a day they can tell us when different species are active. These analyses can give insight into competition, predation, and coexistence.
-
-In this section we present the temporal (diel) activity patterns for each of the 8 focal species from the `r com_acr` cameras. The x-axis (bottom) of each of the following plots represents the 24-hr daily cycle, and the line represents the relative activity level detected by the cameras. This data is pooled across all 18 cameras in the project.
-
-```{r}
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-#| results: asis
-
-# Set folder containing the plots
-file_names <- paste0("Activity ", species, ".png")
-figure_letters <- letters[1:length(species)]
-
-cat("::: panel-tabset\n\n")
-
-for (i in seq_along(species)) {
-  title <- species[i]
-  letter <- figure_letters[i]
-  img_path <- here::here("Figures/OMGD19", file_names[i])
-  rel_path <- fs::path_rel(img_path, start = getwd())
-  
-  cat("### ", title, " {.unnumbered}\n\n", sep = "")
-  
-  # Render the image and caption
-  html <- glue::glue(
-    '<div style="text-align: center;">
-       <img src="{rel_path}" style="width:80%;">
-       <figcaption style="text-align: center; font-size: 0.95em; margin-top: 0.5em;">
-         <strong>Figure 4{letter}.</strong> Daily activity pattern of <strong>{title}</strong> based on camera trap detections.
-       </figcaption>
-     </div>\n\n'
-  )
-  
-  cat(html)
-}
-
-cat(":::\n")
-
-
-```
-
--   **White-tailed deer** are primarily active during twilight hours, specifically at dawn and dusk. This pattern is known as *crepuscular*. The majority of the activity, however, was captured during the dawn hours (6:00 to 9:00).
--   **Black Bear** were similarly crepuscular, although the peak was much more pronounced during the dusk hours (between 18:00 and 24:00).
--   Based on the cameras in the `r com_acr` project, **Moose** were primarily active during the night time (00:00 to 6:00).
--   **Coyote** and **Snowshoe Hare** were similar to Moose, but had slightly elevated (and increasing) activity levels throughout the evening hours.
--   **Canada Lynx** activity peaked during midday (12:00). **Caribou** were similar, with a slightly earlier, and more pronounced, peak (10:00).
--   Finally, **Gray Wolf** showed a slightly crepuscular tendency, however the dusk activity peak was more extreme.
-
-# Species Overlap
-
-Camera trap data are being increasingly used to model multiple species communities, and we can use this data to explore the co-occurrence patterns of the species in the community.
-
-## Species that share the same spaces
-
-Blue boxes in Figure 5 below show species that are usually seen by the same cameras. For example, Black Bears and Moose often appear in the same areas because they rely on the same habitat like forests-that provide food and shelter. Even though bears sometimes hunt moose (especially calves), most adult Moose are big enough to defend themselves, so they don’t always avoid bear territory. Bears might also follow Moose for scavenging opportunities, which keeps them in the same general area without constant conflict.
-
-## Species rarely found together
-
-Red boxes show species that tend to stay apart and weren't usually seen at the same camera. For example, White-tailed Deer might avoid areas with certain predators to reduce risk. But not all predators trigger avoidance: deer and Gray Wolves can have a blue box (positive correlation) because deer are fast and rely on the same habitats as wolves. Wolves can not catch every deer, so deer may tolerate the risk to access food or water. Other pairs of species, such as Moose and Caribou, do not have a predator/prey relationship but select for different habitat types because they browse on different vegetation for food. Moose prefer upload (drier) sites, whereas Caribou prefer lowland areas.
-
-```{r}
-#| label: cooccurrences
-#| include: true
-#| echo: false
-#| eval: true
-#| warning: false
-#| message: false
-#| fig-cap: "Figure 5. Co-Occurrence values for the 8 focal species."
-
-par(mfrow=c(1,1))
-
-corrplot(M, method = "color",
-         type = "upper",
-         order = "hclust",
-         tl.col = "black", tl.srt = 45,
-         diag = FALSE)
-
-```
-
-# Species Density
-
-We can use the number of images and counts of independent detections to estimate the density of each species at each camera. Density is the number of animals per unit area, which we express below as the number of animals per square kilometer (km<sup>2</sup>).
-
-To estimate the density of each wildlife species at each camera, we used the Time in Front of Camera (TIFC) approach (@becker2022applying). This method has previously been used to estimate densities of unmarked populations of both White-tailed Deer and Moose in the boreal region of Alberta (@laurent2021evaluating, @dickie2024habitat). Similar to quadrat sampling, this approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
-
-The following map displays the spatial distribution in densities of the 8 focal species between the 18 cameras of the OMGD19 camera project. Note that cameras with no detections of a particular species (i.e., a density of '0') are represented with a black circle. Smaller circles represent small densities of a species at that camera. Bigger circles indicate that the density is higher at that camera.
-
-<br>
-
-::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
-You can hover over each camera location to see the calculated density of each species at that deployment.
-:::
-
-```{r}
-#| label: map-species-density
-#| include: true
-#| echo: false
-#| results: asis
-#| eval: true
-#| warning: false
-#| message: false
-
-densities_to_map <- locations_for_map |>
-  left_join(df_density_sum) |>
-  select(-project) |>
-  mutate(density_km2 = ifelse(density_km2 > 5, 5, density_km2)) |>
-  mutate(log_density = log10(density_km2 + 1))
-
-# Species palette as a list
-species_palette <- list(
-  "White-tailed Deer"  = "#3A86FF",  
-  "Snowshoe Hare"      = "#E63946",  
-  "Moose"              = "#06D6A0",  
-  "Canada Lynx"        = "#FFBE0B",  
-  "Black Bear"         = "#8338EC",  
-  "Woodland Caribou"   = "#FB5607",  
-  "Coyote"             = "#3366CC",  
-  "Gray Wolf"          = "#FF006E"
-)
-
-buffer <- 0.1
-
-# Create base map
-leaf_map <- leaflet(width = "90%", height = "750px") |>
-  addProviderTiles("Esri.WorldGrayCanvas", group = "Gray Canvas") |>
-  fitBounds(
-    lng1 = min(densities_to_map$longitude) - buffer,
-    lat1 = min(densities_to_map$latitude) - buffer,
-    lng2 = max(densities_to_map$longitude) + buffer,
-    lat2 = max(densities_to_map$latitude) + buffer
-  ) |>
-  addFullscreenControl() |>
-  addResetMapButton()
-
-max_log <- max(densities_to_map$log_density, na.rm = TRUE)
-
-# Loop over species and add circle markers for each base group
-for (sp in species) {
-  
-  data <- densities_to_map |> 
-  filter(species_common_name == sp) |>
-  mutate(
-    scaled_radius = pmax(log_density / max_log * 15, 4),
-    fill_color = ifelse(density_km2 == 0, "#222222", species_palette[[sp]]),
-    label_text = ifelse(
-      density_km2 == 0,
-      paste0(
-        "<table>",
-        "<tr><td>Camera location:</td><td align='right'><b>", location, "</b></td></tr>",
-        "<tr><td>Treatment:</td><td align='right'><b>", treatment, "</b></td></tr>",
-        "<tr><td colspan='2'><i>No detections at this location</i></td></tr>",
-        "</table>"
-      ),
-      paste0(
-        "<table>",
-        "<tr><td>Camera location:</td><td align='right'><b>", location, "</b></td></tr>",
-        "<tr><td>Treatment:</td><td align='right'><b>", treatment, "</b></td></tr>",
-        "<tr><td>", species_common_name, " Density:</td><td align='right'><b>",
-        round(density_km2, 2), " per km²</b></td></tr>",
-        "</table>"
-      )
-    )
-  )
-  
-  leaf_map <- leaf_map |>
-    addCircleMarkers(
-      data = data,
-      lng = ~longitude,
-      lat = ~latitude,
-      radius = ~scaled_radius,
-      fillColor = ~fill_color,
-      fillOpacity = 0.85,
-      stroke = TRUE,
-      color = "#FFFFFF",
-      weight = 1,
-      group = sp,
-      label = ~ lapply(label_text, HTML),
-      labelOptions = labelOptions(
-        html = TRUE,
-        direction = "top",
-        textsize = "14px",
-        style = list(
-          "padding" = "6px"
-        )
-      )
-    )
-}
-
-leaf_map <- leaf_map |>
-  addLayersControl(
-    baseGroups = species,
-    options = layersControlOptions(collapsed = FALSE),
-    position = "topleft"
-  )
-
-tags$div(
-  style = "display: flex; justify-content: center;",
-  leaf_map)
-
-```
-
-<br>
-
-# Where We Expect to Find Species
-
-The ABMI compiles remote camera data collected in Alberta’s boreal region (including the Oil Sands Region) and uses it to develop habitat models for many species. These models incorporate species’ responses to land cover (e.g., vegetation and forest types), human disturbance, and climate variables (seasonal weather patterns).
-
-The maps below show where the models predict each species is most likely to be found in the `r com_acr` area of interest. The area is divided into 1 km<sup>2</sup> pixels, and for each pixel, the model estimates the probability of each species being there based on the habitat and disturbance present in that pixel.
-
-<br>
-
-::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
-Use the buttons on the top right of the map to toggle through each species' predictions. You can also turn on **Satellite Imagery** and use the **NONE (Blank)** button to view the imagery underneath the predictions, as well as use the **Camera Locations** button to see where `r com_acr` camera locations are.
-:::
-
-```{r}
-#| label: map-species-predictions
-#| include: true
-#| echo: false
-#| results: asis
-#| eval: true
-#| warning: false
-#| message: false
-
-# Load AOI
-aoi <- st_read(paste0(g_drive_cbme, "CPDFN/AOI/CPDFN Area of Interest.shp"), quiet = TRUE) |>
-  st_transform(4326)
-
-# Load rasters for each species
-raster_list <- species |>
-  set_names() |>
-  map(~ terra::rast(paste0(g_drive_cbme, "CPDFN/Predictions/", .x, " CPDFN.tif")))
-
-raster_list_clamped <- map(raster_list, ~ terra::clamp(.x, lower = 0, upper = 0.60, values = TRUE))
-
-domain_raw <- c(0, 0.601)
-
-pal <- colorNumeric(
-  palette = colorRampPalette(c("navy", "skyblue", "gold", "red"))(100),
-  domain = domain_raw,
-  na.color = "transparent"
-)
-
-# Start building the leaflet map
-map <- leaflet(width = "90%", height = "750px") |>
-  addMapPane(name = "Basemap", zIndex = 410) |>
-  addMapPane(name = "Satellite Imagery", zIndex = 420) |>
-  addMapPane(name = "Species Rasters", zIndex = 430) |>
-  addMapPane(name = "AOI Boundary", zIndex = 440) |>
-  #addMapPane(name = "Camera Locations", zIndex = 450) |>
-  addTiles(group = "Basemap", options = tileOptions(opacity = 1, pane = "Basemap")) |>
-  addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery", options = leafletOptions(pane = "Satellite Imagery")) |>
-  addFullscreenControl() |>
-  addResetMapButton() |>
-  addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE)) |>
-  addMiniMap(position = "bottomright") |>
-  addPolylines(data = aoi, color = "#0a0909", weight = 2, smoothFactor = 0.2, opacity = 1.0, fill = FALSE, options = leafletOptions(pane = "AOI Boundary"))
-
-for (sp in species) {
-  map <- map |>
-    addRasterImage(
-      raster_list_clamped[[sp]],
-      colors = pal,
-      opacity = 0.8,
-      group = sp,
-      options = leafletOptions(pane = "Species Rasters")
-    )
-}
-
-map <- map |>
-  addTiles(group = "NONE (Blank)", options = tileOptions(opacity = 0)) |>
-  addAwesomeMarkers(data = st_as_sf(locations_for_map, coords = c("longitude", "latitude"), crs = 4326),
-                    icon = makeAwesomeIcon(icon = "camera", iconColor = "black", library = "ion", markerColor = "white"),
-      group = "Camera Locations",
-      popup = paste(
-        "<b>", "Location: ", "</b>", locations_for_map$location, "<br><br>",
-        "<b>", "Treatment:", "</b>", locations_for_map$treatment, "<br><br>",
-        "<b>", "Deployed:", "</b>", locations_for_map$start_date, "<br><br>",
-        "<b>", "Refreshed:", "</b>", locations_for_map$end_date, "<br><br>")) |>
-  addLegend(
-    pal = pal,
-    values = domain_raw,
-    opacity = 1,
-    title = "Probability of<br>Species Presence:",
-    position = "bottomright",
-    labFormat = labelFormat(
-      transform = function(x) x * 100,
-      digits = 0,
-      suffix = "%"
-    )
-  ) |>
-  addLayersControl(
-    overlayGroups = c("Satellite Imagery",
-                      "Camera Locations"),
-    baseGroups = c(species, "NONE (Blank)"),
-    options = layersControlOptions(collapsed = FALSE)
-  ) |>
-  hideGroup(c("Satellite Imagery", "Camera Locations"))
-
-# Print map
-
-htmltools::tags$div(
-  style = "display: flex; justify-content: center;",
-  map)
-
-```
-
-<br>

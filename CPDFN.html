@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Ave Dersch">
+<meta name="author" content="Stuart Janvier">
+<meta name="author" content="Louie Janvier">
+<meta name="author" content="Caiden Morice">
+<meta name="author" content="David Evans">
+<meta name="author" content="Robbie Potts">
+<meta name="dcterms.date" content="2025-10-22">
+
+<title>Chipewyan Prairie Dene First Nation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="CPDFN_files/libs/clipboard/clipboard.min.js"></script>
+<script src="CPDFN_files/libs/quarto-html/quarto.js"></script>
+<script src="CPDFN_files/libs/quarto-html/popper.min.js"></script>
+<script src="CPDFN_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="CPDFN_files/libs/quarto-html/anchor.min.js"></script>
+<link href="CPDFN_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="CPDFN_files/libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="CPDFN_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="CPDFN_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="CPDFN_files/libs/bootstrap/bootstrap-b19cd20e7bd7decb0357ffeefbecc2b2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="CPDFN_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="CPDFN_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="CPDFN_files/libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+
+<script src="CPDFN_files/libs/leaflet-1.3.1/leaflet.js"></script>
+
+<link href="CPDFN_files/libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+
+<script src="CPDFN_files/libs/proj4-2.6.2/proj4.min.js"></script>
+
+<script src="CPDFN_files/libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+
+<link href="CPDFN_files/libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+
+<script src="CPDFN_files/libs/leaflet-binding-2.2.2/leaflet.js"></script>
+
+<script src="CPDFN_files/libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+
+<script src="CPDFN_files/libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
+
+<link href="CPDFN_files/libs/lfx-fullscreen-1.0.2/lfx-fullscreen-prod.css" rel="stylesheet">
+
+<script src="CPDFN_files/libs/lfx-fullscreen-1.0.2/lfx-fullscreen-prod.js"></script>
+
+<link href="CPDFN_files/libs/leaflet-easybutton-1.3.1/easy-button.css" rel="stylesheet">
+
+<script src="CPDFN_files/libs/leaflet-easybutton-1.3.1/easy-button.js"></script>
+
+<script src="CPDFN_files/libs/leaflet-easybutton-1.3.1/EasyButton-binding.js"></script>
+
+<link href="CPDFN_files/libs/ionicons-2.0.1/ionicons.min.css" rel="stylesheet">
+
+<link href="CPDFN_files/libs/leaflet-minimap-3.3.1/Control.MiniMap.min.css" rel="stylesheet">
+
+<script src="CPDFN_files/libs/leaflet-minimap-3.3.1/Control.MiniMap.min.js"></script>
+
+<script src="CPDFN_files/libs/leaflet-minimap-3.3.1/Minimap-binding.js"></script>
+
+<link href="CPDFN_files/libs/leaflet-awesomemarkers-2.0.3/leaflet.awesome-markers.css" rel="stylesheet">
+
+<script src="CPDFN_files/libs/leaflet-awesomemarkers-2.0.3/leaflet.awesome-markers.min.js"></script>
+
+
+
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
+<div id="quarto-sidebar-toc-left" class="sidebar toc-left">
+  <nav id="TOC" role="doc-toc" class="toc-active" data-toc-expanded="99">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#project-introduction" id="toc-project-introduction" class="nav-link active" data-scroll-target="#project-introduction">Project Introduction</a>
+  <ul class="collapse">
+  <li><a href="#human-land-use-study" id="toc-human-land-use-study" class="nav-link" data-scroll-target="#human-land-use-study">Human Land Use Study</a></li>
+  <li><a href="#wildlife-abundance-study" id="toc-wildlife-abundance-study" class="nav-link" data-scroll-target="#wildlife-abundance-study">Wildlife Abundance Study</a></li>
+  </ul></li>
+  <li><a href="#camera-refresh-and-image-processing" id="toc-camera-refresh-and-image-processing" class="nav-link" data-scroll-target="#camera-refresh-and-image-processing">Camera Refresh and Image Processing</a></li>
+  <li><a href="#project-highlights" id="toc-project-highlights" class="nav-link" data-scroll-target="#project-highlights">Project Highlights</a></li>
+  <li><a href="#camera-locations" id="toc-camera-locations" class="nav-link" data-scroll-target="#camera-locations">Camera Locations</a></li>
+  <li><a href="#deployment-and-retrieval-dates" id="toc-deployment-and-retrieval-dates" class="nav-link" data-scroll-target="#deployment-and-retrieval-dates">Deployment and Retrieval Dates</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a>
+  <ul class="collapse">
+  <li><a href="#number-of-images-collected" id="toc-number-of-images-collected" class="nav-link" data-scroll-target="#number-of-images-collected">Number of Images Collected</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Chipewyan Prairie Dene First Nation</h1>
+<p class="subtitle lead">Results from the Oil Sands Monitoring Wildlife Camera Project</p>
+</div>
+
+
+<div class="quarto-title-meta-author">
+  <div class="quarto-title-meta-heading">Authors</div>
+  <div class="quarto-title-meta-heading">Affiliations</div>
+  
+    <div class="quarto-title-meta-contents">
+    <p class="author">Ave Dersch </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Moccasin Flower
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Stuart Janvier </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Chip Prairie Dene First Nation
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Louie Janvier </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Chip Prairie Dene First Nation
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Caiden Morice </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            Chip Prairie Dene First Nation
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">David Evans <a href="mailto:david.evans@ualberta.ca" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            ABMI
+          </p>
+      </div>
+    <div class="quarto-title-meta-contents">
+    <p class="author">Robbie Potts <a href="mailto:rnpotts@ualberta.ca" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> </p>
+  </div>
+  <div class="quarto-title-meta-contents">
+        <p class="affiliation">
+            ABMI
+          </p>
+      </div>
+  </div>
+
+<div class="quarto-title-meta">
+
+      
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">October 22, 2025</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><br></p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="gallery-carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+<div class="carousel-indicators">
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="0" aria-label="Slide 1" class="active" aria-current="true"></button>
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+</div>
+<div class="carousel-inner">
+<div class="carousel-item active" data-bs-interval="10000">
+<a href="">
+<img src="Images/CPDFN/IMG_7089.JPG" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">(Right to Left) CPFN’s Stuart Janvier, Caiden Morice and Louie Janvier with Dave Evans (ABMI) refreshing the Human Land Use Study cameras in October, 2022.</p>
+</div>
+</div>
+<div class="carousel-item" data-bs-interval="10000">
+<a href="">
+<img src="Images/CPDFN/IMG_5542.JPG" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">CPFN Field Crew with ABMI deploying cameras for the Human Land Use Study in February, 2022.</p>
+</div>
+</div>
+<div class="carousel-item" data-bs-interval="10000">
+<a href="">
+<img src="Images/CPDFN/IMG_5534.JPG" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">Louie Janvier recording deployment metadata.</p>
+</div>
+</div>
+<div class="carousel-item" data-bs-interval="10000">
+<a href="">
+<img src="Images/CPDFN/IMG_7083.JPG" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">Louie Janvier deploying a camera.</p>
+</div>
+</div>
+<div class="carousel-item" data-bs-interval="10000">
+<a href="">
+<img src="Images/CPDFN/IMG_7085.JPG" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">CPFN camera deployed as part of the Human Land Use study.</p>
+</div>
+</div>
+</div>
+<button class="carousel-control-prev" type="button" data-bs-target="#gallery-carousel" data-bs-slide="prev">
+<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Prevoius</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#gallery-carousel" data-bs-slide="next">
+<span class="carousel-control-next-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Next</span>
+</button>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" style="background-color: #f4f4f4; padding: 20px;">
+<div class="callout-header d-flex align-content-center" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, refer to the publication date and feel free to reach out to the authors.</p>
+</div>
+</div>
+</div>
+<section id="project-introduction" class="level1">
+<h1>Project Introduction</h1>
+<p>The <strong>Chipewyan Prairie Dene First Nation</strong> (CPDFN) OSM camera program started in 2022 with a focus of recording land users accessing the lands near Janvier who were not members of the community. Over the years the camera program has adapted to answer different questions and concerns expressed by the community, including understanding how wildlife abundances change in proximity to human disturbance (including oil sands industry disturbance). This webpage will focus on the results from both the Human Land Use and Wildlife Abundance study designs.</p>
+<section id="human-land-use-study" class="level2">
+<h2 class="anchored" data-anchor-id="human-land-use-study">Human Land Use Study</h2>
+<p>CPDFN members have been experiencing the impacts of oil sands development for a long time. Land users have seen firsthand how these developments are changing the way they access and use the land. Some of the harvesting sites have been physically lost. Others are still there, but getting to them has become harder—either because access is blocked, uncomfortable, or just not appropriate anymore.</p>
+<p>At the same time, they’re seeing more and more outsiders—like oil sands workers staying in camps, or non-Indigenous hunters and recreational users—coming onto their land. They’re using roads and trails built for oil sands development to get into areas used traditionally for harvesting and cultural activities. This has led to increased competition for land and resources, and sometimes even dangerous or racist interactions, vandalism, littering, and poaching. It’s not just about the physical space—CPDFN members are also dealing with loud noise, bad smells, heavy traffic, bright lights, and other things that ruin the peaceful experience of being out on the land.</p>
+<p>CPDFN has been raising these concerns with oil sands companies for years, but often, they don’t take them seriously. So CPDFN decided to collect their own evidence. From 2022 to 2024, led by Stuart Janvier, Louie Janvier, Caiden Morice and Ave Dersche with support from ABMI, CPDFN ran a camera monitoring project to track who’s coming into their territory and what kinds of impacts they’re seeing. This section of the report shares the results of that project and helps show what they already knew—yes, oil sands development has created pathways for outsiders to come onto their land, and yes, it’s causing real problems for their community.</p>
+</section>
+<section id="wildlife-abundance-study" class="level2">
+<h2 class="anchored" data-anchor-id="wildlife-abundance-study">Wildlife Abundance Study</h2>
+<p>In 2024 the cameras used in the Human Land Use study were retrieved and then deployed along the 20th Baseline to monitor wildlife. The 20th Baseline runs west to east with the Black Gold Sag-D plant to the West (high oil sands disturbance) and the proposed Dillon River Wildland with considerably less disturbance to the east (some old cutlines and occasional conventional well pads). The objective of this study is to document and compare the wildlife abundances calculated from the images collected from each camera deployed along the baseline to see if wildlife use the landscape differently when closer or further away from the area of high disturbance.</p>
+<p>Unfortunately during the spring of 2023 a large wildfire burned through the area and a number of cameras were lost. Cameras were re-deployed afterwards and the program continued.</p>
+</section>
+</section>
+<section id="camera-refresh-and-image-processing" class="level1">
+<h1>Camera Refresh and Image Processing</h1>
+<p>The human land use cameras were refreshed (given new SD cards and batteries) in the field by CPDFN in December 2022. The images from the SD cards were uploaded and tagged on the online platform <a href="www.wildtrax.ca">WildTrax</a>. WildTrax is an online platform developed by the <a href="www.abmi.ca">Alberta Biodiversity Monitoring Institute</a> for users of environmental sensors such as remote cameras to provide support with processing, organizing, and sharing data.</p>
+<p>CPDFN have 4 projects available on WildTrax with the images stored and tagged:</p>
+<ul>
+<li><a href="https://portal.wildtrax.ca/cam/1312"><strong>CPDFN Wildlife Cameras</strong></a>: Contains images from the 18 cameras initially deployed for the Human Land Use study in January 2022 and refreshed in November later that year.</li>
+<li><a href="https://portal.wildtrax.ca/cam/2259"><strong>CPDFN Wildlife Cameras 2023</strong></a>: Contains images from the same 18 cameras over the next year (November 2022 to November 2023). Also includes a new location that monitors a salt lick identified by the community that is highly trafficked by wildlife.</li>
+<li><a href="https://portal.wildtrax.ca/cam/3194"><strong>CPFN 20th Baseline Cameras</strong></a>: This project contains images from 13 cameras deployed for the Wildlife Abundance project along 20th baseline.</li>
+<li><a href="https://portal.wildtrax.ca/cam/3381"><strong>20th Baseline Cameras 2025</strong></a>: This project contains images from 20 cameras deployed further along 20th baseline for the Wildlife Abundance portion of the project.</li>
+</ul>
+<p>Note that viewers will need to have a WildTrax account with the appropriate permissions from the community and be logged in to see the these images.</p>
+</section>
+<section id="project-highlights" class="level1">
+<h1>Project Highlights</h1>
+<p>This section is a space for the CPDFN to share their major takeaways from the project so far. This could be sharing surprises from the images, camera deployment/refresh, potential to add quotes, or create videos and add them in! Highlight specific images, etc.</p>
+<p>One idea we came up with was: One highlight of the program was during the initial image tagging training land users gathered to review the images and discuss what they were seeing in the images to help inform the direction of the project. This discussion focused on non-community members photographed by the cameras, the number of deer, wolves, moose, caribou, and health of the photographed moose.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="species-carousel" class="carousel carousel-dark slide" data-bs-ride="carousel">
+<div class="carousel-indicators">
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="0" aria-label="Slide 1" class="active" aria-current="true"></button>
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+<button type="button" data-bs-target="#gallery-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+</div>
+<div class="carousel-inner">
+<div class="carousel-item active" data-bs-interval="10000">
+<a href="">
+<img src="Images/CPDFN/Fire.jpg" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">Wildfire captured by cameras during the spring of 2023.</p>
+</div>
+</div>
+<div class="carousel-item" data-bs-interval="10000">
+<a href="">
+<img src="Images/CPDFN/Bull.jpg" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">Bull moose hanging out at the salt lick site identified by CPDFN members.</p>
+</div>
+</div>
+<div class="carousel-item" data-bs-interval="10000">
+<a href="">
+<img src="Images/CPDFN/Calves.jpg" class="d-block  mx-auto border">
+</a>
+<div class="carousel-caption d-none d-md-block">
+<p class="fw-light">Calf moose captured by CPDFN wildlife cameras.</p>
+</div>
+</div>
+</div>
+<button class="carousel-control-prev" type="button" data-bs-target="#species-carousel" data-bs-slide="prev">
+<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Prevoius</span>
+</button>
+<button class="carousel-control-next" type="button" data-bs-target="#species-carousel" data-bs-slide="next">
+<span class="carousel-control-next-icon" aria-hidden="true"></span>
+<span class="visually-hidden">Next</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<section id="camera-locations" class="level1">
+<h1>Camera Locations</h1>
+<p>The following interactive map can be used to explore the locations of the cameras deployed by Chipewyan Prairie Dene First Nation. Camera locations for the Human Land Use study were chosen by the community to reflect areas where monitoring was desired. Locations for the Wildlife Abundance study were chosen to assess how a gradient of land use and industry disturbance impacts wildlife distribution and abundance.</p>
+<p>Click each camera location to see it’s name, the study it belongs to, and when it was deployed and refreshed. Cameras that belong to the Human Land Use study are coloured light blue, and those that belong to the Wildlife Abundance Study are coloured white. You can use the check boxes in the top right of the map to turn on/off the satellite imagery as well as the camera location points.</p>
+<p><br></p>
+<div style="display: flex; justify-content: center;">
+<div id="htmlwidget-70152b55239745f085c8" style="width:90%;height:750px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-70152b55239745f085c8">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"fullscreenControl":{"position":"topleft","pseudoFullscreen":false}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org/copyright/\">OpenStreetMap<\/a>,  <a href=\"https://opendatacommons.org/licenses/odbl/\">ODbL<\/a>"}]},{"method":"addProviderTiles","args":["Esri.WorldImagery",null,"Satellite Imagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addEasyButton","args":[{"icon":"ion-arrow-shrink","title":"Reset View","onClick":"function(btn, map){ map.setView(map._initialCenter, map._initialZoom); }","position":"topleft"}]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":false,"updateWhenIdle":true,"position":"bottomright"}]},{"method":"addMiniMap","args":[null,null,"bottomleft",150,150,19,19,-5,false,false,false,false,false,false,{"color":"#ff7800","weight":1,"clickable":false},{"color":"#000000","weight":1,"clickable":false,"opacity":0,"fillOpacity":0},{"hideText":"Hide MiniMap","showText":"Show MiniMap"},[]]},{"method":"addAwesomeMarkers","args":[[55.63373,55.63482,55.634648,55.639137,55.63476,55.6355,55.638582,55.634639,55.63469,55.6373,55.63361,55.635515,55.634776,55.636047,55.632487,55.634752,55.620543,55.624567,55.635354,55.634583,55.825394,55.825394,55.823992,55.823992,55.816507,55.816507,55.817642,55.817642,55.82463,55.82463,55.857801,55.857801,55.856058,55.856058,55.849583,55.849583,55.846057,55.846057,55.841501,55.841501,55.843316,55.843316,55.815475,55.815475,55.814579,55.814579,55.955805,55.82298,55.815411,55.848778,55.857309,55.816394,55.64499,55.64497,55.64087,55.65243,55.64758,55.64119,55.64126,55.63625,55.64045],[-110.17462,-110.18299,-110.20002,-110.200418,-110.12826,-110.13605,-110.141102,-110.157945,-110.0832,-110.08988,-110.09469,-110.108145,-110.045006,-110.055896,-110.06718,-110.07075,-110.008263,-109.997458,-110.011225,-110.023842,-110.794629,-110.794629,-110.781393,-110.781393,-110.678554,-110.678554,-110.617165,-110.617165,-110.50958,-110.50958,-110.923921,-110.923921,-110.923312,-110.923312,-110.923217,-110.923217,-110.905813,-110.905813,-110.907005,-110.907005,-110.890171,-110.890171,-110.678947,-110.678947,-110.780591,-110.780591,-110.839992,-110.508971,-110.686971,-110.925521,-110.923242,-110.686775,-110.49577,-110.48267,-110.48962,-110.47719,-110.3899,-110.38663,-110.39558,-110.39175,-110.31899],{"icon":"camera","markerColor":["white","white","white","white","white","white","white","white","white","white","white","white","white","white","white","white","white","white","white","white","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","lightblue","white","white","white","white","white","white","white","white","white"],"iconColor":"black","spin":false,"squareMarker":false,"iconRotate":0,"font":"monospace","prefix":"ion"},null,"Camera Locations",{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["<b> Location:  <\/b> CPDFN-C4C1 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-04-09 <br><br>","<b> Location:  <\/b> CPDFN-C4C2 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-01-30 <br><br>","<b> Location:  <\/b> CPDFN-C4C3 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-04-09 <br><br>","<b> Location:  <\/b> CPDFN-C4C4 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-04-09 <br><br>","<b> Location:  <\/b> CPDFN-C5C1 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-04-09 <br><br>","<b> Location:  <\/b> CPDFN-C5C2 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-04-09 <br><br>","<b> Location:  <\/b> CPDFN-C5C3 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-04-09 <br><br>","<b> Location:  <\/b> CPDFN-C5C4 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-04-09 <br><br>","<b> Location:  <\/b> CPDFN-C6C1 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-04-08 <br><br>","<b> Location:  <\/b> CPDFN-C6C2 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-04-09 <br><br>","<b> Location:  <\/b> CPDFN-C6C3 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-03-01 <br><br>","<b> Location:  <\/b> CPDFN-C6C4 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-02-22 <br><br> <b> Refreshed: <\/b> 2025-04-09 <br><br>","<b> Location:  <\/b> CPDFN-C7C1 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-03-26 <br><br> <b> Refreshed: <\/b> 2025-04-08 <br><br>","<b> Location:  <\/b> CPDFN-C7C2 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-03-26 <br><br> <b> Refreshed: <\/b> 2024-07-03 <br><br>","<b> Location:  <\/b> CPDFN-C7C3 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-03-26 <br><br> <b> Refreshed: <\/b> 2025-04-08 <br><br>","<b> Location:  <\/b> CPDFN-C7C4 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-03-26 <br><br> <b> Refreshed: <\/b> 2025-04-08 <br><br>","<b> Location:  <\/b> CPDFN-C8C1 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-03-26 <br><br> <b> Refreshed: <\/b> 2025-04-08 <br><br>","<b> Location:  <\/b> CPDFN-C8C2 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-03-26 <br><br> <b> Refreshed: <\/b> 2025-04-08 <br><br>","<b> Location:  <\/b> CPDFN-C8C3 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-03-26 <br><br> <b> Refreshed: <\/b> 2025-04-08 <br><br>","<b> Location:  <\/b> CPDFN-C8C4 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2024-03-26 <br><br> <b> Refreshed: <\/b> 2025-04-08 <br><br>","<b> Location:  <\/b> CPDFN-2 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-21 <br><br> <b> Refreshed: <\/b> 2023-11-21 <br><br>","<b> Location:  <\/b> CPDFN-2 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-15 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> CPDFN-3 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-21 <br><br> <b> Refreshed: <\/b> 2023-11-21 <br><br>","<b> Location:  <\/b> CPDFN-3 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-15 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> CPDFN-9 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-21 <br><br> <b> Refreshed: <\/b> 2023-08-13 <br><br>","<b> Location:  <\/b> CPDFN-9 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-16 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> CPDFN-8 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-21 <br><br> <b> Refreshed: <\/b> 2023-05-06 <br><br>","<b> Location:  <\/b> CPDFN-8 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-16 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> CPDFN-6 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-21 <br><br> <b> Refreshed: <\/b> 2023-11-21 <br><br>","<b> Location:  <\/b> CPDFN-6 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-16 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> CPDFN-19 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-22 <br><br> <b> Refreshed: <\/b> 2023-06-27 <br><br>","<b> Location:  <\/b> CPDFN-19 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-17 <br><br> <b> Refreshed: <\/b> 2022-11-22 <br><br>","<b> Location:  <\/b> CPDFN-16 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-22 <br><br> <b> Refreshed: <\/b> 2023-11-13 <br><br>","<b> Location:  <\/b> CPDFN-16 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-17 <br><br> <b> Refreshed: <\/b> 2022-11-22 <br><br>","<b> Location:  <\/b> CPDFN-14 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-22 <br><br> <b> Refreshed: <\/b> 2023-11-21 <br><br>","<b> Location:  <\/b> CPDFN-14 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-17 <br><br> <b> Refreshed: <\/b> 2022-11-22 <br><br>","<b> Location:  <\/b> CPDFN-13 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-22 <br><br> <b> Refreshed: <\/b> 2023-11-21 <br><br>","<b> Location:  <\/b> CPDFN-13 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-17 <br><br> <b> Refreshed: <\/b> 2022-11-22 <br><br>","<b> Location:  <\/b> CPDFN-12 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-22 <br><br> <b> Refreshed: <\/b> 2023-11-21 <br><br>","<b> Location:  <\/b> CPDFN-12 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-17 <br><br> <b> Refreshed: <\/b> 2022-11-22 <br><br>","<b> Location:  <\/b> CPDFN-11 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-22 <br><br> <b> Refreshed: <\/b> 2023-08-29 <br><br>","<b> Location:  <\/b> CPDFN-11 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-17 <br><br> <b> Refreshed: <\/b> 2022-11-22 <br><br>","<b> Location:  <\/b> CPDFN-10 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-21 <br><br> <b> Refreshed: <\/b> 2022-12-21 <br><br>","<b> Location:  <\/b> CPDFN-10 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-16 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> CPDFN-1 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-21 <br><br> <b> Refreshed: <\/b> 2023-11-18 <br><br>","<b> Location:  <\/b> CPDFN-1 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-16 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> SALTLICK-SITE-18 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-11-22 <br><br> <b> Refreshed: <\/b> 2023-10-15 <br><br>","<b> Location:  <\/b> CPDFN-7 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-16 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> CPDFN-4 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-15 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> CPDFN-17 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-17 <br><br> <b> Refreshed: <\/b> 2022-11-22 <br><br>","<b> Location:  <\/b> CPDFN-15 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-17 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> CPDFN-5 <br><br> <b> Study:  <\/b> Human Land Use <br><br> <b> Deployed: <\/b> 2022-02-15 <br><br> <b> Refreshed: <\/b> 2022-11-21 <br><br>","<b> Location:  <\/b> CPDFN-C1C1 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2023-03-17 <br><br> <b> Refreshed: <\/b> 2024-02-21 <br><br>","<b> Location:  <\/b> CPDFN-C1C2 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2023-03-17 <br><br> <b> Refreshed: <\/b> 2024-02-21 <br><br>","<b> Location:  <\/b> CPDFN-C1C3 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2023-03-17 <br><br> <b> Refreshed: <\/b> 2024-01-22 <br><br>","<b> Location:  <\/b> CPDFN-C1C4 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2023-03-17 <br><br> <b> Refreshed: <\/b> 2024-02-21 <br><br>","<b> Location:  <\/b> CPDFN-C3C1 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2023-03-16 <br><br> <b> Refreshed: <\/b> 2023-11-17 <br><br>","<b> Location:  <\/b> CPDFN-C3C2 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2023-03-16 <br><br> <b> Refreshed: <\/b> 2024-02-21 <br><br>","<b> Location:  <\/b> CPDFN-C3C3 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2023-03-16 <br><br> <b> Refreshed: <\/b> 2024-02-16 <br><br>","<b> Location:  <\/b> CPDFN-C3C4 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2023-03-16 <br><br> <b> Refreshed: <\/b> 2024-02-21 <br><br>","<b> Location:  <\/b> CPDFN-C2C2 <br><br> <b> Study:  <\/b> Wildlife Abundance <br><br> <b> Deployed: <\/b> 2023-03-16 <br><br> <b> Refreshed: <\/b> 2023-05-29 <br><br>"],null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[[],["Satellite Imagery","Camera Locations"],{"collapsed":false,"autoZIndex":true,"position":"topright"}]}],"fitBounds":[55.545543,-111.000521,56.030805,-109.922458,[]],"limits":{"lat":[55.620543,55.955805],"lng":[-110.925521,-109.997458]}},"evals":["calls.2.args.0.onClick"],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\nfunction(el, x){\n  var map = this;\n  map.whenReady(function(){\n    map._initialCenter = map.getCenter();\n    map._initialZoom = map.getZoom();\n  });\n}).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+</div>
+<p><br></p>
+</section>
+<section id="deployment-and-retrieval-dates" class="level1">
+<h1>Deployment and Retrieval Dates</h1>
+<p><a href="#fig-ranges" class="quarto-xref">Figure&nbsp;1</a> below displays the dates when each camera location was deployed and when the SD cards were retrieved (or the last day of image collection if the camera failed). These dates are marked with a point in the plot.</p>
+<p>Deployment first took place for the Human Land Use study in February 2022, and cameras were serviced for the first time at the end of November in the same year. These cameras were retrieved from their locations in the field in November the following year, totalling nearly 2 years of monitoring.</p>
+<p>A subset of the cameras (9) for the Wildlife Abundance study were first deployed in March 2023. This initial batch was collected and additional locations were added in February/March of 2024. Those cameras were serviced one year later in March 2025.</p>
+<div class="cell fig-cap-location-bottom">
+<div class="cell-output-display">
+<div id="fig-ranges" class="quarto-float quarto-figure quarto-figure-center anchored" data-cap-location="bottom">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ranges-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="Figures/CPDFN/Deployment%20Ranges.png" class="img-fluid figure-img" style="width:85.0%">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ranges-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Camera deployment and SD card retrieval dates.
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="results" class="level1">
+<h1>Results</h1>
+<p>We first present the results from the Human Land Use Study.</p>
+<section id="number-of-images-collected" class="level2">
+<h2 class="anchored" data-anchor-id="number-of-images-collected">Number of Images Collected</h2>
+<p><strong>?@fig-nimages-hlu</strong> below displays the total number of images collected with the cameras used for the Human Land Use study. The most commonly observed species was Human Land Use with White-tailed Deer images collected over the course of the project. The</p>
+<p>on the most common 8 species tagged in the Chipewyan Prairie Dene First Nation camera projects. The most commonly observed species was Human Land Use with White-tailed Deer images collected over the course of the project.</p>
+<div class="cell fig-cap-location-bottom">
+
+</div>
+<p>For a complete list of all the species, you can go projects on WildTrax (linked above) and click on the ‘Species’ tab within the project. Since no other species had more than 20 images collected over the course of the project and across all cameras, we will focus our analysis on the 8 species shown here.</p>
+<p><br></p>
+
+</section>
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-Bayne2021OSMFramework" class="csl-entry" role="listitem">
+Bayne, E., J. Dennett, J. Dooley, M. Kohler, J. Ball, M. Bidwell, A. Braid, et al. 2021. <span>“Oil Sands Monitoring Program: A Before-After Dose-Response Terrestrial Biological Monitoring Framework for the Oil Sands.”</span> OSM Technical Report Series No. 7. Oil Sands Monitoring Program. <a href="https://open.alberta.ca/publications/9781460151341">https://open.alberta.ca/publications/9781460151341</a>.
+</div>
+<div id="ref-becker2022applying" class="csl-entry" role="listitem">
+Becker, Marcus, David J Huggard, Melanie Dickie, Camille Warbington, Jim Schieck, Emily Herdman, Robert Serrouya, and Stan Boutin. 2022. <span>“Applying and Testing a Novel Method to Estimate Animal Density from Motion-Triggered Cameras.”</span> <em>Ecosphere</em> 13 (4): e4005.
+</div>
+<div id="ref-dickie2024habitat" class="csl-entry" role="listitem">
+Dickie, Melanie, Robert Serrouya, Marcus Becker, Craig DeMars, Michael J Noonan, Robin Steenweg, Stan Boutin, and Adam T Ford. 2024. <span>“Habitat Alteration or Climate: What Drives the Densities of an Invading Ungulate?”</span> <em>Global Change Biology</em> 30 (4): e17286.
+</div>
+<div id="ref-laurent2021evaluating" class="csl-entry" role="listitem">
+Laurent, Maud, Melanie Dickie, Marcus Becker, Robert Serrouya, and Stan Boutin. 2021. <span>“Evaluating the Mechanisms of Landscape Change on White-Tailed Deer Populations.”</span> <em>The Journal of Wildlife Management</em> 85 (2): 340–53.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
