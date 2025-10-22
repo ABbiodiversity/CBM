@@ -144,6 +144,8 @@ This section is a space for the `r com_acr` to share their major takeaways from 
 
 One idea we came up with was: One highlight of the program was during the initial image tagging training land users gathered to review the images and discuss what they were seeing in the images to help inform the direction of the project. This discussion focused on non-community members photographed by the cameras, the number of deer, wolves, moose, caribou, and health of the photographed moose.
 
+<br>
+
 ```{r}
 #| warning: false
 #| echo: false

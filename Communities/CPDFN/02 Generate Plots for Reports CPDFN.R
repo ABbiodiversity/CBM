@@ -70,22 +70,25 @@ fig_ranges <- ggplot(location_ranges, aes(y = location)) +
     axis.title.y = element_blank(),
     panel.grid.major.y = element_blank(),
     legend.position = "bottom",
-    legend.title = element_text(size = 14),
+    legend.title = element_blank(),
     legend.text = element_text(size = 14)
   )
 
 # View the figure
 fig_ranges
 
+h <- 8.5
+w <- 7.5
+
 # Save the figure to Google Drive
 ggsave(filename = paste0(g_drive_cbme, com_acr, "/Figures/Deployment Ranges.png"),
        fig_ranges,
-       width = 8.5, height = 9.5, dpi = 500, bg = "white")
+       width = w, height = h, dpi = 500, bg = "white")
 
 # Save the figure to the Figures folder in the CBM repository
 ggsave(filename = paste0("Figures/", com_acr, "/Deployment Ranges.png"),
        fig_ranges,
-       width = 5, height = 5.5, dpi = 500, bg = "white")
+       width = w, height = h, dpi = 500, bg = "white")
 
 #-----------------------------------------------------------------------------------------------------------------------
 
