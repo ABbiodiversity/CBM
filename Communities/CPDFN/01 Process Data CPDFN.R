@@ -181,10 +181,11 @@ df_density_sum <- df_density_long |>
 
 # Prepare data for diel modeling
 
-species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
+species <- c("White-tailed Deer", "Black Bear", "Moose", "Snowshoe Hare",
              "Canada Lynx", "Woodland Caribou", "Gray Wolf")
 
 df <- main_reports |>
+  filter(str_detect(project, "Baseline")) |>
   filter(species_common_name %in% species) |>
   filter(!individual_count == "VNA") |>
   mutate(individual_count = as.numeric(individual_count),
@@ -286,6 +287,40 @@ comments <- image_comments |>
   # Only the projects set up for this purpose
   filter(!str_detect(project, "CPFN 20th Baseline Cameras"))
 
+# Summary of all the categories
+
+comments_summary <- image_comments |>
+  full_join(tag_comments, by = c("location", "image_date_time", "project"),
+            relationship = "many-to-many") |>
+  # If there is both, take the image comment.
+  mutate(comment = ifelse(is.na(image_comments), tag_comments, image_comments)) |>
+  # Only the projects set up for this purpose
+  filter(!str_detect(project, "CPFN 20th Baseline Cameras"),
+         !str_detect(comment, "Rash")) |>
+  # group_by(comment) |>
+  # add_count() |>
+  # ungroup() |>
+  # filter(n > 20) |>
+  mutate(residency = ifelse(str_detect(comment, "^R"), "Resident", "Non-Resident"),
+         hunter = ifelse(str_detect(comment, "H"), "Hunter", "Non-Hunter"),
+         transport = case_when(
+           str_detect(comment, "Q") ~ "Quad",
+           str_detect(comment, "S") ~ "Side-by-Side",
+           str_detect(comment, "A") ~ "Argo",
+           str_detect(comment, "Ski|ski") ~ "Skidoo",
+           str_detect(comment, "T") ~ "Truck",
+           TRUE ~ "Not Specified"
+         )) |>
+  mutate(species_common_name = paste0(residency, "_", hunter, "_", transport)) |>
+  mutate(project_id = project, individual_count = 1) |>
+  wt_ind_detect(threshold = 10, units = "minutes") |>
+  separate(species_common_name, into = c("Residency", "Hunter", "Transport"), sep = "_") |>
+  group_by(Residency, Hunter, Transport) |>
+  tally() |>
+  ungroup() |>
+  complete(Residency, Hunter, Transport, fill = list(n = 0)) |>
+  arrange(desc(Residency))
+
 #-----------------------------------------------------------------------------------------------------------------------
 
 # Densities at OS stressors for comparison with OSM BADR regional monitoring
@@ -338,12 +373,13 @@ dens_cpdfn <- df_density_sum |>
       str_detect(location, "CPDFN-C2") ~ "C2",
       str_detect(location, "CPDFN-C3") ~ "C3",
       TRUE ~ location)) |>
-  group_by(site, species_common_name, treatment, fine_scale) |>
+  filter(!site == "C2") |>
+  group_by(species_common_name, treatment) |>
   summarise(density_km2 = mean(density_km2)) |>
   ungroup() |>
   mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Inactive Wellpads"))) |>
   # Add project
-  mutate(project = "CPDFN 20th Baseline Monitoring")
+  mutate(project = "CPDFN Local Monitoring")
 
 # OSM BADR Regional Monitoring Data
 
@@ -361,6 +397,7 @@ ref_fine_scale <- read_csv(paste0(g_drive_osm, "Results/ABMI BADR and EH Camera 
 dens_badr <- read_csv(paste0(g_drive_osm, "Results/Densities to use in the summaries.csv")) |>
   filter(str_detect(project, "ABMI OSM")) |>
   filter(treatment == "reference" | treatment == "dense linear features" | treatment == "low activity well pads") |>
+  # NOTE: fine_scale 'On' is not included in this data.
   left_join(ref_fine_scale) |>
   mutate(fine_scale = ifelse(is.na(fine_scale), fine_scale_new, fine_scale)) |>
   select(-fine_scale_new) |>
@@ -383,12 +420,12 @@ dens_badr <- read_csv(paste0(g_drive_osm, "Results/Densities to use in the summa
   mutate(site = paste0(landscape_unit, "_", jem)) |>
   select(project, site, treatment, fine_scale, species_common_name, density_km2) |>
   mutate(treatment = case_when(
-    treatment == "low activity well pads" ~ "Inactive Well Pads",
+    treatment == "low activity well pads" ~ "Inactive Wellpads",
     treatment == "dense linear features" ~ "Linear Features",
     treatment == "reference" ~ "Reference"
   )) |>
   mutate(project = "OSM Regional Monitoring") |>
-  mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Inactive Well Pads")))
+  mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Inactive Wellpads")))
 
 # Bind together
 df_density_os <- bind_rows(dens_badr, dens_cpdfn)
@@ -404,6 +441,7 @@ save(df_density_sum, # Densities by location and species
      location_reports, # Locations
      df_ind_detect, # Independent detections
      comments,
+     comments_summary,
      nimages, # Number of images per species
      image_reports, # Image report
      main_reports, # Main report
