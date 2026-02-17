@@ -52,3 +52,6 @@ rsconnect/
 #Figures/
 
 /.quarto/
+
+# WildTrax credentials
+wt_credentials.R

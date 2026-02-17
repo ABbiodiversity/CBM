@@ -1,10 +1,67 @@
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Title:   LMNA Data Analysis for Paper
+# Date:    November 2025
+# Authors: Marcus Becker
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Attach packages
 library(tidyverse)
 library(mapview)
 library(sf)
+library(wildrtrax)
 
-g_drive_new <- "G:/Shared drives/ABMI Mammals/"
+# Set path to Shared Google Drive (G Drive) - ABMI Mammals
+g_drive_abmi <- "G:/Shared drives/ABMI Mammals/"
 
 species <- c("White-tailed Deer", "Moose", "Gray Wolf")
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Download LMNA data
+source("wt_credentials.R")
+wt_auth()
+
+# LMNA projects
+lmna_proj <- wt_get_projects(
+  sensor = "CAM") |>
+  filter(organization_name == "LMCA") |>
+  select(project, project_id)
+
+lmna_ids <- lmna_proj$project_id
+
+# Download main reports
+main_reports <- map_df(.x = lmna_ids,
+                       .f = ~ wt_download_report(
+                         project_id = .x,
+                         sensor_id = "CAM",
+                         reports = "main"
+                       ))
+
+# Clean main reports
+main_reports_clean <- main_reports |>
+  # Remove LMCA-L2 - This was deployed to monitor artificial licks
+  filter(!location == "LMCA-L2") |>
+  left_join(lmna_proj) |>
+  mutate(image_fov = ifelse(is.na(image_fov), "WITHIN", image_fov)) |>
+  consolidate_tags() |>
+  filter(image_fov == "WITHIN") |>
+  select(project, location, image_date_time, species_common_name, individual_count) |>
+  mutate(species_common_name = case_when(
+    species_common_name == "Deer" ~ "White-tailed Deer",
+    TRUE ~ species_common_name)) |>
+  filter(species_common_name %in% species)
+
+# Image reports
+image_reports <- map_df(.x = lmna_ids,
+                       .f = ~ wt_download_report(
+                         project_id = .x,
+                         sensor_id = "CAM",
+                         reports = "image_report"
+                       ))
+
+
 # EH locations that I think are good "reference" for LMNA
 locations <- c("830", "828", "858", "827", "826", "857", "825",
                "794", "793", "761", "730", "792", "760", "729",
