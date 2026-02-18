@@ -6,6 +6,10 @@ format:
     grid:
       margin-width: 200px
       body-width: 950px
+  pdf:
+    toc: true
+    toc-depth: 3
+    keep-tex: false
 navbar: right
 theme: cosmo
 date: "`r format(Sys.time(), '%d %B, %Y')`"
@@ -30,6 +34,7 @@ nocite: '@*'
 toc: true
 toc-depth: 3
 toc-expand: true
+prefer-html: true
 toc-location: left
 css: assets/styles.css
 ---
@@ -37,11 +42,21 @@ css: assets/styles.css
 <br>
 
 ```{r}
+#| include: false
+
+is_pdf  <- knitr::is_latex_output()
+is_html <- knitr::is_html_output()
+
+```
+
+```{r}
 #| warning: false
 #| echo: false
+
 source("Functions/Carousel.R")
 carousel("gallery-carousel", 10000, 
          yaml.load_file("Images/CPDFN/carousel1.yml"))
+
 ```
 
 ::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
@@ -73,6 +88,7 @@ library(htmlwidgets)
 library(plotly)
 library(terra)
 library(glue)
+library(webshot2)
 
 # Community acronym
 com_acr <- "CPDFN"
@@ -107,19 +123,19 @@ species_colours <- c(
 
 ```
 
-The **`r com_full`** (`r com_acr`) OSM camera program started in 2022 with a focus of recording land users accessing the lands near Janvier who were not members of the community. Over the years the camera program has adapted to answer different questions and concerns expressed by the community, including understanding how wildlife abundances change in proximity to human disturbance (including oil sands industry disturbance). This webpage will focus on the results from both the Human Land Use and Wildlife Abundance study designs.
+The Chipewyan Prairie Dene First Nation (CPDFN) OSM camera program started in 2022 as a focus study looking at the use of industrial Right-of-Ways (RoWs) by non-local and non-Indigenous land users. The camera program then shifted to be part of the regional ICMB program designed to answer questions and concerns expressed by the community such as understanding how wildlife abundances change in proximity to human disturbance (including oil sands industry disturbance). This webpage will focus on the results from both the Human Land Use and Wildlife Abundance study designs.
 
 ## Human Land Use Study
 
-`r com_acr` members have been experiencing the impacts of oil sands development for a long time. Land users have seen firsthand how these developments are changing the way they access and use the land. Some of the harvesting sites have been physically lost. Others are still there, but getting to them has become harder—either because access is blocked, uncomfortable, or just not appropriate anymore.
+CPDFN members have been experiencing the impacts of oil sands development since around 2000. Land users have seen firsthand how these developments are changing the way they access and use the land. Some of the harvesting sites have been directly disturbed and destroyed. Others are still there, but getting to them has become harder—either because access is blocked, uncomfortable, or just not appropriate anymore.
 
-At the same time, they’re seeing more and more outsiders—like oil sands workers staying in camps, or non-Indigenous hunters and recreational users—coming onto their land. They’re using roads and trails built for oil sands development to get into areas used traditionally for harvesting and cultural activities. This has led to increased competition for land and resources, and sometimes even dangerous or racist interactions, vandalism, littering, and poaching. It’s not just about the physical space—`r com_acr` members are also dealing with loud noise, bad smells, heavy traffic, bright lights, and other things that ruin the peaceful experience of being out on the land.
+At the same time, they’re seeing more and more outsiders—like oil sands workers staying in camps, or non-Indigenous hunters and recreational users—coming onto their land. They’re using roads and trails built for oil sands development to get into areas used traditionally for harvesting and cultural activities. This has led to increased competition for land and resources, and sometimes even dangerous or racist interactions, vandalism, littering, and poaching. CPDFN members are also dealing with loud noise, bad smells, heavy traffic, bright lights, and other things that ruin the peaceful experience of being out on the land.
 
-`r com_acr` has been raising these concerns with oil sands companies for years, but often, they don’t take them seriously. So `r com_acr` decided to collect their own evidence. From 2022 to 2024, led by Stuart Janvier, Louie Janvier, Caiden Morice and Ave Dersche with support from ABMI, `r com_acr` ran a camera monitoring project to track who’s coming into their territory and what kinds of impacts they’re seeing. This section of the report shares the results of that project and helps show what they already knew—yes, oil sands development has created pathways for outsiders to come onto their land, and yes, it’s causing real problems for their community.
+CPDFN has been raising these concerns with oil sands companies for years, but often, they don’t take them seriously. So CPDFN decided to collect their own evidence. From 2022 to 2024, led by Stuart Janvier, Louie Janvier, Caiden Morice and Ave Dersch with support from ABMI, CPDFN ran a camera monitoring project to track who’s coming into their territory and what kinds of impacts they’re seeing. This section of the report shares the results of that project and helps show what they already knew—yes, oil sands development has created pathways for outsiders to come onto their land, and yes, it’s causing real problems for their community.
 
 ## Wildlife Abundance Study
 
-In 2024 the cameras used in the Human Land Use study were retrieved and then deployed along the 20th Baseline to monitor wildlife. The 20th Baseline runs west to east with the Black Gold Sag-D plant to the West (high oil sands disturbance) and the proposed Dillon River Wildland with considerably less disturbance to the east (some old cutlines and occasional conventional well pads). The objective of this study is to document and compare the wildlife abundances calculated from the images collected from each camera deployed along the baseline to see if wildlife use the landscape differently when closer or further away from the area of high disturbance.
+In 2024 the cameras used in the Human Land Use study were retrieved and then deployed along the 20th Baseline to monitor wildlife. The 20th Baseline runs west to east with the Black Gold Sag-D plant to the West (high oil sands disturbance) and the Dillon River Wildland with considerably less disturbance to the east (some old cutlines and occasional conventional well pads). The objective of this study is to document and compare the wildlife abundances calculated from the images collected from each camera deployed along the baseline to see if wildlife use the landscape differently when closer or further away from the area of high disturbance.
 
 Unfortunately during the spring of 2023 a large wildfire burned through the area and a number of cameras were lost. Cameras were re-deployed afterwards and the program continued.
 
@@ -138,11 +154,37 @@ Note that viewers will need to have a WildTrax account with the appropriate perm
 
 # Project Highlights
 
-This section is a space for the `r com_acr` to share their major takeaways from the project so far. This could be sharing surprises from the images, camera deployment/refresh, potential to add quotes, or create videos and add them in! Highlight specific images, etc.
+We were surprised to see images of a wolverine in some of our camera tagging.
 
-One idea we came up with was: One highlight of the program was during the initial image tagging training land users gathered to review the images and discuss what they were seeing in the images to help inform the direction of the project. This discussion focused on non-community members photographed by the cameras, the number of deer, wolves, moose, caribou, and health of the photographed moose.
+![](Images/CPDFN/Wolverine.jpg){
+  width=85%
+  fig-align="center"
+  fig-cap=""
+  fig-alt="Wolverine"
+}
 
-<br>
+We were also excited to have photographed so many woodland caribou.
+
+![](Images/CPDFN/Caribou.jpg){
+  width=85%
+  fig-align="center"
+  fig-cap=""
+  fig-alt="Caribou"
+}
+
+We also photographed some beautiful birds.
+
+```{r}
+#| warning: false
+#| echo: false
+
+carousel("bird-carousel", 10000, 
+         yaml.load_file("Images/CPDFN/carousel3.yml"))
+
+```
+
+
+Finally, there were many other interesting wildlife detections and environmental events captured by the cameras, including a large wildfire, many images of moose hanging out at a salt lick site identified by the CPDFN members, and twin moose calves.
 
 ```{r}
 #| warning: false
@@ -150,6 +192,7 @@ One idea we came up with was: One highlight of the program was during the initia
 
 carousel("species-carousel", 10000, 
          yaml.load_file("Images/CPDFN/carousel2.yml"))
+
 ```
 
 # Camera Locations
@@ -189,8 +232,8 @@ icons <- awesomeIcons(
   library = "ion",
   markerColor = ifelse(
     locations_for_map$study == "Wildlife Abundance", 
-    "white",         
-    "lightblue"    
+    "darkgreen",         
+    "orange"    
   )
 )
 
@@ -265,9 +308,9 @@ We first present the results from the Human Land Use Study.
 
 ### Number of Images
 
-@fig-nimages-hlu below displays the total number of images collected with the cameras used for the Human Land Use component of the `r com_acr` monitoring. The most commonly observed species was White-tailed Deer with 34,895 images collected with these cameras. Moose were the second most common species seen with these cameras, with 14,804 images collected (with many of these images collected at the Salt Lick site). 
+@fig-nimages-hlu below displays the total number of images collected with the cameras used for the Human Land Use component of the `r com_acr` monitoring. The most commonly observed species was White-tailed Deer with 34,895 images collected with these cameras. Moose were the second most common species seen with these cameras, with 14,804 images collected (with many of these images collected at the Salt Lick site).
 
-Vehicles, Humans, and All Terrain vehicles were also commonly tagged in the images. 
+Vehicles, Humans, and All Terrain vehicles were also commonly tagged in the images.
 
 ```{r}
 #| label: fig-nimages-hlu
@@ -287,7 +330,7 @@ knitr::include_graphics(paste0("Figures/", com_acr, "/Number of Images Human Lan
 
 ### Resident vs Non-Resident Detections
 
-The first important component of this study was to identify the number of CPDFN residents and non-residents who were accessing the land. The images from the cameras were tagged by Louie Janvier and Caiden Morice to identify residents from non-residents. Those who were actively hunting (i.e., armed with a rifle, firearm, compound bow) were further identified in the tagging process. These images were then grouped together into 'independent detections' based on a 30 minute separation of time between images threshold.   
+The first important component of this study was to identify the number of CPDFN residents and non-residents who were accessing the land. The images from the cameras were tagged by Louie Janvier and Caiden Morice to identify residents from non-residents. Those who were actively hunting (i.e., armed with a rifle, firearm, compound bow) were further identified in the tagging process. These images were then grouped together into 'independent detections' based on a 30 minute separation of time between images threshold.
 
 @fig-res-detect below show the total number of independent detections at each of the 16 cameras in this part of the study. Independent detections were defined as series of images of a single event (e.g., a passing group of non-residents). A threshold of 10 minutes between images was used to delineate separate detection events. The vast majority of human detections across all cameras were non-residents (728; 94%) versus a small number of residents (46; 6%). CPDFN-13 was the most frequently visited site with nearly 200 total detections, followed by CPDFN-4 (106) and CPDFN-12 (87). CPDFN-9 was the only site that where 0 non-resident detections were recorded.
 
@@ -311,9 +354,9 @@ knitr::include_graphics(paste0("Figures/", com_acr, "/Location Status Detections
 
 <br>
 
-Next we can plot these detections of both `r com_acr` residents and non-residents **over time**. Pooling the detections across all 16 cameras, @fig-res-detect-time below shows the number of detections across the time period in which these cameras were operational. The figure is split into two panels, with the top showing `r com_acr` residents and the bottom showing non-residents. In this figure, the purple color shows detections that were tagged as being **[resident hunters]{style="color:#7570b3;"}**, and the dark green color shows **[non-resident hunters]{style="color:darkgreen;"}**.
+Next we can plot these detections of both `r com_acr` residents and non-residents **over time**. Pooling the detections across all 16 cameras, @fig-res-detect-time below shows the number of detections across the time period in which these cameras were operational. The figure is split into two panels, with the top showing `r com_acr` residents and the bottom showing non-residents. In this figure, the purple color shows detections that were tagged as being [**resident hunters**]{style="color:#7570b3;"}, and the dark green color shows [**non-resident hunters**]{style="color:darkgreen;"}.
 
-In both 2022 and 2023, the the highest number of detections (both resident and non-resident) occurred during November (corresponding with the hunting season). Detections were much lower throughout the rest of the winter and into the summer. In both years, a significant proportion of non-resident detections could be identified as hunters.
+In both 2022 and 2023, the highest number of detections (both resident and non-resident) occurred during November (corresponding with the primary non-Indigenous hunting season). Detections were much lower throughout the rest of the winter and into the summer. In both years, a significant proportion of non-resident detections could be identified as hunters.
 
 ```{r}
 #| label: fig-res-detect-time
@@ -333,7 +376,7 @@ knitr::include_graphics(paste0("Figures/", com_acr, "/Category Detections.png"))
 
 Another part of the tagging process involved assessing the mode of transportation for each of the detections. The table below lists each combination of residency, whether or not they were seen to be hunting, and the transportation mode they used.
 
-Quads and side-by-sides were commonly used by non-residents (both hunters and non-hunters alike) to access the land. Argos and skidoos were less commonly used, likely reflecting the seasonal conditions that most users encountered. 
+Quads and side-by-sides were commonly used by non-residents (both hunters and non-hunters alike) to access the land. Argos and skidoos were less commonly used, likely reflecting the seasonal conditions that most users encountered.
 
 <br>
 
@@ -350,7 +393,7 @@ comments_summary <- comments_summary |>
 "Side-by-Side", "Skidoo", "Truck", "Not Specified"))) |>
   arrange(desc(Residency), Transport)
 
-htmltools::div(
+  htmltools::div(
   style = "display: flex; flex-direction: column; align-items: center;",
 
   htmltools::tagList(
@@ -373,16 +416,17 @@ htmltools::div(
     )
   )
 )
+  
 
 ```
 
 ## Wildlife Abundance
 
-The following sections summarise the results from the Wildlife Abundance study conducted by `r com_acr`. 
+The following sections summarise the results from the Wildlife Abundance study conducted by `r com_acr`.
 
 ### Number of Images
 
-@fig-nimages-wa below displays the total number of images collected with the cameras used for the Wildlife Abundance component of the `r com_acr` monitoring. The most commonly observed species was White-tailed Deer with 2,584 images collected. Woodland Caribou were the second most common species seen with these cameras, with 2,048 images collected, followed by Moose with 1,714. Black Bears, Gray Wolves, Snowshoe Hares, and Canada Lynx were also observed with the wildlife cameras.  
+@fig-nimages-wa below displays the total number of images collected with the cameras used for the Wildlife Abundance component of the `r com_acr` monitoring. The most commonly observed species was White-tailed Deer with 2,584 images collected. Woodland Caribou were the second most common species seen with these cameras, with 2,048 images collected, followed by Moose with 1,714. Black Bears, Gray Wolves, Snowshoe Hares, and Canada Lynx were also observed with the wildlife cameras.
 
 ```{r}
 #| label: fig-nimages-wa
@@ -408,7 +452,7 @@ In the figures below we present the number of independent detections for each of
 
 You can explore the figures for each species using the tabs below. The x-axis (bottom) represents the camera deployment timeline, from April 2023 to April 2025. The y-axis (left) shows the number of detections captured, from all of the cameras from the Wildlife Abundance study. One thing to keep in mind when evaluating the number of detections over time is that the effort (in terms of number of cameras operating) was not constant. See the [Deployment Retrieval Dates](#deployment-dates) section for information on the number of cameras in operation at any given time.
 
-Note that the y-axis (left) of the plots for each species may change depending on the number of detections captured. 
+Note that the y-axis (left) of the plots for each species may change depending on the number of detections captured.
 
 ```{r}
 #| label: ind-detections
@@ -444,6 +488,7 @@ for (i in seq_along(species)) {
   )
   
   cat(html)
+  
 }
 
 cat(":::\n")
@@ -454,8 +499,8 @@ cat(":::\n")
 
 -   **White-tailed deer** detections were primarily recorded during the spring, summer, and fall periods.
 -   Due to hibernation, **Black Bear** were not detected during the winter.
--   **Moose** detections were most frequent beginning in June of 2024. Detections were very infrequent over the first year of monitoring, which corresponded to monitoring locations furthest to the west. 
--   **Snowshoe Hare** detections were sporadic, but more common throughout the winter periods. 
+-   **Moose** detections were most frequent beginning in June of 2024. Detections were very infrequent over the first year of monitoring, which corresponded to monitoring locations furthest to the west.
+-   **Snowshoe Hare** detections were sporadic, but more common throughout the winter periods.
 -   Like Moose, **Canada Lynx**, **Gray Wolf**, and **Woodland Caribou** detections increased once cameras were deployed to site further east.
 
 <br>
@@ -483,8 +528,8 @@ joined_table <- nimages |>
   select(-study) |>
   left_join(ndetect, by = "species_common_name") |>
   filter(!is.na(detect))
-
-htmltools::div(
+  
+  htmltools::div(
   style = "display: flex; flex-direction: column; align-items: center;",
 
   htmltools::tagList(
@@ -506,6 +551,7 @@ htmltools::div(
     )
   )
 )
+  
 
 ```
 
@@ -536,8 +582,8 @@ for (i in seq_along(species)) {
   rel_path <- fs::path_rel(img_path, start = getwd())
   
   cat("### ", title, " {.unnumbered}\n\n", sep = "")
-  
-  # Render the image and caption
+    
+    # Render the image and caption
   html <- glue::glue(
     '<div style="text-align: center;">
        <img src="{rel_path}" style="width:80%;">
@@ -548,7 +594,8 @@ for (i in seq_along(species)) {
   )
   
   cat(html)
-}
+    
+  }
 
 cat(":::\n")
 
@@ -559,9 +606,9 @@ cat(":::\n")
 
 -   **White-tailed deer** displayed several activity peaks throughout the day, the most prominent of which were during twilight hours, specifically at dawn (6:00 to 9:00) and dusk (19:00 to 21:00). This pattern is known as *crepuscular*.
 -   **Black Bear** showed the opposite pattern, with more of their activity being recorded during the day. Their activity levels increased throughout the morning (6:00 to 12:00), peaking at noon, and then declining throughout the afternoon and into the evening.
--   Similar to White-tailed Deer, **Moose** demonstrated a crepuscular activity pattern, with peaks in the dawn and dusk. A notable peak occurred before 24:00 as well before falling throughout the nighttime period. 
--   **Snowshoe Hare** activity increased throughout the evening beginning at 18:00, carrying throughout the night until dawn. They were not active during the day. **Canada Lynx** activity levels were fairly consistent throughout the 24-hour period, with a peak occurring in the mid-afternoon (14:00). 
--   **Gray Wolves** had one significant activity peak: the dusk period from about 20:00 to 24:00. 
+-   Similar to White-tailed Deer, **Moose** demonstrated a crepuscular activity pattern, with peaks in the dawn and dusk. A notable peak occurred before 24:00 as well before falling throughout the nighttime period.
+-   **Snowshoe Hare** activity increased throughout the evening beginning at 18:00, carrying throughout the night until dawn. They were not active during the day. **Canada Lynx** activity levels were fairly consistent throughout the 24-hour period, with a peak occurring in the mid-afternoon (14:00).
+-   **Gray Wolves** had one significant activity peak: the dusk period from about 20:00 to 24:00.
 -   **Woodland Caribou** activity spiked in the late morning period, with a significant peak prior to 12:00. Activity levels were very low at other periods of the day, with very few images/detections recorded at any other time. This pattern may be due to predator avoidance, especially since gray wolves were active at the opposite times.
 
 ### Species Overlap
@@ -570,7 +617,7 @@ Camera trap data are being increasingly used to model multiple species communiti
 
 Blue boxes in @fig-cooccurrences below show species that are usually seen by the same cameras at the same location. For example, Moose and White-tailed Deer often share the same space because they browse on similar vegetation and use the same habitats.
 
-Red (or white) boxes show species that tend to stay apart and weren't usually seen at the same camera. For example, Woodland Caribou have distinct habitat preferences - e.g., wet, lowland sites -- that results in spatial separation between them and other ungulates (moose and deer) as well as predators (bears and wolves). Similarly, moose were found to avoid sites that wolves were seen at.  
+Red (or white) boxes show species that tend to stay apart and weren't usually seen at the same camera. For example, Woodland Caribou have distinct habitat preferences - e.g., wet, lowland sites -- that results in spatial separation between them and other ungulates (moose and deer) as well as predators (bears and wolves). Similarly, moose were found to avoid sites that wolves were seen at.
 
 ```{r}
 #| label: fig-cooccurrences
@@ -707,9 +754,9 @@ tags$div(
 
 ### Comparison to Regional Oil Sands Monitoring
 
-We can take the calculated species density values from the `r com_acr` cameras and compare the values to those collected from cameras deployed elsewhere in the Oil Sands Region. The regional monitoring program uses a dose-response study design, where data is collected at various oil sands footprint stressors (e.g., active well sites, mines, roads, and seismic lines) and then this data is compared to areas of low disturbance (@Bayne2021OSMFramework). For the `r com_acr` wildlife abundance study, cameras were deployed at two oil sands stressor treatments (linear features and inactive wellpads) as well as low disturbance (reference) areas. 
+We can take the calculated species density values from the `r com_acr` cameras and compare the values to those collected from cameras deployed elsewhere in the Oil Sands Region. The regional monitoring program uses a dose-response study design, where data is collected at various oil sands footprint stressors (e.g., active well sites, mines, roads, and seismic lines) and then this data is compared to areas of low disturbance (@Bayne2021OSMFramework). For the `r com_acr` wildlife abundance study, cameras were deployed at two oil sands stressor treatments (linear features and inactive wellpads) as well as low disturbance (reference) areas.
 
-The following plots (Figures 7a-7g) show the average density of each species found at each stressor compared to the reference areas. The plots also show the range of values obtained through the broader regional monitoring program; the average density value for for each stressor treatment is represented by a horizontal dark grey line on the plots. When comparing `r com_acr` values to these averages, it is important to note that these are pooled averages from sites surveyed across the entire Oil Sands Region, and represent a variety of geographic characteristics. 
+The following plots (Figures 7a-7g) show the average density of each species found at each stressor compared to the reference areas. The plots also show the range of values obtained through the broader regional monitoring program; the average density value for each stressor treatment is represented by a horizontal dark grey line on the plots. When comparing `r com_acr` values to these averages, it is important to note that these are pooled averages from sites surveyed across the entire Oil Sands Region, and represent a variety of geographic characteristics.
 
 ::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
 Click on each **Data Source** (e.g., 'OSM Regional Monitoring') within each of the plot legends to hide or display the data associated with each source.
@@ -829,8 +876,8 @@ p <- ggplot(
 
 ```
 
-::: panel-tabset
 
+::: panel-tabset
 #### White-tailed Deer {.unnumbered}
 
 ```{r}
@@ -1263,20 +1310,19 @@ htmltools::tags$figure(
 )
   
 ```
-
 :::
 
 -   **White-tailed deer** density was lowest in the linear features treatment, and comparable between the inactive wellpads treatment and the reference areas. Inactive wellpads can provide early seral vegetation for white-tailed deer to browse on, which in effect creates a forage subsidy. Across both treatments and the reference areas, however, white-tailed deer densities were lower at `r com_acr` cameras compared to the regional averages. This may be due to the underlying habitat present in this localized area (e.g., a higher proportion of lowland area compared to upland deciduous/mixedwood, which deer prefer).
 
 -   A similar pattern was found for **Black Bear**, with inactive wellpads and reference areas have similar density values, but areas with a high concentration of linear features having lower numbers of bears. Like white-tailed deer, black bear densities were lower in the `r com_acr` area than regional averages.
 
--   Regionally, **Moose** have either a neutral or slight positive response to footprint such as linear features and inactive wellpads; like white-tailed deer, these features provide a forage and/or movement subsidy. However, this finding was not replicated with the `r com_acr` data, as moose density was lower than reference in both treatments (albeit with a small sample size). Like white-tailed deer and black bear, moose densities were significantly lower than regional averages. 
+-   Regionally, **Moose** have either a neutral or slight positive response to footprint such as linear features and inactive wellpads; like white-tailed deer, these features provide a forage and/or movement subsidy. However, this finding was not replicated with the `r com_acr` data, as moose density was lower than reference in both treatments (albeit with a small sample size). Like white-tailed deer and black bear, moose densities were significantly lower than regional averages.
 
--   **Snowshoe Hare** were not found in the inactive wellpad treatment, but had similar densities between the linear features treatment and the reference areas. At the latter two, hare densities were similar to regional averages. **Canada Lynx** densities at `r com_acr` sites across both treatments and the reference areas were higher than regional averages. 
+-   **Snowshoe Hare** were not found in the inactive wellpad treatment, but had similar densities between the linear features treatment and the reference areas. At the latter two, hare densities were similar to regional averages. **Canada Lynx** densities at `r com_acr` sites across both treatments and the reference areas were higher than regional averages.
 
 -   High densities of **Woodland Caribou** were found at the `r com_acr` reference sites -- higher than any other sites sampled regionally. These sites coincide with East Side Athabasca (ESAR) Christina subherd range. Caribou densities were lower in the two oil sands footprint treatments when compared to reference.
 
--   Finally, **Gray Wolf** densities were higher in reference areas than the two treatments. `r com_acr` cameras recorded higher densities in these areas than the regional average. 
+-   Finally, **Gray Wolf** densities were higher in reference areas than the two treatments. `r com_acr` cameras recorded higher densities in these areas than the regional average.
 
 # Where We Expect to Find Species
 
@@ -1392,10 +1438,10 @@ htmltools::tags$div(
 
 -   **Snowshoe Hare**, and to a lesser extent **Canada Lynx**, thrive in the lowland habitats that make up a significant portion of the east side of the `r com_acr` area of interest.
 
--   **Woodland Caribou** prediction of occurrence in patchy due to their range limitations. The ESAR Christina and Bohn subherds are prominent in the `r com_acr` territory. **Wolves** have low predictions of occurrence, but that is because they exist in low densities across the landscape. 
+-   **Woodland Caribou** prediction of occurrence in patchy due to their range limitations. The ESAR Christina and Bohn subherds are prominent in the `r com_acr` territory. **Wolves** have low predictions of occurrence, but that is because they exist in low densities across the landscape.
 
 # Recommendations and Next Steps
 
-(This section is available to record the direction provided by the community to help guide the next phases of the `r com_acr` monitoring program(s).)
+CPDFN plans to continue being part of the regional ICBM camera program. We look forward to building out more indicators with hunters related to wildlife health. 
 
 # References
