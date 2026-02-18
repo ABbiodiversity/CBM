@@ -6,10 +6,6 @@ format:
     grid:
       margin-width: 200px
       body-width: 950px
-  pdf:
-    toc: true
-    toc-depth: 3
-    keep-tex: false
 navbar: right
 theme: cosmo
 date: "`r format(Sys.time(), '%d %B, %Y')`"
@@ -34,20 +30,11 @@ nocite: '@*'
 toc: true
 toc-depth: 3
 toc-expand: true
-prefer-html: true
 toc-location: left
 css: assets/styles.css
 ---
 
 <br>
-
-```{r}
-#| include: false
-
-is_pdf  <- knitr::is_latex_output()
-is_html <- knitr::is_html_output()
-
-```
 
 ```{r}
 #| warning: false
@@ -88,7 +75,6 @@ library(htmlwidgets)
 library(plotly)
 library(terra)
 library(glue)
-library(webshot2)
 
 # Community acronym
 com_acr <- "CPDFN"
@@ -156,21 +142,11 @@ Note that viewers will need to have a WildTrax account with the appropriate perm
 
 We were surprised to see images of a wolverine in some of our camera tagging.
 
-![](Images/CPDFN/Wolverine.jpg){
-  width=85%
-  fig-align="center"
-  fig-cap=""
-  fig-alt="Wolverine"
-}
+![](Images/CPDFN/Wolverine.jpg){width="85%" fig-align="center" fig-cap="" fig-alt="Wolverine"}
 
 We were also excited to have photographed so many woodland caribou.
 
-![](Images/CPDFN/Caribou.jpg){
-  width=85%
-  fig-align="center"
-  fig-cap=""
-  fig-alt="Caribou"
-}
+![](Images/CPDFN/Caribou.jpg){width="85%" fig-align="center" fig-cap="" fig-alt="Caribou"}
 
 We also photographed some beautiful birds.
 
@@ -182,7 +158,6 @@ carousel("bird-carousel", 10000,
          yaml.load_file("Images/CPDFN/carousel3.yml"))
 
 ```
-
 
 Finally, there were many other interesting wildlife detections and environmental events captured by the cameras, including a large wildfire, many images of moose hanging out at a salt lick site identified by the CPDFN members, and twin moose calves.
 
@@ -876,7 +851,6 @@ p <- ggplot(
 
 ```
 
-
 ::: panel-tabset
 #### White-tailed Deer {.unnumbered}
 
@@ -1442,6 +1416,6 @@ htmltools::tags$div(
 
 # Recommendations and Next Steps
 
-CPDFN plans to continue being part of the regional ICBM camera program. We look forward to building out more indicators with hunters related to wildlife health. 
+CPDFN plans to continue being part of the regional ICBM camera program. We look forward to building out more indicators with hunters related to wildlife health.
 
 # References

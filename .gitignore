@@ -55,3 +55,5 @@ rsconnect/
 
 # WildTrax credentials
 wt_credentials.R
+
+**/*.quarto_ipynb
