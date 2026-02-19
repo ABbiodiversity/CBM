@@ -1,0 +1,95 @@
+---
+title: "Community-Based Monitoring Reports"
+format:
+  html:
+    toc: false
+    page-layout: full
+    css: styles.css
+    theme: default
+output-dir: docs
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+
+library(tibble)
+library(glue)
+
+# Communities
+communities <- tribble(
+  ~short,   ~name,                                      ~subtitle,                             ~file,        ~status,
+  "CPDFN",  "Chipewyan Prairie Dene First Nation",       "Community camera monitoring results", "CPDFN.html",  "Available",
+  "OMGD19", "Otipemisiwak Métis Government District 19", "Community camera monitoring results", "OMGD19.html", "Available",
+  "BLMS",   "Beaver Lake Métis Settlement",              "Community camera monitoring results", "BLMS.html",   "Available"
+)
+
+```
+
+::: {.cbm-hero}
+::: {.cbm-hero-inner}
+
+# Community-Based Monitoring & Engagement
+
+We work collaboratively with communities throughout Alberta on projects driven by community interests and objectives.
+
+<div class="cbm-hero-actions"> <a class="cbm-btn cbm-btn-primary" href="#reports">Browse reports</a> <a class="cbm-btn cbm-btn-ghost" href="#about">About this portal</a> </div>
+
+:::
+
+:::
+
+## Reports {#reports}
+
+```{r, echo=FALSE, results='asis'}
+
+cat('<div class="cbm-grid">')
+
+for (i in seq_len(nrow(communities))) {
+  row <- communities[i, ]
+  cat(glue::glue('
+<div class="cbm-card">
+  <div class="cbm-card-top">
+    <div class="cbm-badge">{row$short}</div>
+    <div class="cbm-status">{row$status}</div>
+  </div>
+
+  <h3 class="cbm-card-title">{row$name}</h3>
+  <p class="cbm-card-subtitle">{row$subtitle}</p>
+
+  <div class="cbm-card-actions">
+    <a class="cbm-btn cbm-btn-primary" href="{row$file}">Open report →</a>
+  </div>
+</div>
+'))
+}
+
+cat("</div>")
+
+```
+
+## About this portal {#about}
+
+This site is a hub for community-facing monitoring outputs (HTML reports) that live in the same docs/ folder used for GitHub Pages.
+
+::: {.cbm-footer}
+::: {.cbm-footer-grid}
+
+::: {.cbm-footer-block}
+
+### Contact
+
+For questions about these reports or to request updates, contact the ABMI Community-Based Monitoring & Engagement team.
+:::
+
+::: {.cbm-footer-block}
+
+### Acknowledgement
+
+This work is made possible through reciprocal relationships with partner communities and stewardship on Indigenous territories across Alberta.
+:::
+
+:::
+:::
