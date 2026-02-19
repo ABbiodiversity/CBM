@@ -1,5 +1,5 @@
 ---
-title: "Community-Based Monitoring Reports"
+title: ""
 format:
   html:
     toc: false
@@ -14,7 +14,6 @@ execute:
 ---
 
 ```{r}
-
 library(tibble)
 library(glue)
 
@@ -23,7 +22,10 @@ communities <- tribble(
   ~short,   ~name,                                      ~subtitle,                             ~file,        ~status,
   "CPDFN",  "Chipewyan Prairie Dene First Nation",       "Community camera monitoring results", "CPDFN.html",  "Available",
   "OMGD19", "Otipemisiwak Métis Government District 19", "Community camera monitoring results", "OMGD19.html", "Available",
-  "BLMS",   "Beaver Lake Métis Settlement",              "Community camera monitoring results", "BLMS.html",   "Available"
+  "BLMS",   "Beaver Lake Métis Settlement",              "Community camera monitoring results", "BLMS.html",   "Available",
+  "GLMS",   "Gift Lake Métis Settlement",                "Community camera monitoring results", "GLMS.html",   "Coming Soon",
+  "BLCN",   "Beaver Lake Cree Nation",                   "Community camera monitoring results", "BLCN.html",   "Coming Soon",
+  "CONK",   "Conklin Métis",                             "Community camera monitoring results", "CONK.html",   "Coming Soon"
 )
 
 ```
@@ -31,7 +33,7 @@ communities <- tribble(
 ::: {.cbm-hero}
 ::: {.cbm-hero-inner}
 
-# Community-Based Monitoring & Engagement
+# Community-Based Monitoring & Engagement Online Reports
 
 We work collaboratively with communities throughout Alberta on projects driven by community interests and objectives.
 
@@ -43,30 +45,50 @@ We work collaboratively with communities throughout Alberta on projects driven b
 
 ## Reports {#reports}
 
-```{r, echo=FALSE, results='asis'}
+```{r, echo=FALSE}
 
-cat('<div class="cbm-grid">')
+out <- "<div class='cbm-grid'>\n"
 
 for (i in seq_len(nrow(communities))) {
-  row <- communities[i, ]
-  cat(glue::glue('
-<div class="cbm-card">
-  <div class="cbm-card-top">
-    <div class="cbm-badge">{row$short}</div>
-    <div class="cbm-status">{row$status}</div>
+
+  short    <- communities$short[[i]]
+  name     <- communities$name[[i]]
+  subtitle <- communities$subtitle[[i]]
+  file     <- communities$file[[i]]
+  status   <- communities$status[[i]]
+
+  status_class <- if (status == "Coming Soon") "cbm-status status-coming" else "cbm-status"
+
+  button_html <- if (status == "Coming Soon") {
+    "<span class='cbm-btn cbm-btn-disabled'>Coming Soon</span>"
+  } else {
+    glue("<a class='cbm-btn cbm-btn-primary' href='{file}'>Open report →</a>")
+  }
+
+  out <- paste0(
+    out,
+    glue::glue("
+<div class='cbm-card'>
+  <div class='cbm-card-top'>
+    <div class='cbm-badge'>{short}</div>
+    <div class='{status_class}'>{status}</div>
   </div>
 
-  <h3 class="cbm-card-title">{row$name}</h3>
-  <p class="cbm-card-subtitle">{row$subtitle}</p>
+  <h3 class='cbm-card-title'>{name}</h3>
+  <p class='cbm-card-subtitle'>{subtitle}</p>
 
-  <div class="cbm-card-actions">
-    <a class="cbm-btn cbm-btn-primary" href="{row$file}">Open report →</a>
+  <div class='cbm-card-actions'>
+    {button_html}
   </div>
 </div>
-'))
+"),
+    "\n"
+  )
 }
 
-cat("</div>")
+out <- paste0(out, "</div>\n")
+
+knitr::asis_output(out)
 
 ```
 

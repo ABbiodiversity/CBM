@@ -83,6 +83,19 @@ a:hover{ color: var(--cbm-blue-700); }
   background: white;
 }
 
+.cbm-btn-disabled{
+  background: #E0E0E0;
+  color: #757575 !important;
+  border: 1px solid #D0D0D0;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.cbm-btn-disabled:hover{
+  background: #E0E0E0;
+  color: #757575 !important;
+}
+
 .cbm-grid{
   display:grid;
   grid-template-columns: repeat(12, 1fr);
@@ -97,6 +110,9 @@ a:hover{ color: var(--cbm-blue-700); }
   border-radius: var(--cbm-radius);
   padding: 1.25rem 1.25rem 1.15rem 1.25rem;
   box-shadow: var(--cbm-shadow-soft);
+
+  display: flex;           /* ADD */
+  flex-direction: column;  /* ADD */
 }
 
 @media (min-width: 900px){
@@ -122,8 +138,21 @@ a:hover{ color: var(--cbm-blue-700); }
 
 .cbm-status{
   color: var(--cbm-green-800);
+  background: rgba(76,175,80,0.12);
+  border: 1px solid rgba(76,175,80,0.28);
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
   font-weight: 700;
   font-size: 0.9rem;
+}
+
+.status-coming{
+  color: #B26A00;            /* amber text */
+  background: rgba(255,193,7,0.15);
+  border: 1px solid rgba(255,193,7,0.35);
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-weight: 700;
 }
 
 .cbm-card-title{
@@ -139,7 +168,7 @@ a:hover{ color: var(--cbm-blue-700); }
 }
 
 .cbm-card-actions{
-  margin-top: 0.25rem;
+  margin-top: auto;        /* CHANGE from 0.25rem */
 }
 
 .cbm-footer{
