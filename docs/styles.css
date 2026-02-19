@@ -26,6 +26,9 @@ a{ color: var(--cbm-blue-900); }
 a:hover{ color: var(--cbm-blue-700); }
 
 .cbm-hero{
+  position: relative;   /* IMPORTANT for ::before positioning */
+  overflow: hidden;     /* ensures image doesn't spill outside rounded corners */
+
   background:
     radial-gradient(1200px 500px at 10% 10%, rgba(129,212,250,0.45), transparent 60%),
     radial-gradient(900px 450px at 90% 20%, rgba(76,175,80,0.20), transparent 55%),
@@ -35,6 +38,35 @@ a:hover{ color: var(--cbm-blue-700); }
   padding: 3.25rem 2.5rem;
   margin: 1.25rem 0 2rem 0;
   box-shadow: var(--cbm-shadow-soft);
+}
+
+/* Decorative hero image as a top "banner" behind the heading area */
+.cbm-hero::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+
+  height: 240px;                 /* controls how far down the banner extends */
+
+  background-image: url("hero1.jpg");
+  background-size: cover;
+  background-position: center 30%;
+  background-repeat: no-repeat;
+
+  opacity: 0.22;
+  pointer-events:none;
+
+  /* fade out toward the bottom so it blends into the hero gradient */
+  mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+}
+
+/* Ensure hero content sits above the decorative image */
+.cbm-hero-inner{
+  position: relative;
+  z-index: 1;
 }
 
 .cbm-hero-inner h1{
@@ -105,14 +137,26 @@ a:hover{ color: var(--cbm-blue-700); }
 
 .cbm-card{
   grid-column: span 12;
-  background: white;
+  background: linear-gradient(
+    180deg,
+    rgba(255,255,255,1) 0%,
+    rgba(248,250,252,1) 100%
+  );
   border: 1px solid rgba(55,71,79,0.12);
   border-radius: var(--cbm-radius);
   padding: 1.25rem 1.25rem 1.15rem 1.25rem;
   box-shadow: var(--cbm-shadow-soft);
 
-  display: flex;           /* ADD */
-  flex-direction: column;  /* ADD */
+  display: flex;
+  flex-direction: column;
+
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.cbm-card:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 18px 44px rgba(16, 42, 67, 0.18);
+  border-color: rgba(1,87,155,0.25);
 }
 
 @media (min-width: 900px){
@@ -140,35 +184,36 @@ a:hover{ color: var(--cbm-blue-700); }
   color: var(--cbm-green-800);
   background: rgba(76,175,80,0.12);
   border: 1px solid rgba(76,175,80,0.28);
-  padding: 0.15rem 0.45rem;
+  padding: 0.18rem 0.55rem;
   border-radius: 999px;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.82rem;
 }
 
 .status-coming{
-  color: #B26A00;            /* amber text */
+  color: #B26A00;
   background: rgba(255,193,7,0.15);
   border: 1px solid rgba(255,193,7,0.35);
-  padding: 0.15rem 0.45rem;
+  padding: 0.18rem 0.55rem;
   border-radius: 999px;
   font-weight: 700;
+  font-size: 0.82rem;
 }
 
 .cbm-card-title{
   margin: 0 0 0.4rem 0;
-  font-weight: 750;
+  font-weight: 800;
   letter-spacing: -0.01em;
 }
 
 .cbm-card-subtitle{
   margin: 0 0 1rem 0;
   color: var(--cbm-muted);
-  min-height: 2.6em;
+  min-height: 2.6em; /* optional now that actions are pinned to bottom */
 }
 
 .cbm-card-actions{
-  margin-top: auto;        /* CHANGE from 0.25rem */
+  margin-top: auto;
 }
 
 .cbm-footer{
