@@ -50,7 +50,7 @@ a:hover{ color: var(--cbm-blue-700); }
 
   height: 240px;                 /* controls how far down the banner extends */
 
-  background-image: url("hero1.jpg");
+  background-image: url("hero1.JPG");
   background-size: cover;
   background-position: center 30%;
   background-repeat: no-repeat;
