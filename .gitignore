@@ -57,3 +57,4 @@ rsconnect/
 wt_credentials.R
 
 **/*.quarto_ipynb
+.positai

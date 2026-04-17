@@ -12,10 +12,6 @@ date: "`r format(Sys.time(), '%d %B, %Y')`"
 author:
   - name: "Rebecca Zalaski"
     affiliation: "Mother Earth Environmental Services - Whitefish (Goodfish) Lake First Nation #128"
-  - name: "Chris Bernard"
-    affiliation: "Mother Earth Environmental Services - Whitefish (Goodfish) Lake First Nation #128"
-  - name: "Lavada Memnook"
-    affiliation: "Mother Earth Environmental Services - Whitefish (Goodfish) Lake First Nation #128"
   - name: "David Evans"
     affiliation: "ABMI"
     email: "david.evans@ualberta.ca"
@@ -95,7 +91,7 @@ sp_uni <- c("White-tailed Deer",
             "Moose",
             "Coyote",
             "Snowshoe Hare",
-            "Horse",
+            #"Horse",
             "Red Fox")
 
 species_colours <- c(
@@ -104,7 +100,7 @@ species_colours <- c(
   "Moose"             = "#8D6E63",  # brown
   "Coyote"            = "#2A9D8F",  # teal
   "Snowshoe Hare"     = "#E63946",  # red
-  "Horse"             = "#F4A261",  # sandy/orange
+  #"Horse"             = "#F4A261",  # sandy/orange
   "Red Fox"           = "#E76F51"   # fox orange-red
 )
 
@@ -112,11 +108,11 @@ species_colours <- c(
 
 This report formally initiates a multi-year study designed to document key wildlife species of significance to Whitefish (Goodfish) Lake First Nation #128 (WLFN #128). The project is led by [Mother Earth Environmental Services](https://www.motherearthenvironmental.ca/) (MEES), 100% owned by and operated in WLFN #128. The focus encompasses major game species - such as white-tailed deer, mule deer, and moose - in addition to furbearers and predators, including cougar, lynx, black bear, wolf, and coyote. The primary objective is to assess the impacts of oil sands development, specifically the cumulative effects arising from well-pads, pipelines, and other linear disturbances on the presence and abundance of these species within WLFN #128’s preferred harvesting areas.
 
-A critical knowledge gap exists regarding how industrial landscape alterations influence wildlife distribution and habitat use in relation to traditional harvesting. This community-based monitoring program is structured to address two central questions derived from a community conceptual model: 
+A critical knowledge gap exists regarding how industrial landscape alterations influence wildlife distribution and habitat use in relation to traditional harvesting. This community-based monitoring program is structured to address two central questions derived from a community conceptual model:
 
-+ First, are areas of oil sands development causing changes to the presence and abundance of key wildlife species within the Nation’s harvesting locations, thereby affecting species availability?
+-   First, are areas of oil sands development causing changes to the presence and abundance of key wildlife species within the Nation’s harvesting locations, thereby affecting species availability?
 
-+ Second, is the community’s capacity to harvest wildlife through hunting and trapping being impacted by the ongoing and escalating pressure (the cumulative effects) of this development?
+-   Second, is the community’s capacity to harvest wildlife through hunting and trapping being impacted by the ongoing and escalating pressure (the cumulative effects) of this development?
 
 This project will incorporate community-based scientific monitoring with the Indigenous Knowledge (IK) of WLFN #128. While the wildlife cameras give us a boots-on-the-ground glimpse of what is going on, Harvester and Elder knowledge also give us important insight. They provide a deeper understanding of animal behaviour and populations, such as identifying game movement trends and key areas of interest for camera placement, and interpreting animal behaviour and health through the images. By bridging these knowledges, it enables us to have data that is scientifically strong, guided by community values and interests. Our work directly fulfills the goals of the OSM program by empowering MEES and WLFN #128 with these knowledge tools to find.
 
@@ -124,9 +120,9 @@ By systematically gathering evidence on these points, this study will generate v
 
 As of February 2026, MEES deployed a total of 40 cameras:
 
-+ Phase I Cameras - In 2024, MEES deployed 20 cameras - in clusters of four - around the main WLFN #128 reservation region, WLFN #128’s primary region of interest where approximately 2,000 WLFN #128 community members reside. These 20 camera locations were selected by MEES based on key areas of interest by WLFN #128 community members. 
+-   Phase I Cameras - In 2024, MEES deployed 20 cameras around the main WLFN #128 reservation region, WLFN #128’s primary region of interest where approximately 2,000 WLFN #128 community members reside. These 20 camera locations were selected by MEES based on key areas of interest by WLFN #128 community members.
 
-+ Phase II Cameras - In 2025, MEES deployed an additional 20 cameras - in clusters of four - within a secondary region of interest immediately northeast of the main WLFN #128 reservation region within locations that are affected by oil & gas development. These 20 camera locations were selected by MEES based on key areas of interest by WLFN #128 community members. 
+-   Phase II Cameras - In 2025, MEES deployed an additional 20 cameras - in clusters of four - within a secondary region of interest immediately northeast of the main WLFN #128 reservation region within locations that are affected by oil & gas development. These 20 camera locations were selected by MEES based on key areas of interest by WLFN #128 community members.
 
 MEES will be able to compare both areas using the camera data with the idea of noticing any trends and changes in wildlife behaviour and abundance. The opportunity is also provided for WLFN #128 community members to observe any wildlife changes and trends from a generational perspective.
 
@@ -134,19 +130,19 @@ MEES will be able to compare both areas using the camera data with the idea of n
 
 MEES refreshed the 18 of the 20 total Phase I Cameras initially deployed in 2024 around the main reservation region in November 2025:
 
-+ Upon retrieval, MEES unfortunately discovered one of the 20 Phase I Cameras (Camera WFL128-11) to be missing, and was unable to be located. MEES plans on searching for this missing camera in early Spring 2026 as soon as the snow melts.
+-   Upon retrieval, MEES unfortunately discovered one of the 20 Phase I Cameras (Camera WFL128-11) to be missing, and was unable to be located. MEES plans on searching for this missing camera in early Spring 2026 as soon as the snow melts.
 
-+ Upon retrieval, MEES unfortunately discovered one of the 20 Phase I Cameras (Camera WFL128-18) was inaccessible due to extremely deep snow cover, and was unable to be retrieved. MEES plans on retrieving images from this camera in early Spring 2026 as soon as the snow melts.
+-   Upon retrieval, MEES unfortunately discovered one of the 20 Phase I Cameras (Camera WFL128-18) was inaccessible due to extremely deep snow cover, and was unable to be retrieved. MEES plans on retrieving images from this camera in early Spring 2026 as soon as the snow melts.
 
 MEES uploaded the images retrieved from the 18 Phase I Cameras to the online platform [WildTrax](www.wildtrax.ca). WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) (ABMI) for users of environmental sensors - such as remote cameras - to provide support with processing, organizing, and sharing data.
 
 # Project Highlights
 
-A major highlight of our project was the combination and integration of IK with western environmental science. At the beginning of our project, MEES environmental professionals consulted with WLFN #128 community members to gain insight on wildlife “hotspots” based on their held IK. As most WLFN #128 community members are unavailable to participate in engagement sessions due to work commitments, our team adapted to bring the engagement session to them at work. This direct community involvement helped WLFN #128 feel a sense of belonging and connection with our project, making our project more meaningful and grounded in lived experience. Generations of local IK and understanding were shared and utilized to thoughtfully plan our project within its first year of execution, and for subsequent years of future wildlife monitoring. Meaningful collaboration resulted in a successful project, increasing authenticity and a sense of reward. 
+A major highlight of our project was the combination and integration of IK with western environmental science. At the beginning of our project, MEES environmental professionals consulted with WLFN #128 community members to gain insight on wildlife “hotspots” based on their held IK. As most WLFN #128 community members are unavailable to participate in engagement sessions due to work commitments, our team adapted to bring the engagement session to them at work. This direct community involvement helped WLFN #128 feel a sense of belonging and connection with our project, making our project more meaningful and grounded in lived experience. Generations of local IK and understanding were shared and utilized to thoughtfully plan our project within its first year of execution, and for subsequent years of future wildlife monitoring. Meaningful collaboration resulted in a successful project, increasing authenticity and a sense of reward.
 
-The process of wildlife camera trapping is lengthy and includes long periods of waiting for data to be collected. One of the initial phases of camera deployment involving physical exertion - including trekking and bushwhacking through remote areas - is nearly directly opposite of one of the final phases of data collection involving mental stimulation - including uploading, tagging, and analyzing tens of thousands of images in WildTrax - in an attempt to correlate the phases and complete the annual project as a whole. After a full year of data collection, viewing the memory card from each camera was synonymous with opening a time capsule which captured all wildlife passing by over the past year. 
+The process of wildlife camera trapping is lengthy and includes long periods of waiting for data to be collected. One of the initial phases of camera deployment involving physical exertion - including trekking and bushwhacking through remote areas - is nearly directly opposite of one of the final phases of data collection involving mental stimulation - including uploading, tagging, and analyzing tens of thousands of images in WildTrax - in an attempt to correlate the phases and complete the annual project as a whole. After a full year of data collection, viewing the memory card from each camera was synonymous with opening a time capsule which captured all wildlife passing by over the past year.
 
-The wide variety of wildlife species captured by the cameras was of much interest to the MEES team. Of particular interest was the capture of one singular white-tailed deer fawn (@fig-fawn), as this age of deer is not known to wander without a doe, with the exception of if the fawn is bedded down in hiding while the doe forages. Viewing this image was very rare and unexpected, showing the resilience of this white-tailed deer fawn as an individual, and hope for its survival. The captured image also demonstrated not only presence, but reproductive success contributing to healthy wildlife populations. 
+The wide variety of wildlife species captured by the cameras was of much interest to the MEES team. Of particular interest was the capture of one singular white-tailed deer fawn (@fig-fawn), as this age of deer is not known to wander without a doe, with the exception of if the fawn is bedded down in hiding while the doe forages. Viewing this image was very rare and unexpected, showing the resilience of this white-tailed deer fawn as an individual, and hope for its survival. The captured image also demonstrated not only presence, but reproductive success contributing to healthy wildlife populations.
 
 ```{r}
 #| label: fig-fawn
@@ -163,7 +159,7 @@ knitr::include_graphics("Images/WLFN/fawn.JPG")
 
 ```
 
-Of additional particular interest was the capture of one singular mule deer doe (@fig-mule), as this species of deer is not known to inhabit the WLFN #128 region. Viewing this image was very rare and unexpected, showing the resilience of this mule deer doe as an individual, and hope and anticipation for mule deer in the WLFN #128 region as a species. 
+Of additional particular interest was the capture of one singular mule deer doe (@fig-mule), as this species of deer is not known to inhabit the WLFN #128 region. Viewing this image was very rare and unexpected, showing the resilience of this mule deer doe as an individual, and hope and anticipation for mule deer in the WLFN #128 region as a species.
 
 ```{r}
 #| label: fig-mule
@@ -179,7 +175,7 @@ Of additional particular interest was the capture of one singular mule deer doe 
 knitr::include_graphics("Images/WLFN/muledeer.JPG")
 ```
 
-Additional memorable images included the capture of a cow moose with two young calves trailing behind her, and similarly, the capture of a sow black bear with four young cubs trailing behind her! These similar images demonstrated the precious leadership and protection of a mother and her offspring. The captured images also demonstrated not only presence, but reproductive success contributing to healthy wildlife populations for more than one species. 
+Additional memorable images included the capture of a cow moose with two young calves trailing behind her, and similarly, the capture of a sow black bear with four young cubs trailing behind her! These similar images demonstrated the precious leadership and protection of a mother and her offspring. The captured images also demonstrated not only presence, but reproductive success contributing to healthy wildlife populations for more than one species.
 
 ```{r}
 #| warning: false
@@ -190,7 +186,8 @@ carousel("bear", 10000,
 
 ```
 
-Additional memorable images included the capture of very healthy looking coyotes and of coyotes carrying prey in their mouths, such as a deer leg and a grouse. These images demonstrated successful wildlife health and insight into predator-prey relationships. 
+Additional memorable images included the capture of very healthy looking coyotes and of coyotes carrying prey in their mouths, such as a deer leg and a grouse. These images demonstrated successful wildlife health and insight into predator-prey relationships.
+
 ```{r}
 #| warning: false
 #| echo: false
@@ -216,7 +213,7 @@ carousel("misc", 10000,
          yaml.load_file("Images/WLFN/wlfn-carousel4.yml"))
 ```
 
-Even the human capture and domestic animal capture was interesting in their own way. While it was something frustrating - especially when tagging large herds of cattle or horses one by one - it highlighted how shared landscapes function between anthropogenic and wild activity. The cameras documented not only wildlife, but the interaction between wild species, domestic animals, and people. 
+Even the human capture and domestic animal capture was interesting in their own way. While it was something frustrating - especially when tagging large herds of cattle or horses one by one - it highlighted how shared landscapes function between anthropogenic and wild activity. The cameras documented not only wildlife, but the interaction between wild species, domestic animals, and people.
 
 ```{r}
 #| warning: false
@@ -225,15 +222,15 @@ carousel("horse", 10000,
          yaml.load_file("Images/WLFN/wlfn-carousel5.yml"))
 ```
 
-Overall, the project revealed a local yet grand story. Each camera captured images that would likely otherwise never be observed, and almost certainly would never be otherwise documented. The still and silent cameras quietly captured migration, feeding, rearing, hunting, animal curiosity, and even human curiosity. What was initially intended to be data collection was actually capable of a deeper insight into determining how the WLFN #128 land is actively used and shared between a multitude of different individuals and species. 
+Overall, the project revealed a local yet grand story. Each camera captured images that would likely otherwise never be observed, and almost certainly would never be otherwise documented. The still and silent cameras quietly captured migration, feeding, rearing, hunting, animal curiosity, and even human curiosity. What was initially intended to be data collection was actually capable of a deeper insight into determining how the WLFN #128 land is actively used and shared between a multitude of different individuals and species.
 
 # Camera Locations
 
 As of February 2026, MEES has deployed a total of 40 cameras:
 
-+ Phase I Cameras - In 2024, MEES deployed 20 cameras - in clusters of four - around the main WLFN #128 reservation region, WLFN #128’s primary region of interest where approximately 2,000 WLFN #128 community members reside. These 20 camera locations were selected by MEES based on key areas of interest by WLFN #128 community members. 
+-   Phase I Cameras - In 2024, MEES deployed 20 cameras around the main WLFN #128 reservation region, WLFN #128’s primary region of interest where approximately 2,000 WLFN #128 community members reside. These 20 camera locations were selected by MEES based on key areas of interest by WLFN #128 community members.
 
-+ Phase II Cameras - In 2025, MEES deployed an additional 20 cameras - in clusters of four - within a secondary region of interest immediately northeast of the main WLFN #128 reservation region within locations that are affected by oil & gas development. These 20 camera locations were selected by MEES based on key areas of interest by WLFN #128 community members. 
+-   Phase II Cameras - In 2025, MEES deployed an additional 20 cameras - in clusters of four - within a secondary region of interest immediately northeast of the main WLFN #128 reservation region within locations that are affected by oil & gas development. These 20 camera locations were selected by MEES based on key areas of interest by WLFN #128 community members.
 
 The map below is an interactive map that can be used to explore the locations of the 40 cameras in total deployed by MEES. Satellite imagery can be switched on and off using the button in the top left of the top. Each camera location can be clicked on to show the camera name, assigned treatment (road, pipeline, or reference), and when it was deployed and refreshed.
 
@@ -353,7 +350,7 @@ knitr::include_graphics(paste0("Figures/", com_acr, "/Number of Images.png"))
 
 <br>
 
-Species with a minimum of 20 images captured across all 18 cameras were highlighted as focal species. The complete list of all species captured is located in WildTrax within the ‘Species’ tab of the project. 
+Species with a minimum of 20 images captured across all 18 cameras were highlighted as focal species. The complete list of all species captured is located in WildTrax within the ‘Species’ tab of the project.
 
 MEES has chosen to focus the Phase I Cameras analysis on six focal species: White-Tailed Deer, Coyote, Moose, Black Bear, Snowshoe Hare, and Red Fox.
 
@@ -363,7 +360,7 @@ The number of images of each species can tell us part of the grand picture; howe
 
 For each camera, a 30-minute time interval is used to separate detection events; that is, images captured within 30 minutes of each other count toward a single detection, and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual or group of individuals.
 
-You can explore the figures for each species using the tabs below. The x-axis (bottom) represents the camera deployment timeline, from November 2024 to November 2025. The y-axis (left) shows the number of detections captured, aggregated from all of the cameras from the project. Note that the y-axis (left) for each species may change depending on the number of detections captured. 
+You can explore the figures for each species using the tabs below. The x-axis (bottom) represents the camera deployment timeline, from November 2024 to November 2025. The y-axis (left) shows the number of detections captured, aggregated from all of the cameras from the project. Note that the y-axis (left) for each species may change depending on the number of detections captured.
 
 ```{r}
 #| label: ind-detections
@@ -410,12 +407,11 @@ cat(":::\n")
 
 <br>
 
--   **White-tailed deer** detections were primarily recorded during the summer months, with a noticeable decline during winter 2025, a low point in March and April of 2025, and then rebounding during the summer. 
+-   **White-tailed deer** detections were primarily recorded during the summer months, with a noticeable decline during winter 2025, a low point in March and April of 2025, and then rebounding during the summer.
 -   Due to hibernation, **Black Bear** were not detected during the winter, and began in May 2025.
 -   **Moose** detections were sporadic, with some concentration during June and July of 2025.
 -   **Coyote** were also most frequently detected earlier on in the study period, particularly around February-April 2025.
--   **Horse** detections were recorded throughout the study period, particularly in the summer months of 2025.
--   **Red Fox** were primarily detected during the beginning of the study period, with hardly any detections after May 2025. A similar pattern was observed for **Snowshoe Hare**. 
+-   **Red Fox** were primarily detected during the beginning of the study period, with hardly any detections after May 2025. A similar pattern was observed for **Snowshoe Hare**.
 
 <br>
 
@@ -516,19 +512,18 @@ cat(":::\n")
 
 -   **White-tailed deer** displayed several activity peaks throughout the day, the most prominent of which were during twilight hours, specifically at dawn (6:00 to 9:00) and dusk (18:00). This pattern is known as *crepuscular*.
 -   **Black Bear** showed a spike in activity near midday (12:00), with some smaller peaks later in the day.
--   Similar to White-tailed Deer, **Moose** demonstrated a crepuscular activity pattern, with peaks in the dawn (and later into the morning), as well as dusk after 18:00. 
--   **Red Fox** were primarily noctural, with the most activity occurring during the nighttime. 
--   **Coyote** were consistently active throughout the day, rising a little bit in the dawn after 18:00. 
--   **Snowshoe Hare** activity increased throughout the evening beginning at 18:00, carrying throughout the night until dawn. They were not active during the day. 
--   **Horses** were also active throughout the day and night, with a major short peak occuring at midday.
+-   Similar to White-tailed Deer, **Moose** demonstrated a crepuscular activity pattern, with peaks in the dawn (and later into the morning), as well as dusk after 18:00.
+-   **Red Fox** were primarily noctural, with the most activity occurring during the nighttime.
+-   **Coyote** were consistently active throughout the day, rising a little bit in the dawn after 18:00.
+-   **Snowshoe Hare** activity increased throughout the evening beginning at 18:00, carrying throughout the night until dawn. They were not active during the day.
 
 ### Species Overlap
 
 Blue colours indicate positive correlation, as two species are usually seen by the same cameras and share the same space. For example, Black Bears and Moose often appear in the same areas as they rely on the same habitat, such as forests which provide them both with food and shelter. Even though Black Bears sometimes hunt Moose - particularly calves - most adult Moose are large enough in size to defend themselves, meaning they don’t necessarily need to avoid Black Bear territory. Black Bears can also follow Moose for scavenging opportunities, which may keep them both in the same general area without constant conflict.
 
-Red colours indicate negative correlation, as high counts of one species are usually accompanied with low counts of another species - and vice versa - as certain species tend to stay apart and are not usually seen at the same camera. For example, White-Tailed Deer may avoid areas with certain predators to reduce risk. 
+Red colours indicate negative correlation, as high counts of one species are usually accompanied with low counts of another species - and vice versa - as certain species tend to stay apart and are not usually seen at the same camera. For example, White-Tailed Deer may avoid areas with certain predators to reduce risk.
 
-However, not all predators trigger avoidance; White-Tailed Deer and Gray Wolves may demonstrate a positive correlation, as White-Tailed Deer can be relatively fast and can rely on the same habitats as Gray Wolves. Gray Wolves are not able to catch every White-Tailed Deer, so White-Tailed Deer may tolerate the risk to access food or water. 
+However, not all predators trigger avoidance; White-Tailed Deer and Gray Wolves may demonstrate a positive correlation, as White-Tailed Deer can be relatively fast and can rely on the same habitats as Gray Wolves. Gray Wolves are not able to catch every White-Tailed Deer, so White-Tailed Deer may tolerate the risk to access food or water.
 
 ```{r}
 #| label: fig-cooccurrences
@@ -572,7 +567,7 @@ You can hover over each camera location to see the calculated density of each sp
 #| warning: false
 #| message: false
 
-species <- c("Moose", "Horse", "White-tailed Deer",
+species <- c("Moose", "White-tailed Deer",
              "Black Bear", "Coyote", "Snowshoe Hare")
 
 densities_to_map <- locations_for_map |>
@@ -667,7 +662,7 @@ tags$div(
 
 ### Comparison to Regional Oil Sands Monitoring
 
-Results to come. 
+Results to come.
 
 <br>
 
@@ -783,13 +778,12 @@ htmltools::tags$div(
 <br>
 
 -   **Moose** are expected to most abundant in the forested region of the area of interest.
--   **Red Fox** are relatively uncommon throughout the region of interest, but slightly more common in the south where agriculture is more prevalent. 
--   **White-tailed Deer** are common throughout the region. 
--   **Black Bear** are most common to the west of the region of interest, in the more forested areas. 
+-   **Red Fox** are relatively uncommon throughout the region of interest, but slightly more common in the south where agriculture is more prevalent.
+-   **White-tailed Deer** are common throughout the region.
+-   **Black Bear** are most common to the west of the region of interest, in the more forested areas.
 -   Like Fox, **Coyote** are expected to be more prevalent in the south of the region in areas dominated by agriculture.
--   There is a small pocket of high quality **Snowshoe Hare** habitat in the west of the region, which is heavily forested. 
+-   There is a small pocket of high quality **Snowshoe Hare** habitat in the west of the region, which is heavily forested.
 
 # Recommendations and Next Steps
 
 # References
-

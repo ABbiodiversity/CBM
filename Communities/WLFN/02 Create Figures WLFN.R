@@ -30,7 +30,7 @@ sp_uni <- c("White-tailed Deer",
             "Moose",
             "Coyote",
             "Snowshoe Hare",
-            "Horse",
+            #"Horse",
             "Red Fox")
 
 species_colours <- c(
@@ -39,7 +39,7 @@ species_colours <- c(
   "Moose"             = "#8D6E63",  # brown
   "Coyote"            = "#2A9D8F",  # teal
   "Snowshoe Hare"     = "#E63946",  # red
-  "Horse"             = "#F4A261",  # sandy/orange
+  #"Horse"             = "#F4A261",  # sandy/orange
   "Red Fox"           = "#E76F51"   # fox orange-red
 )
 
