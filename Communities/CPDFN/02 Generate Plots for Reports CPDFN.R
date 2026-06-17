@@ -20,7 +20,7 @@ com_acr <- "CPDFN"
 # Load data
 load(paste0(g_drive_cbme, "CPDFN/Data/CPDFN Data Objects.RData"))
 
-species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
+species <- c("White-tailed Deer", "Black Bear", "Moose", "Snowshoe Hare",
              "Canada Lynx", "Woodland Caribou", "Gray Wolf")
 
 species_plus_human <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
@@ -34,8 +34,8 @@ species_colours <- c(
   "Canada Lynx"        = "#FFBE0B",
   "Black Bear"         = "#8338EC",
   "Woodland Caribou"   = "#FB5607",
-  "Coyote"             = "#3366CC",
-  "Gray Wolf"          = "#FF006E",
+  #"Coyote"             = "#3366CC",
+  "Gray Wolf"          = "#3366CC",
   "Human"              = "gray50",
   "All Terrain Vehicle"   = "gray50",
   "Heavy Equipment"             = "gray50",
@@ -98,8 +98,14 @@ studies <- c("Total", "Human Land Use", "Wildlife Abundance")
 
 for (s in studies) {
 
+  if (s == "Wildlife Abundance") {
+    d <- species
+  } else {
+    d <- species_plus_human
+  }
+
   fig_nimages <- nimages |>
-    filter(species_common_name %in% species_plus_human,
+    filter(species_common_name %in% d,
            study == s,
            n > 100) |>
     mutate(species_common_name = fct_reorder(as.factor(species_common_name), n)) |>
@@ -134,7 +140,12 @@ for (s in studies) {
 
 # Independent Detections
 
+# Going to only present results from the Wildlife Cameras
+
+wc <- c(3194, 3381)
+
 fig_ind_detect_all <- df_ind_detect |>
+  filter(project_id %in% wc) |>
   filter(species_common_name %in% species) |>
   ggplot(mapping = aes(x = start_time, fill = species_common_name)) +
   geom_histogram(bins = 50) +
@@ -172,11 +183,14 @@ ggsave(filename = paste0("Figures/", com_acr, "/Independent Detections.png"),
 
 # Now we do each species individually
 
-x_range <- range(df_ind_detect$start_time, na.rm = TRUE) + c(-1, 1) * lubridate::days(1)
+df_ind_detect_wc <- df_ind_detect |>
+  filter(project_id %in% wc)
+
+x_range <- range(df_ind_detect_wc$start_time, na.rm = TRUE) + c(-1, 1) * lubridate::days(1)
 
 for (sp in species) {
 
-  p <- df_ind_detect |>
+  p <- df_ind_detect_wc |>
     filter(species_common_name == sp) |>
     ggplot(mapping = aes(x = start_time, fill = species_common_name)) +
     geom_histogram(bins = 50) +
@@ -190,13 +204,13 @@ for (sp in species) {
     ) +
     scale_x_datetime(
       limits = x_range,
-      date_breaks = "1 year",
-      date_labels = "%Y"
+      date_breaks = "2 months",
+      date_labels = "%b %Y"
     ) +
     scale_fill_manual(values = species_colours[sp]) +
     theme_minimal() +
     theme(legend.position = "none",
-          axis.text.x = element_text(size = 11),
+          axis.text.x = element_text(size = 11, angle = 45, hjust = 1),
           axis.text.y = element_text(size = 11),
           axis.title.y = element_text(size = 14, margin = margin(0, 0.5, 0, 0, unit = "cm")))
 
@@ -269,7 +283,7 @@ fig_ind_detect_rh <- comments |>
                                                  "Non-Resident", "Non-Resident Hunter"))) |>
   mutate(status = ifelse(str_detect(category, "CPDFN"), "CPDFN Residents", "Non-Residents")) |>
   ggplot(mapping = aes(x = start_time, fill = category)) +
-  geom_histogram(position = "stack", bins = 80) +
+  geom_histogram(position = "stack", bins = 70) +
   facet_wrap(~ status, nrow = 2) +
   labs(y = "Number of Detections") +
   scale_y_continuous(breaks = seq(0, 40, 10)) +
@@ -280,15 +294,16 @@ fig_ind_detect_rh <- comments |>
                `CPDFN Resident` = "grey", `CPDFN Hunter` = "#7570b3"),
     breaks = c("Non-Resident Hunter", "CPDFN Hunter")) +
   theme_minimal() +
-  theme(axis.text.x = element_text(size = 10, hjust = 0.5),
+  theme(axis.text.x = element_text(size = 12, hjust = 0.5),
+        axis.text.y = element_text(size = 12),
         axis.title.x = element_blank(),
-        axis.title.y = element_text(size = 14, margin = margin(0, 10, 0, 0)),
+        axis.title.y = element_text(size = 19, margin = margin(0, 10, 0, 0)),
         #axis.text.y = element_blank(),
         legend.position = "bottom",
-        legend.text = element_text(size = 13),
+        legend.text = element_text(size = 14),
         legend.title = element_blank(),
         #legend.key.size = unit(0.4, "cm"),
-        strip.text = element_text(size = 14, hjust = 0, margin = margin(b = 0.5, unit = "cm")),
+        strip.text = element_text(size = 16, hjust = 0, margin = margin(b = 0.5, t = 0.5, unit = "cm")),
         strip.background = element_blank())
 
 # View the figure
@@ -297,18 +312,59 @@ fig_ind_detect_rh
 # Save the figure to Google Drive
 ggsave(filename = paste0(g_drive_cbme, com_acr, "/Figures/Category Detections.png"),
        fig_ind_detect_rh,
-       width = 7, height = 5, dpi = 500, bg = "white")
+       width = 7, height = 7, dpi = 500, bg = "white")
 
 # Save the figure to the Figures folder in the CBM repository
 ggsave(filename = paste0("Figures/", com_acr, "/Category Detections.png"),
        fig_ind_detect_rh,
-       width = 7, height = 5, dpi = 500, bg = "white")
+       width = 7, height = 7, dpi = 500, bg = "white")
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-# Number of comments for each category
+# Detections are each camera
 
+fig_ind_detect_cam <- comments |>
+  filter(!str_detect(location, "SALT")) |>
+  mutate(location = factor(location, levels = c(
+    "CPDFN-1", "CPDFN-2", "CPDFN-3", "CPDFN-4", "CPDFN-5",
+    "CPDFN-6", "CPDFN-7", "CPDFN-9", "CPDFN-11", "CPDFN-12",
+    "CPDFN-13", "CPDFN-14", "CPDFN-15", "CPDFN-16", "CPDFN-17",
+    "CPDFN-19"
+  ))) |>
+  mutate(category = case_when(
+    category == "Resident Hunter" ~ "CPDFN Hunter",
+    category == "Resident" ~ "CPDFN Resident",
+    TRUE ~ category)) |>
+  mutate(category = factor(category, levels = c("CPDFN Resident", "CPDFN Hunter",
+                                                "Non-Resident", "Non-Resident Hunter"))) |>
+  mutate(status = ifelse(str_detect(category, "CPDFN"), "CPDFN Residents", "Non-Residents")) |>
+  group_by(location, status, .drop = FALSE) |>
+  tally() |>
+  mutate(status = factor(status, levels = c("Non-Residents", "CPDFN Residents"))) |>
+  ggplot() +
+  geom_col(aes(x = location, y = n, fill = status), position = "stack", color = "black") +
+  scale_fill_manual(values = c("darkgreen", "#7570b3")) +
+  labs(y = "Number of Detections") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        legend.title = element_blank(),
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 19, margin = margin(0, 0.4, 0, 0, unit = "cm")),
+        axis.text.x = element_text(angle = 45, hjust = 1, size = 11),
+        axis.text.y = element_text(size = 12),
+        legend.text = element_text(size = 14))
 
+fig_ind_detect_cam
+
+# Save the figure to Google Drive
+ggsave(filename = paste0(g_drive_cbme, com_acr, "/Figures/Location Status Detections.png"),
+       fig_ind_detect_cam,
+       width = 7, height = 5, dpi = 500, bg = "white")
+
+# Save the figure to the Figures folder in the CBM repository
+ggsave(filename = paste0("Figures/", com_acr, "/Location Status Detections.png"),
+       fig_ind_detect_cam,
+       width = 7, height = 5, dpi = 500, bg = "white")
 
 # ----------------------------------------------------------------------------------------------------------------------
 

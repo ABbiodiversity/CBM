@@ -1,0 +1,117 @@
+---
+title: ""
+format:
+  html:
+    toc: false
+    page-layout: full
+    css: styles.css
+    theme: default
+output-dir: docs
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+library(tibble)
+library(glue)
+
+# Communities
+communities <- tribble(
+  ~short,   ~name,                                      ~subtitle,                             ~file,        ~status,
+  "CPDFN",  "Chipewyan Prairie Dene First Nation",       "Community camera monitoring results", "CPDFN.html",  "Available",
+  "OMGD19", "Otipemisiwak Métis Government District 19", "Community camera monitoring results", "OMGD19.html", "Available",
+  "BLMS",   "Beaver Lake Métis Settlement",              "Community camera monitoring results", "BLMS.html",   "Available",
+  "GLMS",   "Gift Lake Métis Settlement",                "Community camera monitoring results", "GLMS.html",   "Coming Soon",
+  "BLCN",   "Beaver Lake Cree Nation",                   "Community camera monitoring results", "BLCN.html",   "Coming Soon",
+  "CONK",   "Conklin Métis",                             "Community camera monitoring results", "CONK.html",   "Coming Soon"
+)
+
+```
+
+::: {.cbm-hero}
+::: {.cbm-hero-inner}
+
+# Community-Based Monitoring & Engagement Online Reports
+
+We work collaboratively with communities throughout Alberta on projects driven by community interests and objectives.
+
+<div class="cbm-hero-actions"> <a class="cbm-btn cbm-btn-primary" href="#reports">Browse reports</a> <a class="cbm-btn cbm-btn-ghost" href="#about">About this portal</a> </div>
+
+:::
+
+:::
+
+## Reports {#reports}
+
+```{r, echo=FALSE}
+
+out <- "<div class='cbm-grid'>\n"
+
+for (i in seq_len(nrow(communities))) {
+
+  short    <- communities$short[[i]]
+  name     <- communities$name[[i]]
+  subtitle <- communities$subtitle[[i]]
+  file     <- communities$file[[i]]
+  status   <- communities$status[[i]]
+
+  status_class <- if (status == "Coming Soon") "cbm-status status-coming" else "cbm-status"
+
+  button_html <- if (status == "Coming Soon") {
+    "<span class='cbm-btn cbm-btn-disabled'>Coming Soon</span>"
+  } else {
+    glue("<a class='cbm-btn cbm-btn-primary' href='{file}'>Open report →</a>")
+  }
+
+  out <- paste0(
+    out,
+    glue::glue("
+<div class='cbm-card'>
+  <div class='cbm-card-top'>
+    <div class='cbm-badge'>{short}</div>
+    <div class='{status_class}'>{status}</div>
+  </div>
+
+  <h3 class='cbm-card-title'>{name}</h3>
+  <p class='cbm-card-subtitle'>{subtitle}</p>
+
+  <div class='cbm-card-actions'>
+    {button_html}
+  </div>
+</div>
+"),
+    "\n"
+  )
+}
+
+out <- paste0(out, "</div>\n")
+
+knitr::asis_output(out)
+
+```
+
+## About this portal {#about}
+
+This site is a hub for community-facing monitoring outputs (HTML reports) that live in the same docs/ folder used for GitHub Pages.
+
+::: {.cbm-footer}
+::: {.cbm-footer-grid}
+
+::: {.cbm-footer-block}
+
+### Contact
+
+For questions about these reports or to request updates, contact the ABMI Community-Based Monitoring & Engagement team.
+:::
+
+::: {.cbm-footer-block}
+
+### Acknowledgement
+
+This work is made possible through reciprocal relationships with partner communities and stewardship on Indigenous territories across Alberta.
+:::
+
+:::
+:::

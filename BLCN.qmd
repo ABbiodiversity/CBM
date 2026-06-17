@@ -1,0 +1,1182 @@
+---
+title: "Beaver Lake Cree Nation"
+subtitle: "Results from the Oil Sands Monitoring Wildlife Camera Project"
+format:
+  html:
+    grid:
+      margin-width: 200px
+      body-width: 950px
+navbar: right
+theme: cosmo
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+author:
+  - name: "Dylan Landstrome"
+    affiliation: "Beaver Lake Cree Nation"
+  - name: "Chris Swan"
+    affiliation: "Beaver Lake Cree Nation"
+  - name: "Cole Gladue"
+    affiliation: "Beaver Lake Cree Nation"
+  - name: "David Evans"
+    affiliation: "ABMI"
+    email: "david.evans@ualberta.ca"
+  - name: "Robbie Potts"
+    email: "rnpotts@ualberta.ca"
+    affiliation: "ABMI"
+  - name: "Marcus Becker"
+    email: "mabecker@ualberta.ca"
+    affiliation: "ABMI"
+editor: visual
+bibliography: references.bib
+nocite: '@*'
+toc: true
+toc-depth: 3
+toc-expand: true
+toc-location: left
+css: assets/styles.css
+---
+
+<br>
+
+```{r}
+#| warning: false
+#| echo: false
+
+source("Functions/Carousel.R")
+carousel("gallery-carousel", 10000, 
+         yaml.load_file("Images/BLCN/blcn-carousel1.yml"))
+
+```
+
+::: {.callout-note collapse="true" style="background-color: #f4f4f4; padding: 20px;"}
+This report is dynamically generated, meaning its results may evolve with the addition of new data or further analyses. For the most recent updates, refer to the publication date and feel free to reach out to the authors.
+:::
+
+# Project Introduction
+
+```{r}
+#| label: load-packages and authenticate
+#| include: false
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+# Load packages
+library(tidyverse)
+library(leaflet)
+library(leaflet.extras)
+library(sf)
+library(activity)
+library(overlap)
+library(corrplot)
+library(DT)
+library(here)
+library(htmltools)
+library(htmlwidgets)
+library(plotly)
+library(terra)
+library(glue)
+
+# Community acronym
+com_acr <- "BLCN"
+
+# Community full name
+com_full <- "Beaver Lake Cree Nation"
+
+# Google Drive
+g_drive_cbme <- "G:/Shared drives/CBME Community Camera Results/"
+
+# Load data from the community (including pre-processed data)
+load(paste0(g_drive_cbme, com_acr, "/Data/", com_acr, " Data Objects.RData"))
+
+df_density_os <- read_csv(paste0(g_drive_cbme, "Global/OSM BADR Species JEM Results for Comparison Plots.csv")) |>
+  select(-fine_scale) |>
+  bind_rows(dens_blcn)
+
+# Species of interest
+species <- c("White-tailed Deer",
+            "Black Bear",
+            "Moose",
+            "Coyote",
+            "Snowshoe Hare",
+            "Canada Lynx",
+            "Human")
+
+species_colours <- c(
+  "White-tailed Deer"  = "#3A86FF",
+  "Snowshoe Hare"      = "#E63946",
+  "Moose"              = "#06D6A0",
+  "Canada Lynx"        = "#FFBE0B",
+  "Black Bear"         = "#8338EC",
+  "Coyote"             = "#3366CC",
+  "Human"              = "gray50"
+)
+
+```
+
+Beaver Lake Cree Nation (BLCN) began its wildlife camera monitoring program in 2022 to better understand how wildlife is using the Nation’s lands and how development may be affecting animals that are important to community members and treaty rights.
+
+The program started by supporting regional wildlife monitoring led by the Alberta Biodiversity Monitoring Institute (ABMI). Later that year, BLCN launched its own community-led camera program, with cameras placed across the reserve using a random layout to get a clear picture of wildlife abundance and movement.
+
+In 2024, cameras were moved to a culturally important area north of the Cold Lake Air Weapons Range and south of Winefred Lake. These cameras were set up in a way that allows wildlife use in this area to be compared with areas closer to development and with cameras on the reserve. This helps the Nation understand how wildlife changes over time and across different levels of disturbance.
+
+Community members lead camera deployment and monitoring. The program focuses on animals that support hunting, trapping, and other Section 35 rights. The data collected also connects to regional Oil Sands Monitoring (OSM) programs, helping answer shared questions about whether wildlife abundance is changing and how much of that change may be linked to oil sands activities.
+
+This is a long-term program that will continue through 2025–26 and beyond. It supports community capacity, strengthens local knowledge, and helps ensure that BLCN has its own data to support land stewardship and decision-making.
+
+# Camera Refresh and Image Processing
+
+The wildlife cameras have been retrieved or refreshed (given new SD cards and batteries) in the field by BLCN every year since 2023. BLCN staff and members uploaded and tagged all of the camera images on the online platform [WildTrax](www.wildtrax.ca). WildTrax is an online platform developed by the [Alberta Biodiversity Monitoring Institute](www.abmi.ca) for users of environmental sensors such as remote cameras to provide support with processing, organizing , and sharing data. Initial results are presented here in this report.
+
+`r com_acr` have 3 projects available on WildTrax with the images stored and tagged:
+
+-   [**BLCN Cameras August 2023**](https://portal.wildtrax.ca/cam/2060): Contains images from the 16 cameras initially deployed for the monitoring on Beaver Lake Cree Nation lands in November 2022.
+-   [**BLCN July 2024 Cameras**](https://portal.wildtrax.ca/cam/2817): Contains images from 10 cameras that were refreshed from the set on the Beaver Lake Cree Nation lands. Refresh took place in November 2023.
+-   [**BLCN Cameras November 2025 Winefred Lake**](https://portal.wildtrax.ca/cam/4058): This project contains images from 12 cameras deployed south of Winefred Lake for wildlife monitoring in the area.
+
+Note that viewers will need to have a WildTrax account with the appropriate permissions from the community and be logged in to see the these images.
+
+# Project Highlights
+
+This section is a space for the BLCN to share their major takeaways from the project so far. This could be sharing surprises from the images, camera deployment/refresh, potential to add quotes, or create videos and add them in! Highlight specific images, etc.
+
+One idea we came up with was:
+One highlight of the program has been working with youth from the community while out servicing the cameras on the reserve and discussing what wildlife were photographed during the previous year.
+
+# Camera Locations
+
+The following interactive map can be used to explore the locations of the cameras deployed by the Beaver Lake Cree Nation. Camera cluster sites were chosen in a region that not only holds cultural significance but also is a traditional harvesting area for community food sources. Satellite imagery can be switched on and off using the button in the top left of the top.
+
+Click each camera location to see it’s name, the study it belongs to (Winefred Lake cameras vs BLCN land cameras), and when it was deployed and refreshed. You can also click on 'Satellite Imagery' in the top right corner to view aerial imagery on the map.
+
+<br>
+
+```{r}
+#| label: map-camera-locations
+#| include: true
+#| echo: false
+#| results: asis
+#| eval: true
+#| warning: false
+#| message: false
+
+# Camera data ranges
+location_ranges <- df_od |>
+  mutate(project_location = paste0(project, "_", location)) |>
+  group_by(project_location) |>
+  summarise(start_date = min(date), end_date = max(date), .groups = "drop") |>
+  separate(project_location, into = c("project", "location"), sep = "_") 
+
+# Camera locations to map
+locations_for_map <- df_location_reports |>
+  left_join(location_ranges, by = c("location", "project")) |>
+  filter(!is.na(latitude)) |>
+  mutate(study = ifelse(str_detect(project, "Winefred"), "Winefred Lake", "BLCN"))
+
+# Define icons for each study
+icons <- awesomeIcons(
+  icon = "camera",
+  iconColor = "black",
+  library = "ion",
+  markerColor = ifelse(
+    locations_for_map$study == "Winefred Lake", 
+    "darkblue",         
+    "orange"    
+  )
+)
+
+buffer <- 0.075
+
+htmltools::tags$div(
+  style = "display: flex; justify-content: center;",
+  
+  leaflet(data = st_as_sf(locations_for_map, coords = c("longitude", "latitude"), crs = 4326), width = "90%", height = "750px") |>
+  addTiles() |>
+  addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
+  fitBounds(
+    lng1 = min(locations_for_map$longitude) - buffer,
+    lat1 = min(locations_for_map$latitude) - buffer,
+    lng2 = max(locations_for_map$longitude) + buffer,
+    lat2 = max(locations_for_map$latitude) + buffer
+  ) |>
+  addFullscreenControl() |>
+  addResetMapButton() |>
+  addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE)) |>
+  addMiniMap(position = "bottomleft") |>
+  addAwesomeMarkers(
+    icon = icons,
+    group = "Camera Locations",
+    popup = paste(
+      "<b>", "Location: ", "</b>", locations_for_map$location, "<br><br>",
+      "<b>", "Study: ", "</b>", locations_for_map$study, "<br><br>",
+      "<b>", "Deployed:", "</b>", locations_for_map$start_date, "<br><br>",
+      "<b>", "Refreshed:", "</b>", locations_for_map$end_date, "<br><br>"
+    )
+  ) |>
+  addLayersControl(
+    overlayGroups = c("Satellite Imagery", "Camera Locations"),
+    options = layersControlOptions(collapsed = FALSE),
+    position = "topright"
+  ) |>
+    hideGroup("Satellite Imagery")
+)
+  
+```
+
+<br>
+
+# Deployment and Retrieval Dates {#deployment-dates}
+
+@fig-ranges below displays the dates when each camera location was deployed and when the SD cards were retrieved (or the last day of image collection if the camera failed). These dates are marked with a point in the plot.
+
+```{r}
+#| label: fig-ranges
+#| fig-cap: "Camera deployment and SD card retrieval dates."
+#| fig-cap-location: bottom
+#| fig-dpi: 500
+#| out-width: "85%"
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(paste0("Figures/", com_acr, "/Deployment Ranges.png"))
+
+```
+
+# Results
+
+## Number of Images
+
+@fig-nimages-blcn below displays the total number of images collected with the cameras used for monitoring the Beaver Lake Cree Nation land. The most commonly observed species was White-tailed Deer with 7,276 images collected with these cameras. Snowshoe Hare were the second most common species seen with these cameras, with 626 images collected, followed by Moose, Black Bear, and Coyote.
+
+```{r}
+#| label: fig-nimages-blcn
+#| fig-cap: "Number of images captured by tag."
+#| fig-cap-location: bottom
+#| fig-dpi: 300
+#| out-width: "85%"
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(paste0("Figures/", com_acr, "/Number of Images Beaver Lake Cree Nation.png"))
+
+```
+
+<br>
+
+@fig-nimages-winefred below displays the total number of images collected with the cameras used for monitoring the area south of Winefred Lake. Again, The most commonly observed species was White-tailed Deer (1,402 images), followed by Snowshoe Hare (1,035). Black Bear, Coyote, and Canada Lynx were also captured, but Moose were not.
+
+```{r}
+#| label: fig-nimages-winefred
+#| fig-cap: "Number of images captured by tag."
+#| fig-cap-location: bottom
+#| fig-dpi: 300
+#| out-width: "85%"
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+
+knitr::include_graphics(paste0("Figures/", com_acr, "/Number of Images Winefred Lake Cameras.png"))
+  
+
+```
+
+<br>
+
+For a complete list of all the species, you can go to the projects on WildTrax and click on the ‘Species’ tab of the project. Since no other species had more than 20 images collected over the course of the project and across all cameras, we will focus our analysis on the 6 species shown here (White-tailed deer, Black Bear, Moose, Coyote, Snowshoe Hare, and Canada Lynx).
+
+## Independent Detections Over Time
+
+The number of images of each species tells us part of the picture but just because there may be more images of one species doesn’t necessarily mean there are more of them in the area, they may have just spent more time in front of the camera. With camera data, it’s important to track the number of “independent” detections for each species. You can think of an independent detection as an image or collection of images for a visit from an animal or group of animals.
+
+In the figures below we present the number of independent detections for each of the 5 focal species detected on cameras deployed in the BLCN land. Canada Lynx were omitted due to a low number of detections on these cameras. We use a 30 minute time interval to separate detection events; that is, images captured within 30 minutes of each other count toward a single detection and images with a gap of greater than 30 minutes between them count as multiple independent detections. Images that are captured of the same species over less than 30 minutes are assumed to be of the same individual, or group of individuals.
+
+You can explore the figures for each species using the tabs below. The x-axis (bottom) represents the camera deployment timeline, from December 2022 to August 2024. The y-axis (left) shows the number of detections captured, from all of the cameras from the project. Note that the y-axis (left) for each species may change depending on the number of detections captured. 
+
+One thing to keep in mind when evaluating the number of detections over time is that the effort (in terms of number of cameras operating) was not constant. See the [Deployment Retrieval Dates](#deployment-dates) section for information on the number of cameras in operation at any given time.
+
+```{r}
+#| label: ind-detections
+#| echo: false
+#| results: asis
+#| include: true
+#| eval: true
+#| warning: false
+#| message: false
+
+species <- c("White-tailed Deer", "Black Bear",
+             "Moose", "Coyote", "Snowshoe Hare")
+
+file_names <- paste0("Independent Detections ", species, ".png")
+
+figure_letters <- letters[1:length(species)]
+
+cat("::: panel-tabset\n\n")
+
+for (i in seq_along(species)) {
+  title <- species[i]
+  letter <- figure_letters[i]
+  img_path <- here::here("Figures/BLCN", file_names[i])
+  rel_path <- fs::path_rel(img_path, start = getwd())
+
+  cat("### ", title, " {.unnumbered}\n\n", sep = "")
+  
+  # Output raw HTML as a single string
+  html <- glue::glue(
+    '<div style="text-align: center;">
+       <img src="{rel_path}" style="width:80%;">
+       <figcaption style="text-align: center; font-size: 0.95em; margin-top: 0.5em;">
+         <strong>Figure 6{letter}.</strong> Independent detections of <strong>{title}</strong> across the study time period.
+       </figcaption>
+     </div>\n\n'
+  )
+  
+  cat(html)
+  
+}
+
+cat(":::\n")
+
+```
+
+<br>
+
+-   **White-tailed deer** detections were primarily recorded during the spring and summer months, particularly in the first year of monitoring when more cameras were on the landscape.
+-   Due to hibernation, **Black Bear** were not detected during the winter.
+-   **Moose** detections were spread evenly throughout the study time period, for the most part.
+-   **Coyote** were also most frequently detected earlier on in the study period, particularly around February-April 2023.
+-   **Snowshoe Hare** detections peaked in January of 2023 and were rarely seen after that. This may be due to the timing of the Snowshoe Hare cycle in Alberta, a natural phenomenon. 
+
+<br>
+
+The table below summarises the number of images collected for each species and the number of independent detections.
+
+<br>
+
+```{r}
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| results: asis
+
+ndetect <- df_ind_detect |>
+  group_by(species_common_name) |>
+  tally(name = "detect") |>
+  filter(species_common_name != "Unidentified")
+
+joined_table <- nimages |>
+  filter(study == "Total") |>
+  select(-study) |>
+  left_join(ndetect, by = "species_common_name") |>
+  filter(!is.na(detect))
+  
+  htmltools::div(
+  style = "display: flex; flex-direction: column; align-items: center;",
+
+  htmltools::tagList(
+    DT::datatable(
+      joined_table,
+      options = list(
+        searching = TRUE,
+        paging = TRUE,
+        pageLength = 10,
+        autoWidth = TRUE
+      ),
+      width = "70%",
+      colnames = c("Species", "Number of Images", "Number of Detections")
+    ),
+
+    htmltools::tags$figcaption(
+      style = "text-align: center; font-size: 1.1em; margin-top: 0.5em;",
+      strong("Table 2."), " Number of images captured and independent detections by species in the BLCN camera monitoring study."
+    )
+  )
+)
+  
+
+```
+
+### Temporal Activity Patterns
+
+Since camera traps take photos continuously 24 hours a day they can tell us when different species are active. These analyses can give insight into competition, predation, and coexistence.
+
+In this section we present the temporal (diel) activity patterns for each of the 6 focal species from the BLCN cameras. The x-axis (bottom) of each of the following plots represents the 24-hr daily cycle, and the line represents the relative activity level detected by the cameras. This data is pooled across all the cameras deployed by BLCN, including the Winefred Lake cameras.
+
+```{r}
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| results: asis
+
+# Set folder containing the plots
+file_names <- paste0("Activity ", species, ".png")
+figure_letters <- letters[1:length(species)]
+
+cat("::: panel-tabset\n\n")
+
+for (i in seq_along(species)) {
+  title <- species[i]
+  letter <- figure_letters[i]
+  img_path <- here::here("Figures/BLCN", file_names[i])
+  rel_path <- fs::path_rel(img_path, start = getwd())
+  
+  cat("### ", title, " {.unnumbered}\n\n", sep = "")
+    
+    # Render the image and caption
+  html <- glue::glue(
+    '<div style="text-align: center;">
+       <img src="{rel_path}" style="width:80%;">
+       <figcaption style="text-align: center; font-size: 0.95em; margin-top: 0.5em;">
+         <strong>Figure 7{letter}.</strong> Daily activity pattern of <strong>{title}</strong> based on camera trap detections.
+       </figcaption>
+     </div>\n\n'
+  )
+  
+  cat(html)
+    
+  }
+
+cat(":::\n")
+
+
+```
+
+<br>
+
+-   **White-tailed deer** displayed several activity peaks throughout the day, the most prominent of which were during twilight hours, specifically at dawn (6:00 to 9:00) and dusk (18:00). This pattern is known as *crepuscular*.
+-   **Black Bear** showed a spike in activity near midday (12:00), with some smaller peaks later in the day.
+-   Similar to White-tailed Deer, **Moose** demonstrated a crepuscular activity pattern, with peaks in the dawn and dusk. 
+-   **Coyote** were consistently active throughout the day, rising a little bit after 12:00. 
+-   **Snowshoe Hare** activity increased throughout the evening beginning at 18:00, carrying throughout the night until dawn. They were not active during the day. 
+-   **Canada Lynx** activity levels were highest in the dusk period beginning around 18:00.
+
+### Species Overlap
+
+Camera trap data are being increasingly used to model multiple species communities, and we can use this data to explore the co-occurrence patterns of the species in the community.
+
+Blue boxes in @fig-cooccurrences below show species that are usually seen by the same cameras at the same location. For example, Moose and White-tailed Deer often share the same space because they browse on similar vegetation and use the same habitats.
+
+Red (or white) boxes show species that tend to stay apart and weren't usually seen at the same camera. For example, Moose and Canada Lynx tend not to share the same habitats (Moose prefer upland habitat with abundant leafy vegetation to browse on, whereas Canada Lynx are more often found in lowland habitats looking for prey such as Snowshoe Hare). 
+
+```{r}
+#| label: fig-cooccurrences
+#| include: true
+#| echo: false
+#| eval: true
+#| warning: false
+#| message: false
+#| fig-cap: "Figure 5. Co-Occurrence values for the 7 focal species."
+
+par(mfrow=c(1,1))
+
+corrplot(M, method = "color",
+         type = "upper",
+         order = "hclust",
+         tl.col = "black", tl.srt = 45,
+         diag = FALSE)
+
+```
+
+### Species Density
+
+We can use the number of images and counts of independent detections to estimate the density of each species at each camera. Density is the number of animals per unit area, which we express below as the number of animals per square kilometer (km<sup>2</sup>).
+
+To estimate the density of each wildlife species at each camera, we used the Time in Front of Camera (TIFC) approach (@becker2022applying). This method has previously been used to estimate densities of unmarked populations of both White-tailed Deer and Moose in the boreal region of Alberta (@laurent2021evaluating, @dickie2024habitat). Similar to quadrat sampling, this approach involves (for each camera) multiplying the number of animals observed by the total time they spend in front of the camera, which is then divided by the product of the area sampled by the camera and the total time the camera was operating. This calculation yields an estimate of animals per unit area (i.e., 'density').
+
+The following map displays the spatial distribution in densities of the 6 focal species between the cameras of the `r com_acr` camera wildlife monitoring projects. Note that cameras with no detections of a particular species (i.e., a density of '0') are represented with a black circle. Smaller circles represent small densities of a species at that camera. Bigger circles indicate that the density is higher at that camera.
+
+<br>
+
+::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
+You can hover over each camera location to see the calculated density of each species at that deployment, as well as use the 'Satellite Imagery' checkbox to turn on satellite imagery.
+:::
+
+```{r}
+#| label: map-species-density
+#| include: true
+#| echo: false
+#| results: asis
+#| eval: true
+#| warning: false
+#| message: false
+
+species <- c("Moose", "Canada Lynx", "White-tailed Deer",
+             "Black Bear", "Coyote", "Snowshoe Hare")
+
+densities_to_map <- locations_for_map |>
+  left_join(df_density_sum) |>
+  select(-project) |>
+  mutate(density_km2 = ifelse(density_km2 > 3, 3, density_km2)) |>
+  mutate(log_density = log10(density_km2 + 1))
+
+buffer <- 0.03
+
+# Create base map
+leaf_map <- leaflet(width = "95%", height = "550px") |>
+  addProviderTiles("Esri.WorldGrayCanvas", group = "Gray Canvas") |>
+  addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery") |>
+  fitBounds(
+    lng1 = min(densities_to_map$longitude) - buffer,
+    lat1 = min(densities_to_map$latitude) - buffer,
+    lng2 = max(densities_to_map$longitude) + buffer,
+    lat2 = max(densities_to_map$latitude) + buffer
+  ) |>
+  addFullscreenControl() |>
+  addResetMapButton()
+
+max_log <- max(densities_to_map$log_density, na.rm = TRUE)
+
+# Loop over species and add circle markers for each base group
+for (sp in species) {
+  
+  data <- densities_to_map |>
+  filter(species_common_name == sp) |>
+  mutate(
+    scaled_radius = pmax(log_density / max_log * 15, 4),
+    fill_color = ifelse(density_km2 == 0, "#222222", species_colours[[sp]]),
+    label_text = ifelse(
+      density_km2 == 0,
+      paste0(
+        "<table>",
+        "<tr><td>Camera location:</td><td align='right'><b>", location, "</b></td></tr>",
+        "<tr><td colspan='2'><i>No detections at this location</i></td></tr>",
+        "</table>"
+      ),
+      paste0(
+        "<table>",
+        "<tr><td>Camera location:</td><td align='right'><b>", location, "</b></td></tr>",
+        "<tr><td>", species_common_name, " Density:</td><td align='right'><b>",
+        round(density_km2, 2), " per km²</b></td></tr>",
+        "</table>"
+      )
+    )
+  )
+  
+  leaf_map <- leaf_map |>
+    addCircleMarkers(
+      data = data,
+      lng = ~longitude,
+      lat = ~latitude,
+      radius = ~scaled_radius,
+      fillColor = ~fill_color,
+      fillOpacity = 0.85,
+      stroke = TRUE,
+      color = "#FFFFFF",
+      weight = 1,
+      group = sp,
+      label = ~ lapply(label_text, HTML),
+      labelOptions = labelOptions(
+        html = TRUE,
+        direction = "top",
+        textsize = "14px",
+        style = list(
+          "padding" = "6px"
+        )
+      )
+    )
+}
+
+leaf_map <- leaf_map |>
+  addLayersControl(
+    baseGroups = species,
+    overlayGroups = "Satellite Imagery",
+    options = layersControlOptions(collapsed = FALSE),
+    position = "topright"
+  ) |>
+  hideGroup("Satellite Imagery")
+
+tags$div(
+  style = "display: flex; justify-content: center;",
+  leaf_map)
+
+```
+
+<br>
+
+### Comparison to Regional Oil Sands Monitoring
+
+This section shows the results from the BLCN camera deployments evaluating the impact of a specific oil sands stressors on wildlife within the Winefred Lake study area: seismic lines. The effect of these stressors on species’ density is evaluated by comparing values to a reference (low human disturbance) area.
+
+The following plots show the density of each species at each cluster of cameras. Each point represents the average density value among the cameras of the cluster. For instance, the 3 cameras that belong to the ‘BLCN E’ cluster (which is a reference cluster) had white-tailed deer density values of 1.09, 0.02, and 0.3 animals per km2, for an average density of 0.47. This is represented by the point in the Reference column of Figure 6a below. BLCN deployed 1 reference cluster and 2 clusters of cameras in the seismic line treatment. The tabs can be used to go through each individual species results.
+
+We can also compare the results from the 3 camera clusters deployed by BLCN to those deployed as part of the broader regional OSM monitoring done by the ABMI. The ABMI deploys clusters of cameras (called ‘Joint Environmental Monitoring Sites’, or JEMS) in a similar fashion to BLCN, targeting the physical footprint and adjacent areas of oil sands industry disturbances @Bayne2021OSMFramework). 
+
+The following plots (Figures 7a-7g) show the average density of each species found at seismic lines compared to the reference areas. The plots also show the range of values obtained through the broader regional monitoring program; the average density value for each stressor treatment is represented by a horizontal dark grey line on the plots. When comparing `r com_acr` values to these averages, it is important to note that these are pooled averages from sites surveyed across the entire Oil Sands Region, and represent a variety of geographic characteristics.
+
+::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
+Click on each **Data Source** (e.g., 'OSM Regional Monitoring') within each of the plot legends to hide or display the data associated with each source.
+:::
+
+```{r}
+#| label: set-up
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+treatments <- c("Reference", "Linear Features")
+
+data <- df_density_os |>
+  filter(species_common_name %in% species) |>
+  filter(treatment %in% treatments) |>
+  mutate(project = factor(
+    project, levels = c("OSM Regional Monitoring", "BLCN Winefred Lake Monitoring")),
+    treatment = factor(treatment),
+    xnum = as.numeric(treatment)) |>
+  group_by(species_common_name) |>
+  mutate(rank = if_else(
+    project == "OSM Regional Monitoring",
+    dense_rank(desc(density_km2)),
+    NA_integer_  # Don't rank BLCN, set to NA
+  )) |>
+  ungroup() |>
+  filter(is.na(rank) | rank > 3)
+
+# Average stressor treatment values
+avg_values <- data |>
+  filter(!str_detect(project, "BLCN")) |>
+  group_by(species_common_name, treatment) |>
+  summarise(avg_density_km2 = mean(density_km2)) |>
+  ungroup() |>
+  mutate(treatment = factor(treatment),
+         xnum = as.numeric(treatment),
+         project = "OSM Regional Monitoring")
+  
+figure_letters <- letters[1:length(species)]
+
+plot_list <- list()
+
+for (sp in seq_along(species)) {
+  
+  title <- species[sp]
+  letter <- figure_letters[sp]
+  
+  d <- data[data$species_common_name == title, ]
+  d_avg <- avg_values[avg_values$species_common_name == title, ]
+  
+p <- ggplot(
+  d,
+  aes(
+    x = xnum,
+    y = density_km2,
+    color = project,
+    shape = project,
+    size = project,
+    alpha = project,
+    text = paste0(
+      "Location: ", site, "<br>",
+      "Treatment: ", as.character(treatment), "<br>",
+      "Density: ", round(density_km2, 2)
+    )
+  )
+) +
+  geom_segment(
+    data = d_avg,
+    aes(
+      x = xnum - 0.1, xend = xnum + 0.1,
+      y = avg_density_km2, yend = avg_density_km2, color = project
+    ),
+    #color = "grey70",
+    inherit.aes = FALSE,
+    linewidth = 1.75,
+    lineend = "butt",
+    show.legend = FALSE
+  ) +
+  geom_point(alpha = 0.7) +
+  scale_shape_manual(values = c(
+    "BLCN Winefred Lake Monitoring" = 16,
+    "OSM Regional Monitoring" = 1
+  )) +
+  scale_size_manual(values = c(
+    "BLCN Winefred Lake Monitoring" = 5.5,
+    "OSM Regional Monitoring" = 3
+  )) +
+  scale_alpha_manual(values = c(
+  "BLCN Winefred Lake Monitoring" = 1,
+  "OSM Regional Monitoring" = 0.7
+  )) + 
+  scale_x_continuous(
+    breaks = sort(unique(d$xnum)),
+    labels = levels(d$treatment)
+  ) +
+  scale_color_manual(
+    values = c(
+      "BLCN Winefred Lake Monitoring" = species_colours[[title]],
+      "OSM Regional Monitoring" = "grey70"
+    ),
+    name = "Data Source: "
+  ) +
+  scale_y_sqrt() +
+  labs(x = "", y = "Density (Animals per km\u00B2)") +
+  theme_minimal() +
+  theme(
+    axis.text = element_text(size = 13),
+    axis.title.y = element_text(size = 14),
+    legend.text = element_text(size = 12),
+    legend.title = element_text(size = 14)
+  ) +
+  guides(shape = "none", size = "none", alpha = "none")
+  
+  plot_list[[title]] <- p
+  
+}
+
+```
+
+::: panel-tabset
+#### White-tailed Deer {.unnumbered}
+
+```{r}
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "White-tailed Deer"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+
+# Hide OSM series by default
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 7{letter}.</strong> {sp} density from BLCN (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
+  htmltools::div(
+    style = "display:inline-block; width:80%; height:600px;",
+    p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
+  )
+)
+  
+```
+
+#### Black Bear {.unnumbered}
+
+```{r}
+#| label: bb-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Black Bear"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+
+# Hide OSM series by default
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 6{letter}.</strong> {sp} density from BLCN (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
+  htmltools::div(
+    style = "display:inline-block; width:80%; height:600px;",
+    p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
+  )
+)
+  
+```
+
+#### Moose {.unnumbered}
+
+```{r}
+#| label: moose-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Moose"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+
+# Hide OSM series by default
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 7{letter}.</strong> {sp} density from BLCN (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
+  htmltools::div(
+    style = "display:inline-block; width:80%; height:600px;",
+    p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
+  )
+)
+  
+```
+
+#### Snowshoe Hare {.unnumbered}
+
+```{r}
+#| label: hare-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Snowshoe Hare"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+
+# Hide OSM series by default
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 7{letter}.</strong> {sp} density from BLCN (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
+  htmltools::div(
+    style = "display:inline-block; width:80%; height:600px;",
+    p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
+  )
+)
+  
+```
+
+#### Canada Lynx {.unnumbered}
+
+```{r}
+#| label: lynx-plotly
+#| echo: false
+#| include: true
+#| eval: true
+#| message: false
+#| warning: false
+
+sp <- "Canada Lynx"
+pos <- match(sp, species)
+letter <- figure_letters[pos]
+
+p <- plot_list[[sp]]
+
+p_plotly <- ggplotly(p, tooltip = "text")
+
+# Hide OSM series by default
+for (i in seq_along(p_plotly$x$data)) {
+  if (p_plotly$x$data[[i]]$name == "OSM Regional Monitoring") {
+    p_plotly$x$data[[i]]$visible <- "legendonly"
+  }
+}
+
+p_plotly <- p_plotly |>
+  layout(
+    yaxis = list(title = list(standoff = 30,
+                              text = "Density (Animals per km<sup>2</sup>)")),
+    legend = list(orientation = "h", x = 0.5, xanchor = "center", y = 1.17),
+    height = 600
+  ) |>
+  config(
+    modeBarButtonsToRemove = c(
+      "zoom2d","pan2d","select2d","lasso2d",
+      "zoomIn2d","zoomOut2d","resetScale2d",
+      "hoverClosestCartesian","hoverCompareCartesian",
+      "toggleSpikelines","toImage","autoScale2d"
+    ),
+    displaylogo = FALSE,
+    displayModeBar = TRUE
+  )
+
+cap_text <- htmltools::HTML(
+  glue("<strong>Figure 7{letter}.</strong> {sp} density from BLCN (colored) with OSM regional context (grey; hidden by default). Average OSM regional monitoring value for each treatment represented by the grey horizontal lines."
+))
+
+htmltools::tags$figure(
+  class = "unnumbered",
+  style = "text-align:center;",
+  htmltools::div(
+    style = "display:inline-block; width:80%; height:600px;",
+    p_plotly
+  ),
+  htmltools::tags$figcaption(
+    style = "text-align:center; font-size:0.95em; margin-top:0.5em;",
+    cap_text
+  )
+)
+  
+```
+:::
+
+-   Based on OSM Regional Monitoring, average **White-tailed deer** density is slightly higher in reference conditions compared to linear features. The BLCN camera clusters in the linear features treatment had one very low density value and one slightly above average. The reference cluster collected by BLCN was below the regional average for reference conditions.  
+
+-   **Black Bear** densities, based on regional monitoring, were slightly less than 1 individual per km^2 in both the linear features and reference conditions. However, BLCN cameras captured significantly less black bears in both treatments. 
+
+-   Regionally, **Moose** density is similar in both reference conditions and around linear features. However, BLCN cameras failed to capture any moose in either reference or the linear features clusters. Further data collection is needed to confirm whether moose density in these localized areas is significantly lower than the regional average.
+
+-   **Snowshoe Hare** densities are similar in both reference and around linear features, based on regional data. However, BLCN cameras captured significantly more hares across all 3 clusters. 
+
+-   **Canada Lynx** had lower densities in the reference condition, according to regional data. The two clusters collected by BLCN in the linear features treatment had very different values, with the reference value falling in the middle (still ahead of regional averages). 
+
+# Where We Expect to Find Species
+
+The ABMI compiles remote camera data collected in Alberta’s boreal region (including the Oil Sands Region) and uses it to develop habitat models for many species. These models incorporate species’ responses to land cover (e.g., vegetation and forest types), human disturbance, and climate variables (seasonal weather patterns).
+
+The maps below show where the models predict each species is most likely to be found in the `r com_acr` area of interest. The area is divided into 1 km<sup>2</sup> pixels, and for each pixel, the model estimates the probability of each species being there based on the habitat and disturbance present in that pixel.
+
+<br>
+
+::: {.callout-tip collapse="false" style="background-color: #f4f4f4; padding: 5px;"}
+Use the buttons on the top right of the map to toggle through each species' predictions. You can also turn on **Satellite Imagery** and use the **NONE (Blank)** button to view the imagery underneath the predictions, as well as use the **Camera Locations** button to see where `r com_acr` camera locations are.
+:::
+
+```{r}
+#| label: map-species-predictions
+#| include: true
+#| echo: false
+#| results: asis
+#| eval: true
+#| warning: false
+#| message: false
+
+# Load AOI
+aoi <- st_read(paste0(g_drive_cbme, "BLCN/AOI/BLCN_Report_AOI.shp"), quiet = TRUE) |>
+  st_transform(4326)
+
+# Load rasters for each species
+raster_list <- species |>
+  set_names() |>
+  map(~ terra::rast(paste0(g_drive_cbme, "BLCN/Predictions/", .x, " BLCN.tif")))
+
+raster_list_clamped <- map(raster_list, ~ terra::clamp(.x, lower = 0, upper = 0.70, values = TRUE))
+
+domain_raw <- c(0, 0.701)
+
+pal <- colorNumeric(
+  palette = colorRampPalette(c("navy", "skyblue", "gold", "red"))(100),
+  domain = domain_raw,
+  na.color = "transparent"
+)
+
+#buffer <- 0.1
+
+# Start building the leaflet map
+map <- leaflet(width = "90%", height = "750px") |>
+  addMapPane(name = "Basemap", zIndex = 410) |>
+  addMapPane(name = "Satellite Imagery", zIndex = 420) |>
+  addMapPane(name = "Species Rasters", zIndex = 430) |>
+  addMapPane(name = "AOI Boundary", zIndex = 440) |>
+  #addMapPane(name = "Camera Locations", zIndex = 450) |>
+  addTiles(group = "Basemap", options = tileOptions(opacity = 1, pane = "Basemap")) |>
+  addProviderTiles("Esri.WorldImagery", group = "Satellite Imagery", options = leafletOptions(pane = "Satellite Imagery")) |>
+  addFullscreenControl() |>
+  addResetMapButton() |>
+  addScaleBar(position = "bottomright", options = scaleBarOptions(imperial = FALSE)) |>
+  addMiniMap(position = "bottomright") |>
+  addPolylines(data = aoi, color = "#0a0909", weight = 2, smoothFactor = 0.2, opacity = 1.0, fill = FALSE, options = leafletOptions(pane = "AOI Boundary"))
+
+for (sp in species) {
+  map <- map |>
+    addRasterImage(
+      raster_list_clamped[[sp]],
+      colors = pal,
+      opacity = 0.8,
+      group = sp,
+      options = leafletOptions(pane = "Species Rasters")
+    ) 
+}
+
+map <- map |>
+  addTiles(group = "NONE (Blank)", options = tileOptions(opacity = 0)) |>
+  addAwesomeMarkers(data = st_as_sf(locations_for_map, coords = c("longitude", "latitude"), crs = 4326),
+                    icon = makeAwesomeIcon(icon = "camera", iconColor = "black", library = "ion", markerColor = "white"),
+      group = "Camera Locations",
+      popup = paste(
+        "<b>", "Location: ", "</b>", locations_for_map$location, "<br><br>",
+        "<b>", "Study:", "</b>", locations_for_map$study, "<br><br>",
+        "<b>", "Deployed:", "</b>", locations_for_map$start_date, "<br><br>",
+        "<b>", "Refreshed:", "</b>", locations_for_map$end_date, "<br><br>")) |>
+  addLegend(
+    pal = pal,
+    values = domain_raw,
+    opacity = 1,
+    title = "Probability of<br>Species Presence:",
+    position = "bottomright",
+    labFormat = labelFormat(
+      transform = function(x) x * 100,
+      digits = 0,
+      suffix = "%"
+    )
+  ) |>
+  addLayersControl(
+    overlayGroups = c("Satellite Imagery",
+                      "Camera Locations"),
+    baseGroups = c(species, "NONE (Blank)"),
+    options = layersControlOptions(collapsed = FALSE)
+  ) |>
+  hideGroup(c("Satellite Imagery", "Camera Locations"))
+
+# Print map
+
+htmltools::tags$div(
+  style = "display: flex; justify-content: center;",
+  map)
+
+```
+
+<br>
+
+-   **Moose** are dispersed relatively evenly across the BLCN area of interest, with less predicted presence towards the northeast. This correlates well with the lack of moose detected by BLCN cameras in the Winefred Lake area.
+
+-   **Canada Lynx** are not very abundant throughout the region, with a slight increase in presence expected in more northern areas. Again, this correlated well with BLCN findings of more lynx around the Winefred cameras and almost none around the BLCN lands. 
+
+-   **White-tailed Deer** were the opposite, which are most abundant to the south and west where human disturbance is highest and climate is less harsh. 
+
+-   **Black Bear** are expected to be abundant through the region, except in the southern most areas that have the highest rates of agricultural activity. 
+
+-   Like deer, **Coyote** thrive in the southwest areas of the region that are most influenced by human activity.
+
+-   **Snowshoe Hare** are most prevalent in the northern parts of the area of interest. 
+
+# Recommendations and Next Steps
+
+# References
+
