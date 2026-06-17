@@ -52,3 +52,6 @@ rsconnect/
 #Figures/
 
 /.quarto/
+
+wt_credentials.R
+.positai
