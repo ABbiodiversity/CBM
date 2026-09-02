@@ -57,4 +57,5 @@ rsconnect/
 wt_credentials.R
 
 **/*.quarto_ipynb
-.positai
+.posit/assistant
+nul

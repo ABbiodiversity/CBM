@@ -297,12 +297,12 @@ cat(":::\n")
 
 ```
 
--   **White-tailed deer** were primarily detected in the summer months of June and July. This coincides with when fawns are typically born, creating a "birth pulse" in the population.
--   Because they hibernate over the winter, detection of **Black Bears** began in May, and peaked in late June and early July.
--   Similar to deer, **Moose** detections peaked in mid-summer, particularly in July.
--   **Coyote** were detected year-round, with a notable peak in the late spring and early summer months of May and June.
--   Detections of **Snowshoe Hare** were consistent year-round with the exception of mid-summer where July and August recorded very few or no detections. This is possibly due to cameras better able to pick up the thermal signature of the species in winter.
--   **Feral Horses** were sporadically detected throughout the camera deployment period.
+- **White-tailed deer** were primarily detected in the summer months of June and July. This coincides with when fawns are typically born, creating a "birth pulse" in the population.
+- Because they hibernate over the winter, detection of **Black Bears** began in May, and peaked in late June and early July.
+- Similar to deer, **Moose** detections peaked in mid-summer, particularly in July.
+- **Coyote** were detected year-round, with a notable peak in the late spring and early summer months of May and June.
+- Detections of **Snowshoe Hare** were consistent year-round with the exception of mid-summer where July and August recorded very few or no detections. This is possibly due to cameras better able to pick up the thermal signature of the species in winter.
+- **Feral Horses** were sporadically detected throughout the camera deployment period.
 
 <br>
 
@@ -397,12 +397,12 @@ cat(":::\n")
 
 ```
 
--   **White-tailed deer** are primarily active during twilight hours, specifically at dawn (6:00 to 9:00) and dusk (19:00 to 21:00). This pattern is known as *crepuscular*.
--   **Black Bear** showed the opposite pattern, with more of their activity being recorded during the day (and specifically before 12:00).
--   Based on the cameras in the `r com_acr` project, **Moose** were primarily active during the night time (3:00 to 6:00), with smaller peaks occurring throughout the day and into the evening.
--   **Coyote** were exclusively active in the early parts of the night, around 24:00.
--   **Snowshoe Hare** activity increased throughout the evening beginning at 18:00, carrying throughout the night until dawn. They were not active during the day.
--   Due to the fewer number of images captured, it is difficult to assess a pattern for **Feral Horses**.
+- **White-tailed deer** are primarily active during twilight hours, specifically at dawn (6:00 to 9:00) and dusk (19:00 to 21:00). This pattern is known as *crepuscular*.
+- **Black Bear** showed the opposite pattern, with more of their activity being recorded during the day (and specifically before 12:00).
+- Based on the cameras in the `r com_acr` project, **Moose** were primarily active during the night time (3:00 to 6:00), with smaller peaks occurring throughout the day and into the evening.
+- **Coyote** were exclusively active in the early parts of the night, around 24:00.
+- **Snowshoe Hare** activity increased throughout the evening beginning at 18:00, carrying throughout the night until dawn. They were not active during the day.
+- Due to the fewer number of images captured, it is difficult to assess a pattern for **Feral Horses**.
 
 # Species Overlap
 
@@ -608,11 +608,11 @@ cat(":::\n")
 
 ```
 
--   **White-tailed deer** were more abundant in the Rubellite West grid, with a density over double that of the Goose Lake grid (6.5 to 3 animals per km<sup>2</sup>).
--   **Black Bear** had similar densities between the two grids, however Goose Lake was slightly higher.
--   **Moose** were much more abundant in the Rubellite West grid (\~4x more). This area had a significant amount of high quality habitat, capable of supporting many animals.
--   Like black bear, **Coyote** and **Snowshoe Hare** were more abundant in the Goose Lake grid.
--   **Feral horses** were only found in the Goose Lake grid.
+- **White-tailed deer** were more abundant in the Rubellite West grid, with a density over double that of the Goose Lake grid (6.5 to 3 animals per km<sup>2</sup>).
+- **Black Bear** had similar densities between the two grids, however Goose Lake was slightly higher.
+- **Moose** were much more abundant in the Rubellite West grid (\~4x more). This area had a significant amount of high quality habitat, capable of supporting many animals.
+- Like black bear, **Coyote** and **Snowshoe Hare** were more abundant in the Goose Lake grid.
+- **Feral horses** were only found in the Goose Lake grid.
 
 <br>
 
@@ -730,11 +730,11 @@ htmltools::tags$div(
 
 <br>
 
--   **White-tailed Deer** have a high probability of occurrence throughout the `r com_acr` as well as in the surrounding areas. This is especially the case in the southern regions, where a slightly warmer climate and greater human disturbance (especially agriculture) favour the species.
--   **Black Bears** are also predicted to occur throughout the territory, with a higher probability of occurrence through the forested areas. Agricultural regions to both the south and the north limit the species' predicted probability of occurrence.
--   **Moose** have a similar pattern, with higher probabilities of occurrences in the forested and less disturbed areas.
--   **Coyotes** show the opposite pattern, favouring the agricultural areas around the edges of the BLMS territory.
--   **Snowshoe Hare** are predicted to occur in the less disturbed forested areas.
+- **White-tailed Deer** have a high probability of occurrence throughout the `r com_acr` as well as in the surrounding areas. This is especially the case in the southern regions, where a slightly warmer climate and greater human disturbance (especially agriculture) favour the species.
+- **Black Bears** are also predicted to occur throughout the territory, with a higher probability of occurrence through the forested areas. Agricultural regions to both the south and the north limit the species' predicted probability of occurrence.
+- **Moose** have a similar pattern, with higher probabilities of occurrences in the forested and less disturbed areas.
+- **Coyotes** show the opposite pattern, favouring the agricultural areas around the edges of the BLMS territory.
+- **Snowshoe Hare** are predicted to occur in the less disturbed forested areas.
 
 # Recommendations and Next Steps
 

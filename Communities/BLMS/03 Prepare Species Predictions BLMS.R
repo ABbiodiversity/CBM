@@ -15,7 +15,7 @@ library(tidyverse)
 # Set path to Shared Google Drive (G Drive) - CBME Community Camera Results
 g_drive_cbme <- "G:/Shared drives/CBME Community Camera Results/"
 # S (Science Centre) drive
-s_drive <- "S:/samba/abmisc/AB_data_v2023"
+s_drive <- "S:/sc/AB_data_v2023"
 # ABMI Mammals Shared Google Drive
 g_drive_abmi <- "G:/Shared drives/ABMI Mammals"
 

@@ -36,10 +36,9 @@ species_colours <- c(
 # Locations summary
 
 location_ranges <- df_od |>
-  group_by(project_location) |>
+  group_by(location) |>
   summarize(start_date = min(date), end_date = max(date), .groups = "drop") |>
-  mutate(project_location = forcats::fct_reorder(project_location, start_date)) |>
-  separate(project_location, into = c("project", "location"), sep = "_")
+  mutate(location = forcats::fct_reorder(location, start_date))
 
 ggplot(location_ranges, aes(y = location)) +
   geom_segment(aes(x = start_date, xend = end_date, yend = location),
@@ -54,10 +53,11 @@ ggplot(location_ranges, aes(y = location)) +
     panel.grid.major.y = element_blank()
   )
 
-# Not going to save this plot, not very interesting for this community. But will keep the code here.
+# Not going to save this plot, not very interesting for this community, since all deployments
+# were virtually identical.
+# But will keep the code here.
 
 #-----------------------------------------------------------------------------------------------------------------------
-
 
 # Number of Images
 
@@ -232,7 +232,7 @@ for (sp in species) {
 
 # Density at Oilsands Stressors
 
-dens <- df_density_sum |>
+dens <- df_density_long |>
   # Put into treatments
   mutate(treatment = case_when(
     str_detect(location, "MNA19-1-") ~ "Roads",
