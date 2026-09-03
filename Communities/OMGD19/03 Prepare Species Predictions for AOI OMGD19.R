@@ -1,10 +1,10 @@
-# ----------------------------------------------------------------------------------------------------------------------
+# ----------------------------------------------------------
 
 # Title:   Prepare ABMI species predictions for OMGD19 AOI
 # Date:    August 2025
 # Authors: Marcus Becker
 
-#-----------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------
 
 # Attach packages
 library(sf)
@@ -15,7 +15,7 @@ library(tidyverse)
 # Set path to Shared Google Drive (G Drive) - CBME Community Camera Results
 g_drive_cbme <- "G:/Shared drives/CBME Community Camera Results/"
 # S (Science Centre) drive
-s_drive <- "S:/samba/abmisc/AB_data_v2023"
+s_drive <- "S:/sc/AB_data_v2023"
 # ABMI Mammals Shared Google Drive
 g_drive_abmi <- "G:/Shared drives/ABMI Mammals"
 
@@ -23,13 +23,14 @@ g_drive_abmi <- "G:/Shared drives/ABMI Mammals"
 species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
              "Canada Lynx", "Woodland Caribou", "Gray Wolf")
 
-# Load kgrid
+# Load kgrid - Full province 1km2 spatial grid
 load(file.path(s_drive, "kgrid", "kgrid_2.2.Rdata"))
 
 # Load species habitat modeling results
-load(file.path(g_drive_abmi, "Results", "Habitat Modeling", "2024", "2024 North Mammal Coefficients and Predictions_2025-07-22.RData"))
+load(file.path(g_drive_abmi, "Results", "Habitat Modeling", "2024",
+               "2024 North Mammal Coefficients and Predictions_2025-07-22.RData"))
 
-#-----------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------
 
 # Area of Interest (AOI) for OMGD19 - Prepared by D. Evans
 aoi_omgd19 <- st_read(paste0(g_drive_cbme, "OMGD19/AOI/OMG19 Area of Interest.shp")) |>
@@ -85,12 +86,16 @@ for (sp in species) {
 
   # Save raster
   terra::writeRaster(r,
-                     filename = paste0(g_drive_cbme, "OMGD19/Predictions/", sp, " OMGD19.tif"),
+                     filename = paste0(
+                       g_drive_cbme,
+                       "OMGD19/Predictions/",
+                       sp,
+                       " OMGD19.tif"),
                      overwrite = TRUE)
 
   }
 
-#-----------------------------------------------------------------------------------------------------------------------
+#-----------------------------------------------------------
 
 
 
