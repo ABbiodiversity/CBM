@@ -14,6 +14,7 @@ library(sciCentRverse)
 
 source("wt_credentials.R")
 
+# Authenticate
 wt_auth()
 
 # Species of interest
@@ -25,7 +26,7 @@ sp <- c("White-tailed Deer", "Moose", "Wolf")
 
 lmna <- wt_get_projects(sensor = "CAM") |>
   filter(str_detect(project, "LMNA")) |>
-  select(project, project_id)
+  dplyr::select(project, project_id)
 
 lmna_main <- map_df(.x = lmna$project_id,
                     .f = ~ wt_download_report(project_id = .x,
@@ -43,7 +44,8 @@ lmna_main <- map_df(.x = lmna$project_id,
 lmna_image <- map_df(.x = lmna$project_id,
                      .f = ~ wt_download_report(project_id = .x,
                                                sensor_id = "CAM",
-                                               reports = "image_report")) |>
+                                               reports = "image_report") |>
+                       dplyr::select(-image_snow)) |>
   # Fold the 'Bs' and other letters into their parent location
   mutate(location = case_when(
     str_detect(location, "-A1") ~ "LMCA-A1",
@@ -52,13 +54,18 @@ lmna_image <- map_df(.x = lmna$project_id,
     TRUE ~ location
   ))
 
+lmna_loc <- map_df(.x = lmna$project_id,
+                   .f = ~ wt_download_report(project_id = .x,
+                                             sensor_id = "CAM",
+                                             reports = "location"))
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Treatment by location
 
 loc <- lmna_main |>
   left_join(lmna) |>
-  select(project, location) |>
+  dplyr::select(project, location) |>
   distinct() |>
   arrange(location, project) |>
   # Assign "treatments"
@@ -71,7 +78,7 @@ loc <- lmna_main |>
     str_detect(location, "-A|-L") ~ "decidmix40",
     str_detect(location, "-S|-D") ~ "treedlow20"
   )) |>
-  select(location, treatment, vegetation) |>
+  dplyr::select(location, treatment, vegetation) |>
   distinct()
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -133,7 +140,6 @@ lmna_images <- lmna_main |>
   left_join(days, by = "location") |>
   mutate(images_per_100_days = (total_images / total_days) * 100)
 
-
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Models: variation in metrics by treatment, controlling for vegetation
@@ -144,8 +150,8 @@ lmna_images <- lmna_main |>
 # pre-normalised rate as a continuous response, because it correctly treats the data as
 # counts and handles the effort adjustment on the log scale (matching the NB log link).
 
-library(MASS)
-library(broom)
+library(glmmTMB)
+library(broom.mixed)
 
 # --- Year-level data preparation ---
 # Splitting each location into annual units increases effective N (15 locations -> 38
@@ -235,60 +241,128 @@ model_data_year <- det_year |>
     species_common_name = factor(species_common_name, levels = c("Moose", "White-tailed Deer"))
   )
 
-# --- Pooled models (species × treatment interaction) ---
-# Fitting one model per metric across both prey species is more efficient than
-# separate per-species models: it pools variance estimation and directly tests
-# whether the treatment effect differs between Moose and WTD via the interaction term.
-# Model formula: species * treatment + vegetation + year_num + wolf_present + effort offset
+# Split into per-species data frames
+md_moose <- model_data_year |> filter(species_common_name == "Moose")
+md_wtd   <- model_data_year |> filter(species_common_name == "White-tailed Deer")
 
-pool_det <- glm.nb(
-  n_detections ~ species_common_name * treatment + vegetation + year_num + wolf_present +
-    offset(log(total_days)),
-  data = model_data_year
+# --- Per-species GLMMs with random intercept for location ---
+# Random intercept for location accounts for the repeated-measures structure
+# (same location contributes multiple years). glmmTMB is used throughout for
+# consistency across NB and binomial families.
+# Formula: metric ~ treatment + vegetation + year_num + wolf_present + (1|location) [+ offset]
+
+# Moose
+moose_det  <- glmmTMB(
+  n_detections ~ treatment + vegetation + year_num + wolf_present + offset(log(total_days)) +
+    (1 | location),
+  family = nbinom2, data = md_moose
 )
 
-pool_prop <- glm(
+moose_prop <- glmmTMB(
   cbind(months_detected, total_months - months_detected) ~
-    species_common_name * treatment + vegetation + year_num + wolf_present,
-  family = binomial,
-  data = model_data_year
+    treatment + vegetation + year_num + wolf_present + (1 | location),
+  family = binomial, data = md_moose
 )
 
-pool_img <- glm.nb(
-  total_images ~ species_common_name * treatment + vegetation + year_num + wolf_present +
-    offset(log(total_days)),
-  data = model_data_year
+moose_img  <- glmmTMB(
+  total_images ~ treatment + vegetation + year_num + wolf_present + offset(log(total_days)) +
+    (1 | location),
+  family = nbinom2, data = md_moose
 )
 
-# Extract results: exponentiated coefficients with Wald CIs
-extract_pooled <- function(model, metric) {
-  tidy(model, exponentiate = TRUE) |>
+# White-tailed Deer
+wtd_det  <- glmmTMB(
+  n_detections ~ treatment + vegetation + year_num + wolf_present + offset(log(total_days)) +
+    (1 | location),
+  family = nbinom2, data = md_wtd
+)
+
+wtd_prop <- glmmTMB(
+  cbind(months_detected, total_months - months_detected) ~
+    treatment + vegetation + year_num + wolf_present + (1 | location),
+  family = binomial, data = md_wtd
+)
+
+wtd_img  <- glmmTMB(
+  total_images ~ treatment + vegetation + year_num + wolf_present + offset(log(total_days)) +
+    (1 | location),
+  family = nbinom2, data = md_wtd
+)
+
+# --- Extract fixed-effect results: exponentiated coefficients with Wald CIs ---
+extract_glmm <- function(model, metric, species) {
+  tidy(model, effects = "fixed", exponentiate = TRUE, conf.int = TRUE) |>
     filter(term != "(Intercept)") |>
-    mutate(
-      conf.low  = exp(log(estimate) - 1.96 * std.error),
-      conf.high = exp(log(estimate) + 1.96 * std.error),
-      metric    = metric
-    ) |>
-    dplyr::select(metric, term, estimate, conf.low, conf.high, p.value)
+    mutate(metric = metric, species = species) |>
+    dplyr::select(species, metric, term, estimate, conf.low, conf.high, p.value)
 }
 
+term_labels <- c(
+  "treatmenthigh activity in situ" = "Treatment: high activity",
+  "vegetationtreedlow20"           = "Vegetation: treedlow20",
+  "year_num"                       = "Year (numeric)",
+  "wolf_present"                   = "Wolf present"
+)
+
 model_results <- bind_rows(
-  extract_pooled(pool_det,  "Detections (NB + offset)"),
-  extract_pooled(pool_prop, "Prop. monthly detections (Binomial)"),
-  extract_pooled(pool_img,  "Images (NB + offset)")
+  extract_glmm(moose_det,  "Detections (NB + offset)",          "Moose"),
+  extract_glmm(moose_prop, "Prop. monthly detections (Binomial)", "Moose"),
+  extract_glmm(moose_img,  "Images (NB + offset)",               "Moose"),
+  extract_glmm(wtd_det,    "Detections (NB + offset)",          "White-tailed Deer"),
+  extract_glmm(wtd_prop,   "Prop. monthly detections (Binomial)", "White-tailed Deer"),
+  extract_glmm(wtd_img,    "Images (NB + offset)",               "White-tailed Deer")
 ) |>
+  mutate(term = recode(term, !!!term_labels))
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+# Data visualization
+
+# Forest plot: treatment effect (high activity in situ vs. reference) for Moose and WTD
+
+plot_data <- model_results |>
+  filter(term == "Treatment: high activity") |>
   mutate(
-    term = recode(term,
-      "species_common_nameWhite-tailed Deer"                                = "Species: WTD",
-      "treatmenthigh activity in situ"                                      = "Treatment: high activity",
-      "vegetationtreedlow20"                                                = "Vegetation: treedlow20",
-      "year_num"                                                            = "Year (numeric)",
-      "wolf_present"                                                        = "Wolf present",
-      "species_common_nameWhite-tailed Deer:treatmenthigh activity in situ" = "WTD × high activity"
+    metric_label = recode(metric,
+      "Detections (NB + offset)"            = "Independent\ndetections",
+      "Prop. monthly detections (Binomial)" = "Prop. monthly\ndetections",
+      "Images (NB + offset)"                = "Images"
+    ),
+    metric_label = factor(metric_label, levels = c(
+      "Images",
+      "Prop. monthly\ndetections",
+      "Independent\ndetections"
+    )),
+    # Significance label for annotation
+    sig = case_when(
+      p.value < 0.001 ~ "p < 0.001",
+      p.value < 0.01  ~ paste0("p = ", round(p.value, 3)),
+      p.value < 0.05  ~ paste0("p = ", round(p.value, 3)),
+      TRUE            ~ paste0("p = ", round(p.value, 2))
     )
   )
 
-
-
-
+ggplot(plot_data, aes(x = estimate, y = metric_label)) +
+  geom_vline(xintercept = 1, linetype = "dashed", colour = "grey60") +
+  geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.15, linewidth = 0.6) +
+  geom_point(size = 3) +
+  geom_text(aes(label = sig), x = log10(0.13), hjust = 0, size = 2.9, colour = "grey30") +
+  scale_x_log10(
+    breaks = c(0.25, 0.5, 1, 2, 4, 8),
+    labels = c("0.25", "0.5", "1", "2", "4", "8"),
+    limits = c(0.13, 10)
+  ) +
+  facet_wrap(~ species, ncol = 2) +
+  labs(
+    x = "Rate ratio (high activity vs. reference)",
+    y = NULL
+  ) +
+  theme_bw(base_size = 11) +
+  theme(
+    strip.background   = element_blank(),
+    strip.text         = element_text(face = "bold", size = 11),
+    panel.grid.minor   = element_blank(),
+    panel.grid.major.y = element_blank(),
+    axis.text.y        = element_text(size = 10)
+  )
 
