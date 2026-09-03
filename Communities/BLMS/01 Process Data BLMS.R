@@ -9,7 +9,6 @@
 # Attach packages
 library(tidyverse)
 library(wildrtrax)
-library(keyring)
 library(googledrive)
 library(googlesheets4)
 library(overlap)
@@ -31,8 +30,7 @@ for (file in files) {
 }
 
 # Authenticate into WildTrax
-Sys.setenv(WT_USERNAME = "marcusabecker89",
-           WT_PASSWORD = "")
+source("wt_credentials.R")
 
 wt_auth()
 
@@ -41,22 +39,23 @@ wt_auth()
 # Step 1. Download data
 
 # BLMS Project(s)
-projects <- wt_get_download_summary(sensor_id = "CAM") |>
-  filter(str_detect(organization, "BLMS")) |>
+projects <- wt_get_projects(sensor = "CAM") |>
+  filter(str_detect(organization_name, "BLMS")) |>
   select(project, project_id) # 3150
 
 project_ids <- projects$project_id
+
+projects_ids <- 3150
 
 # Main report(s)
 # Note: Don't need to loop, or use purrr, since there's only 1 project ID.
 main_report <- wt_download_report(project_id = 3150,
                                   sensor_id = "CAM",
-                                  report = "main",
-                                  weather_cols = FALSE) |>
+                                  report = "main") |>
   left_join(projects) |>
   # Consolidate tags of same species in the same image into one row
   consolidate_tags() |>
-  filter(image_fov == "WITHIN") |>
+  #filter(image_fov != "OOR") |>
   select(project, location, image_date_time, species_common_name, individual_count, image_id) |>
   mutate(species_common_name = case_when(
     species_common_name == "Deer" ~ "White-tailed Deer",
@@ -68,15 +67,14 @@ main_report <- wt_download_report(project_id = 3150,
   ))
 
 # Image report
-image_report <- wt_download_report(project_id = project_ids,
+image_report <- wt_download_report(project_id = 3150,
                                    sensor_id = "CAM",
-                                   report = "image_report",
-                                   weather_cols = FALSE) |>
+                                   report = "image_report") |>
   left_join(projects) |>
   select(project, location, image_id, image_date_time, image_trigger_mode, image_fov)
 
 # Locations
-location_report <- wt_download_report(project_id = project_ids,
+location_report <- wt_download_report(project_id = 3150,
                                       sensor_id = "CAM",
                                       report = "location") |>
   select(location, latitude, longitude)

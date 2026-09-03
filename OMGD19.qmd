@@ -321,11 +321,11 @@ cat(":::\n")
 
 ```
 
--   **White-tailed deer** were primarily detected in the summer months of June, July, and August.
--   Because they hibernate over the winter, detection of **Black Bears** began in May, and peaked in late June and early July.
--   **Moose** were consistently detected year round, as were **Coyote** and **Canada Lynx**.
--   Detections of **Snowshoe Hare** were also consistent year round, with the exception of the later summer months (August).
--   **Woodland Caribou** and **Gray Wolf** detections were infrequent and sporadic across the duration of the project.
+- **White-tailed deer** were primarily detected in the summer months of June, July, and August.
+- Because they hibernate over the winter, detection of **Black Bears** began in May, and peaked in late June and early July.
+- **Moose** were consistently detected year round, as were **Coyote** and **Canada Lynx**.
+- Detections of **Snowshoe Hare** were also consistent year round, with the exception of the later summer months (August).
+- **Woodland Caribou** and **Gray Wolf** detections were infrequent and sporadic across the duration of the project.
 
 <br>
 
@@ -420,12 +420,12 @@ cat(":::\n")
 
 ```
 
--   **White-tailed deer** are primarily active during twilight hours, specifically at dawn and dusk. This pattern is known as *crepuscular*. The majority of the activity, however, was captured during the dawn hours (6:00 to 9:00).
--   **Black Bear** were similarly crepuscular, although the peak was much more pronounced during the dusk hours (between 18:00 and 24:00).
--   Based on the cameras in the `r com_acr` project, **Moose** were primarily active during the night time (00:00 to 6:00).
--   **Coyote** and **Snowshoe Hare** were similar to Moose, but had slightly elevated (and increasing) activity levels throughout the evening hours.
--   **Canada Lynx** activity peaked during midday (12:00). **Caribou** were similar, with a slightly earlier, and more pronounced, peak (10:00).
--   Finally, **Gray Wolf** showed a slightly crepuscular tendency, however the dusk activity peak was more extreme.
+- **White-tailed deer** are primarily active during twilight hours, specifically at dawn and dusk. This pattern is known as *crepuscular*. The majority of the activity, however, was captured during the dawn hours (6:00 to 9:00).
+- **Black Bear** were similarly crepuscular, although the peak was much more pronounced during the dusk hours (between 18:00 and 24:00).
+- Based on the cameras in the `r com_acr` project, **Moose** were primarily active during the night time (00:00 to 6:00).
+- **Coyote** and **Snowshoe Hare** were similar to Moose, but had slightly elevated (and increasing) activity levels throughout the evening hours.
+- **Canada Lynx** activity peaked during midday (12:00). **Caribou** were similar, with a slightly earlier, and more pronounced, peak (10:00).
+- Finally, **Gray Wolf** showed a slightly crepuscular tendency, however the dusk activity peak was more extreme.
 
 # Species Overlap
 
@@ -1191,11 +1191,11 @@ htmltools::tags$figure(
 ```
 :::
 
--   **White-tailed deer** have the highest densities across both stressor treatments and the reference areas among all the species. Density was highest in the reference clusters, and lower in both the linear features cluster and the two roads clusters. Deer values in the `r com_acr` reference clusters were all higher than the regional average.
--   The opposite pattern was found for **Black Bear**, where lower densities were found in the reference clusters and higher densities in the stressor treatments, particularly the two road clusters. The two road clusters were substantially higher than the regional average, whereas the reference and linear features cluster values were more comparable.
--   **Moose** densities were relatively low across all camera clusters, especially in areas of linear features (pipelines). With the exception of roads, these values were lower than the regional averages.
--   **Coyotes** were attracted to road features, but not linear features. The same pattern was observed for **Snowshoe Hare** and **Canada Lynx**. In all three cases, the road clusters had dramatically higher density values than the regional average.
--   **Caribou** and **Wolf** densities (and overall detections) were very low across all clusters, making it difficult to assess patterns and response to stressors. However, wolf densities were higher in the reference clusters compared to the two disturbance treatments, and were above the regional average.
+- **White-tailed deer** have the highest densities across both stressor treatments and the reference areas among all the species. Density was highest in the reference clusters, and lower in both the linear features cluster and the two roads clusters. Deer values in the `r com_acr` reference clusters were all higher than the regional average.
+- The opposite pattern was found for **Black Bear**, where lower densities were found in the reference clusters and higher densities in the stressor treatments, particularly the two road clusters. The two road clusters were substantially higher than the regional average, whereas the reference and linear features cluster values were more comparable.
+- **Moose** densities were relatively low across all camera clusters, especially in areas of linear features (pipelines). With the exception of roads, these values were lower than the regional averages.
+- **Coyotes** were attracted to road features, but not linear features. The same pattern was observed for **Snowshoe Hare** and **Canada Lynx**. In all three cases, the road clusters had dramatically higher density values than the regional average.
+- **Caribou** and **Wolf** densities (and overall detections) were very low across all clusters, making it difficult to assess patterns and response to stressors. However, wolf densities were higher in the reference clusters compared to the two disturbance treatments, and were above the regional average.
 
 # Where We Expect to Find Species
 
@@ -1303,11 +1303,11 @@ htmltools::tags$div(
 
 <br>
 
--   **White-tailed Deer** are predicted to show a higher probability of occurrence in the southern portion of the `r com_acr` traditional territory, where warmer climate and greater human disturbance favour the species.
--   **Black Bears** are predicted to occur throughout the territory, including the more northern forested areas toward Fort McMurray.
--   **Moose** are predicted to occur across the territory, with a higher probability of occurrence in less disturbed areas such as east of Lac La Biche.
--   **Coyotes** are predicted to be concentrated in the southwest where they are associated with agricultural development, whereas **Snowshoe Hare** and **Canada Lynx** show the opposite pattern with a higher probability of occurrence in more forested and northern areas.
--   **Woodland Caribou** are predicted to occur in the northeast of the territory, overlapping the East Side Athabasca River caribou range (ESAR). **Gray Wolves** have a generally low probability of occurrence across the territory, with slight increases where human disturbance is lower.
+- **White-tailed Deer** are predicted to show a higher probability of occurrence in the southern portion of the `r com_acr` traditional territory, where warmer climate and greater human disturbance favour the species.
+- **Black Bears** are predicted to occur throughout the territory, including the more northern forested areas toward Fort McMurray.
+- **Moose** are predicted to occur across the territory, with a higher probability of occurrence in less disturbed areas such as east of Lac La Biche.
+- **Coyotes** are predicted to be concentrated in the southwest where they are associated with agricultural development, whereas **Snowshoe Hare** and **Canada Lynx** show the opposite pattern with a higher probability of occurrence in more forested and northern areas.
+- **Woodland Caribou** are predicted to occur in the northeast of the territory, overlapping the East Side Athabasca River caribou range (ESAR). **Gray Wolves** have a generally low probability of occurrence across the territory, with slight increases where human disturbance is lower.
 
 <br>
 

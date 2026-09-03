@@ -6,6 +6,7 @@
 
 #-----------------------------------------------------------------------------------------------------------------------
 
+# Attach packages
 library(tidyverse)
 library(wildrtrax)
 library(keyring)
@@ -14,12 +15,16 @@ library(googlesheets4)
 library(overlap)
 library(activity)
 library(corrplot)
+# Internal SC package
+# devtools::install_github("ABbiodiversity/sciCentRverse")
+library(sciCentRverse)
 
 # Set path to Shared Google Drive (G Drive) - ABMI Mammals
 g_drive_abmi <- "G:/Shared drives/ABMI Mammals/"
 # Set path to Shared Google Drive (G Drive) - CBME Community Camera Results
 g_drive_cbme <- "G:/Shared drives/CBME Community Camera Results/"
 # Set path to Shared Google Drive (G Drive) - OSM BADR
+# This is for the comparison to ABMI OSM BADR results
 g_drive_osm <- "G:/Shared drives/OSM BADR Mammals/"
 
 # Species character strings
@@ -32,101 +37,146 @@ for (file in files) {
 }
 
 # Authenticate into WildTrax
-Sys.setenv(WT_USERNAME = "marcusabecker89",
-           WT_PASSWORD = "")
-
+source("wt_credentials.R")
 wt_auth()
+
+# Authenticate into Google Drive/Sheets
+googledrive::drive_auth()
+googlesheets4::gs4_auth()
+
+# Define a list of species we care about for this project
+sp_uni <- c("White-tailed Deer",
+            "Black Bear",
+            "Moose",
+            "Coyote",
+            "Snowshoe Hare",
+            "Canada Lynx",
+            "Woodland Caribou",
+            "Gray Wolf")
 
 #-----------------------------------------------------------------------------------------------------------------------
 
 # Step 1. Download data
 
 # OMGD19 Project(s)
-projects <- wt_get_download_summary(sensor_id = "CAM") |>
-  filter(str_detect(organization, "MNA Region 1")) |>
-  select(project, project_id) # 2929
+projects <- wt_get_projects(sensor = "CAM") |>
+  filter(str_detect(organization_name, "MNA Region 1")) |>
+  select(project, project_id)
 
+# Vector of project ids
 project_ids <- projects$project_id
 
-# Main report(s)
-# Note: Don't need to loop, or use purrr, since there's only 1 project ID.
-main_report <- wt_download_report(project_id = project_ids,
+# There are now 2 projects, but the current report just uses the first.
+# To-do: Incorporate the second year of data.
+project_id <- 2929
+
+# Main report(s) - this is a dataframe of the tags applied to the images
+# Note: Don't need to loop, or use purrr, since there's only 1 project ID (for now)
+main_report <- wt_download_report(project_id = project_id,
                                   sensor_id = "CAM",
-                                  report = "main",
-                                  weather_cols = FALSE) |>
+                                  report = "main") |>
+  # I like to keep the project name
   left_join(projects) |>
   # Consolidate tags of same species in the same image into one row
-  consolidate_tags() |>
-  filter(image_fov == "WITHIN") |>
-  select(project, location, image_date_time, species_common_name, individual_count, image_id)
+  cam_consolidate_tags() |>
+  # Remove images that are out-of-range ("OOR") of the desired field-of-view
+  # Note: in this project, there are actually no OOR images. But keep this line in here
+  # just in case future data does.
+  filter(!(image_fov %in% "OOR")) |>
+  # Keep only relevant columns for downstream calculations
+  select(project, project_id,
+         location, location_id,
+         image_date_time, species_common_name, individual_count, image_id)
 
-# Image report
-image_report <- wt_download_report(project_id = project_ids,
+# Image report - this is a dataframe of information on each image in the project.
+image_report <- wt_download_report(project_id = project_id,
                                    sensor_id = "CAM",
-                                   report = "image_report",
-                                   weather_cols = FALSE) |>
+                                   report = "image_report") |>
   left_join(projects) |>
-  select(project, location, image_id, image_date_time, image_trigger_mode, image_fov)
+  select(project, project_id,
+         location, location_id,
+         image_id, image_date_time, image_trigger_mode, image_fov, equipment_model)
 
-# Locations
-location_report <- wt_download_report(project_id = project_ids,
+# Location report - for mapping where the cameras are.
+location_report <- wt_download_report(project_id = project_id,
                                       sensor_id = "CAM",
                                       report = "location") |>
   select(location, latitude, longitude)
-
-# Other reports?
 
 #-----------------------------------------------------------------------------------------------------------------------
 
 # Step 2. Estimate density
 
+# We will use functions from the sciCentRverse package
+
 # Deployment time periods
 # First, get operating days (od):
-df_od_summary <- get_operating_days(
-  image_report = image_report,
-  # Keep project
-  include_project = TRUE,
-  # Summarise
-  summarise = TRUE,
-  # Include ABMI seasons
-  .abmi_seasons = TRUE
+df_od <- cam_get_op_days(
+  df = image_report,
+  grouping   = c("project_id", "project", "location_id", "location"),
+  missing_as = TRUE,
+  span       = "operational"
 )
 
-# Also pull the raw od
-df_od <- get_operating_days(
-  image_report = image_report,
-  include_project = TRUE,
-  summarise = FALSE,
-  .abmi_seasons = TRUE
-)
+# Define season definitions (Julian day cutoffs)
+seasons <- c(spring = 105L,
+             summer = 125L,
+             winter = 300L)
+
+# Summarise the number of operational days by season
+df_od_summary <- df_od |>
+  cam_summarise_op_by_season(
+    seasons  = seasons,
+    by_year  = FALSE,
+    wide     = TRUE   # one column per season + total_days
+  )
 
 # Calculate time in front of camera (TIFC)
 
 df_tifc <- main_report |>
-  # Turn 'Deer' tags into White-tailed Deer (most likely)
+  # Turn 'Deer' tags into White-tailed Deer (most likely);
+  # 'Bear' into Black Bear, 'Foxes' into Red Fox; 'Rabbit' into Snowshoe Hare
   mutate(species_common_name = case_when(
     species_common_name == "Deer" ~ "White-tailed Deer",
-    species_common_name == "Mule Deer" ~ "White-tailed Deer",
     species_common_name == "Bear" ~ "Black Bear",
     species_common_name == "Foxes" ~ "Red Fox",
     str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
     TRUE ~ species_common_name
   )) |>
   # First calculate time by series
-  calculate_time_by_series() |>
+  cam_calc_time_by_series() |>
   # Then sum by time period
-  sum_total_time(sd = df_od_summary)
+  cam_sum_total_time(
+    # Same seasonal cutoffs
+    season_cutoffs = seasons,
+    # Supply the operational day summary df
+    op_days_df = df_od_summary,
+    # Filter to only the species we care about
+    species_universe = sp_uni
+  )
 
-# Calculate density at each location
+# Obtain the camera models used in this project
+df_model <- image_report |>
+  cam_extract_model_lookup(
+    keys      = c("project", "project_id", "location", "location_id"),
+    model_col = "equipment_model"
+  )
 
-# EDD categories
+# Finally, calculate density at each location
+
+# Load the EDD categories - stored on shared Google Drive
+# EDD = "Effective Detection Distance"
+# Note: Authenticate is done at the beginning of the script
+
+# Obtain the proper sheet ID
+# These lookup sheets are in: ABMI Mammals/Data/Detection Distance/EDD Categories By Project/
 sheet_id <- drive_find(type = "spreadsheet",
                        shared_drive = "ABMI Mammals") |>
   filter(str_detect(name, "OMGD19")) |>
   select(id) |>
   pull()
 
-# Read in EDD category data
+# Read in EDD category data from the sheet
 edd_cat <- map_df(.x = sheet_id,
                   .f = ~ read_sheet(ss = .x) |>
                   mutate(location = as.character(location))) |>
@@ -137,29 +187,23 @@ edd_cat <- map_df(.x = sheet_id,
   select(project_location, overall_category)
 
 # Calculate density
-df_density_long <- calc_density_by_loc(tt = df_tifc,
-                                       veg = edd_cat,
-                                       cam_fov_angle = 40,
-                                       format = "long")
-# Summarise density
-df_density_sum <- df_density_long |>
-  # Remove seasons with less than 20 operating days
-  filter(total_season_days >= 20) |>
-  # Remove Black Bears in Winter
-  filter(!(species_common_name == "Black Bear" & season == "Winter")) |>
-  # Summarise density
-  group_by(project, location, species_common_name) |>
-  summarise(density_km2 = weighted.mean(density_km2, w = total_season_days),
-            total_days = sum(total_season_days)) |>
-  ungroup() |>
-  select(-total_days)
+df_density_long <- df_tifc |>
+  left_join(df_model) |>
+  # We have to specify the height of the camera; these were all deployed at 1m,
+  # which corresponds to "high" in the internal package lookup table
+  mutate(height = "high") |>
+  cam_calc_density_by_loc(
+    edd_category_df     = edd_cat,        # vegetation category per location
+    cam_fov_angle       = 40,             # degrees
+    format              = "long",
+    aggregate           = TRUE,           # weighted mean across seasons
+    use_global_edd      = TRUE,           # fall back to pooled EDD if needed
+    annotate_edd_source = FALSE           # label EDD provenance
+    )
 
 #-----------------------------------------------------------------------------------------------------------------------
 
 # Prepare data for diel modeling
-
-species <- c("White-tailed Deer", "Black Bear", "Moose", "Coyote", "Snowshoe Hare",
-             "Canada Lynx", "Woodland Caribou", "Gray Wolf")
 
 df <- main_report |>
   # Turn 'Deer' tags into White-tailed Deer (most likely)
@@ -171,7 +215,7 @@ df <- main_report |>
     str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
     TRUE ~ species_common_name
   )) |>
-  filter(species_common_name %in% species) |>
+  filter(species_common_name %in% sp_uni) |>
   filter(!individual_count == "VNA") |>
   mutate(individual_count = as.numeric(individual_count),
          rad_time = posix2radian(image_date_time),
@@ -192,7 +236,7 @@ rad_time <- df |>
 
 #-----------------------------------------------------------------------------------------------------------------------
 
-# Generate Independent Detections
+# Generate independent detections dataframe
 
 df_ind_detect <- main_report |>
   mutate(species_common_name = case_when(
@@ -202,16 +246,18 @@ df_ind_detect <- main_report |>
     species_common_name == "Foxes" ~ "Red Fox",
     str_detect(species_common_name, "Rabbit") ~ "Snowshoe Hare",
     TRUE ~ species_common_name)) |>
-  mutate(project_id = project_ids) |>
-  #filter(species_common_name %in% species) |>
-  wt_ind_detect(threshold = 30, units = "minutes")
+  mutate(project_id = project_id) |>
+  filter(species_common_name %in% sp_uni) |>
+  # Use this function from the wildrtrax package
+  wt_ind_detect(threshold = 30,
+                units = "minutes")
 
 #-----------------------------------------------------------------------------------------------------------------------
 
 # Species Co-Occurrences
 
 corr <- df_ind_detect |>
-  filter(species_common_name %in% species) |>
+  filter(species_common_name %in% sp_uni) |>
   mutate(species_common_name = factor(species_common_name)) |>
   group_by(location, species_common_name, .drop = FALSE) |>
   tally() |>
@@ -223,7 +269,7 @@ M <- cor(corr)
 
 #-----------------------------------------------------------------------------------------------------------------------
 
-# Number of images
+# Generate number of images dataframe
 
 remove <- c("Human", "STAFF/SETUP", "NONE", "Vehicle", "Unidentified")
 
@@ -244,8 +290,9 @@ nimages <- main_report |>
 
 # Densities at OS stressors for comparison with OSM BADR regional monitoring
 
-dens_omgd19 <- df_density_sum |>
-  # Categorize into treatments
+dens_omgd19 <- df_density_long |>
+  # Categorize into treatments - this information comes from the CBME folks (Dave)
+  # Note there are 4 clusters of cameras
   mutate(treatment = case_when(
     str_detect(location, "MNA19-1-") ~ "Roads",
     str_detect(location, "MNA19-2-") ~ "Roads",
@@ -259,6 +306,7 @@ dens_omgd19 <- df_density_sum |>
   mutate(site = str_extract(location, ".*(?=-[^-]*$)")) |>
   # Pare back some outlier values
   mutate(density_km2 = ifelse(density_km2 > 5, 5, density_km2)) |>
+  # Average across sites with the same treatment
   group_by(site, species_common_name, treatment) |>
   summarise(density_km2 = mean(density_km2)) |>
   ungroup() |>
@@ -272,11 +320,22 @@ lure <- read_csv(paste0(g_drive_abmi, "Data/Lure/ABMI Lure Effect Summary 2024-0
   mutate(species_common_name = str_replace_all(species_common_name, "(?<!^)([A-Z])", " \\1")) |>
   select(species_common_name, TA)
 
-dens_badr <- read_csv(paste0(g_drive_osm, "Results/Densities to use in the summaries.csv")) |>
+# Read in the ABMI OSM BADR results from the other shared drive
+dens_badr <- read_csv(
+  paste0(g_drive_osm,
+         "Data/Processed/ABMI OSM BADR ACME Industry Densities to Use in Summaries.csv")) |>
+  # Only compare to ABMI OSM BADR projects
   filter(str_detect(project, "ABMI OSM")) |>
+  # Filter to only the treatments present in the OMGD19 data
   filter(treatment == "reference" | treatment == "dense linear features" | treatment == "roads") |>
-  pivot_longer(c(`Gray.Wolf`, Moose, `White.tailed.Deer`, `Snowshoe.Hare`, Coyote, `Canada.Lynx`, `Woodland.Caribou`, `Black.Bear`), names_to = "species_common_name", values_to = "density_km2") |>
-  select(project, location, species_common_name, density_km2, treatment, fine_scale, landscape_unit, jem, lure) |>
+  # Turn from wide format to long
+  pivot_longer(c(`Gray.Wolf`, Moose, `White.tailed.Deer`, `Snowshoe.Hare`, Coyote, `Canada.Lynx`, `Woodland.Caribou`, `Black.Bear`),
+               names_to = "species_common_name",
+               values_to = "density_km2") |>
+  # Reorder columns
+  select(project, location, species_common_name, density_km2, treatment,
+         fine_scale, landscape_unit, jem, lure) |>
+  # Rename species to match OMGD19 data
   mutate(species_common_name = case_when(
     species_common_name == "Gray.Wolf" ~ "Gray Wolf",
     species_common_name == "White.tailed.Deer" ~ "White-tailed Deer",
@@ -286,35 +345,40 @@ dens_badr <- read_csv(paste0(g_drive_osm, "Results/Densities to use in the summa
     species_common_name == "Snowshoe.Hare" ~ "Snowshoe Hare",
     TRUE ~ species_common_name
   )) |>
+  # Adjust fine_scale from metres distance to simple On/Off footprint
   mutate(fine_scale = case_when(
     fine_scale == "10-30" ~ "On",
     fine_scale == "100" ~ "Off",
     fine_scale == "300" ~ "Off",
     TRUE ~ fine_scale
   )) |>
+  # Join lure effects
   left_join(lure) |>
+  # Make lure adjustment for deployments that are lured
   mutate(density_km2 = ifelse(lure == "Yes", density_km2 / TA, density_km2)) |>
   group_by(project, jem, landscape_unit, treatment, species_common_name) |>
   summarise(density_km2 = mean(density_km2)) |>
   ungroup() |>
   mutate(site = paste0(landscape_unit, "_", jem)) |>
   select(project, site, treatment, species_common_name, density_km2) |>
+  # Re-name treatments to match OMGD19
   mutate(treatment = case_when(
     treatment == "roads" ~ "Roads",
     treatment == "dense linear features" ~ "Linear Features",
-    treatment == "reference" ~ "Reference"
+    treatment == "reference" ~ "Reference",
+    TRUE ~ treatment
   )) |>
   mutate(project = "OSM Regional Monitoring") |>
   mutate(treatment = factor(treatment, levels = c("Reference", "Linear Features", "Roads")))
 
-# Bind together
+# Bind together ABMI data and OMGD19 data
 df_density_os <- bind_rows(dens_badr, dens_omgd19)
 
 #-----------------------------------------------------------------------------------------------------------------------
 
 # Step 3. Save results for future scripts
 
-save(df_density_sum, # Densities by location and species
+save(df_density_long, # Densities by location and species
      df_density_os, # Densities for OS stressors (regional and local)
      df_od_summary, # Number of operating days per location
      df_od, # Raw operating days
